@@ -1,0 +1,2207 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>1週間英語ラボ</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#131a29">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+:root{
+  --bg:#0f1420; --panel:#171e2e; --panel2:#1e2740; --line:#2a3350;
+  --txt:#e8edf7; --sub:#93a0bd; --accent:#4dd0c3; --accent2:#ff8a4c;
+  --good:#4ade80; --warn:#fbbf24; --bad:#f87171; --chip:#243052;
+  --shadow:0 8px 30px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--txt);
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic UI",system-ui,sans-serif;
+  font-size:15px;line-height:1.55}
+a{color:var(--accent)}
+h1,h2,h3{margin:0 0 .4em}
+h2{font-size:20px}
+h3{font-size:16px}
+.wrap{max-width:1080px;margin:0 auto;padding:14px 14px 96px}
+header.top{position:sticky;top:0;z-index:40;background:linear-gradient(180deg,#131a29,#131a29ee);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px)}
+header.top .in{max-width:1080px;margin:0 auto;padding:11px 14px;display:flex;align-items:center;gap:10px}
+.logo{font-weight:800;letter-spacing:.02em;font-size:17px;display:flex;align-items:center;gap:8px}
+.logo .b{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.grow{flex:1}
+.btn{background:var(--panel2);color:var(--txt);border:1px solid var(--line);border-radius:10px;
+  padding:9px 13px;font-size:14px;cursor:pointer;font-weight:600;display:inline-flex;align-items:center;gap:6px;transition:.12s}
+.btn:hover{border-color:var(--accent)}
+.btn:active{transform:translateY(1px)}
+.btn.p{background:linear-gradient(135deg,var(--accent),#39b3a7);color:#062020;border:none}
+.btn.o{background:linear-gradient(135deg,var(--accent2),#f5713a);color:#2a1200;border:none}
+.btn.sm{padding:6px 10px;font-size:12.5px;border-radius:8px}
+.btn.gho{background:transparent}
+.btn.dang{color:var(--bad);border-color:#4a2530}
+nav.tabs{display:flex;gap:4px;overflow-x:auto;padding:8px 10px;position:fixed;bottom:0;left:0;right:0;
+  background:#131a29f2;border-top:1px solid var(--line);z-index:40;backdrop-filter:blur(8px)}
+nav.tabs button{flex:0 0 auto;background:none;border:none;color:var(--sub);font-size:11px;font-weight:600;
+  display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 12px;cursor:pointer;border-radius:8px}
+nav.tabs button .ic{font-size:19px;line-height:1}
+nav.tabs button.on{color:var(--accent)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}
+.card.pad0{padding:0;overflow:hidden}
+.grid{display:grid;gap:12px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:720px){.g3,.g4{grid-template-columns:repeat(2,1fr)}.hide-sp{display:none}}
+@media(max-width:460px){.g2{grid-template-columns:1fr}}
+label{display:block;font-size:12.5px;color:var(--sub);margin:10px 0 4px;font-weight:600}
+input,select,textarea{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--txt);
+  border-radius:10px;padding:10px 11px;font-size:15px;font-family:inherit}
+textarea{resize:vertical;min-height:64px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row>*{flex:1;min-width:0}
+.sub{color:var(--sub);font-size:13px}
+.tiny{font-size:11.5px;color:var(--sub)}
+.chip{display:inline-block;background:var(--chip);color:#b9c6e6;border-radius:999px;padding:3px 10px;font-size:11.5px;margin:2px 3px 2px 0}
+.chip.a{background:#123c39;color:var(--accent)}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:4px 10px}
+.mut{opacity:.55}
+.kpi{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:13px}
+.kpi .n{font-size:26px;font-weight:800;letter-spacing:-.02em}
+.kpi .l{font-size:11.5px;color:var(--sub);margin-top:2px}
+.right{text-align:right}.center{text-align:center}
+.score-big{font-size:44px;font-weight:800;line-height:1;letter-spacing:-.03em}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{color:var(--sub);font-weight:600;font-size:12px}
+.scroll-x{overflow-x:auto}
+.rank-badge{display:inline-flex;width:26px;height:26px;border-radius:50%;align-items:center;justify-content:center;font-weight:800;font-size:13px;background:var(--chip)}
+.rank-badge.g1{background:linear-gradient(135deg,#ffd76a,#f0a933);color:#3a2400}
+.rank-badge.g2{background:linear-gradient(135deg,#d6dae6,#a7afc4);color:#20242e}
+.rank-badge.g3{background:linear-gradient(135deg,#e6a373,#c07840);color:#2a1400}
+.bar-track{background:var(--panel2);border-radius:6px;height:8px;overflow:hidden}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.modal-bg{position:fixed;inset:0;background:#04070ecc;z-index:80;display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow:auto}
+.modal{background:var(--panel);border:1px solid var(--line);border-radius:16px;max-width:640px;width:100%;padding:18px;box-shadow:var(--shadow);margin:auto}
+.modal h2{display:flex;align-items:center}
+.x{background:none;border:none;color:var(--sub);font-size:24px;cursor:pointer;line-height:1}
+.seg{display:flex;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:3px;gap:3px;flex-wrap:wrap}
+.seg button{flex:1;background:none;border:none;color:var(--sub);padding:7px;border-radius:8px;cursor:pointer;font-weight:600;font-size:13px;min-width:60px}
+.seg button.on{background:var(--accent);color:#062020}
+.slider-row{display:flex;align-items:center;gap:10px;margin:6px 0}
+.slider-row label{margin:0;flex:0 0 92px;color:var(--txt)}
+.slider-row input[type=range]{flex:1;accent-color:var(--accent)}
+.slider-row .v{flex:0 0 30px;text-align:center;font-weight:700;color:var(--accent)}
+.empty{text-align:center;color:var(--sub);padding:36px 10px}
+.empty .e{font-size:40px;margin-bottom:8px}
+.list-item{display:flex;align-items:center;gap:12px;padding:13px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);margin-bottom:10px;cursor:pointer;transition:.12s}
+.list-item:hover{border-color:var(--accent)}
+.av{width:42px;height:42px;border-radius:11px;background:linear-gradient(135deg,#2b3a5e,#1c2embed);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;flex-shrink:0;color:#cdd9f5;background:linear-gradient(135deg,#2b3a5e,#233152)}
+.hl{color:var(--accent);font-weight:700}
+.warn-box{background:#2a2213;border:1px solid #4a3d17;color:#f5d38a;border-radius:10px;padding:10px 12px;font-size:12.5px}
+.ok-box{background:#12281f;border:1px solid #1f4a34;color:#9be8bd;border-radius:10px;padding:10px 12px;font-size:12.5px}
+.days7{display:flex;gap:6px;flex-wrap:wrap}
+.day{flex:1;min-width:38px;text-align:center;border:1px solid var(--line);border-radius:10px;padding:8px 4px;background:var(--panel2)}
+.day.done{background:#12281f;border-color:#1f4a34}
+.day.miss{opacity:.5}
+.day .dn{font-size:10px;color:var(--sub)}
+.day .dm{font-weight:800;font-size:13px}
+.timer-big{font-size:56px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em;text-align:center}
+.fab{position:fixed;right:16px;bottom:78px;z-index:45}
+.toast{position:fixed;left:50%;bottom:88px;transform:translateX(-50%);background:#0b1220;border:1px solid var(--accent);
+  color:var(--txt);padding:11px 18px;border-radius:12px;z-index:100;box-shadow:var(--shadow);font-weight:600;font-size:13.5px;opacity:0;transition:.25s;pointer-events:none}
+.toast.show{opacity:1}
+.divider{height:1px;background:var(--line);margin:14px 0}
+details.acc{border:1px solid var(--line);border-radius:10px;padding:0 12px;margin-bottom:10px;background:var(--panel2)}
+details.acc summary{cursor:pointer;padding:12px 0;font-weight:700;list-style:none}
+details.acc summary::-webkit-details-marker{display:none}
+.badge{font-size:10.5px;padding:2px 7px;border-radius:6px;font-weight:700}
+.badge.done{background:#12281f;color:var(--good)}
+.badge.active{background:#20263f;color:var(--accent)}
+.badge.draft{background:#2a2213;color:var(--warn)}
+canvas{max-width:100%}
+</style>
+
+<header class="top">
+  <div class="in">
+    <div class="logo">🧪 <span class="b">1週間英語ラボ</span></div>
+    <div class="grow"></div>
+    <button class="btn sm gho" onclick="exportAllCSV()">⬇︎ CSV</button>
+    <button class="btn sm gho" onclick="openView('settings')">⚙︎</button>
+  </div>
+</header>
+
+<div class="wrap" id="app"></div>
+
+<nav class="tabs" id="tabs"></nav>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================================
+   1週間英語ラボ — 単一ファイル / ローカル保存 / スプシ&無料LLM連携
+   ========================================================================= */
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+const uid = (p='id')=>p+'_'+Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-4);
+const esc = s => (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const todayStr = ()=> new Date().toISOString().slice(0,10);
+const clamp = (n,a,b)=>Math.max(a,Math.min(b,n));
+const num = (v,d=0)=>{const n=parseFloat(v);return isNaN(n)?d:n;};
+
+/* ---------- constants ---------- */
+const CATEGORIES = ['単語','文法','リーディング','リスニング','スピーキング','ライティング','発音','TOEIC','英会話','学習習慣','その他'];
+const TEST_TYPES = ['TOEIC模擬','英単語','文法','リスニング','リーディング','スピーキング','発音','ディクテーション','英作文','独自テスト'];
+const PLATFORMS = ['YouTube','Instagram','TikTok','X','Web','その他'];
+const LEVELS = ['初級','中級','上級','TOEIC〜500','TOEIC500-700','TOEIC700-900','TOEIC900+'];
+const GOALS = ['英会話','TOEIC・試験','リスニング','スピーキング','発音','語彙','文法','ライティング','ビジネス英語','学習習慣'];
+const COSTS = ['無料','〜500円','〜1,000円','〜3,000円','〜10,000円','10,000円〜'];
+const RECMINS = [10,15,20,30,45,60];
+const RECDAYS = [3,5,7,14,21,30];
+
+// 入力内容から学習法の難易度を自動判定（1易〜5難）。運営者が難易度を決めなくてよい
+function autoDifficulty(o){
+  const cats=o.categories||[], lv=o.targetLevel||'', min=num(o.recMin,30);
+  let s=2;
+  const outputHits=['スピーキング','ライティング','発音','英会話'].filter(c=>cats.includes(c)).length;
+  if(outputHits>=1)s+=1;                    // アウトプット系は負荷高
+  if(cats.includes('文法'))s+=0.3;
+  if(cats.includes('英会話'))s+=0.4;         // 相手/予約が要る
+  if(/上級|900/.test(lv))s+=1.2;             // 対象レベルが高いほど難
+  else if(/中級|500-700|700-900/.test(lv))s+=0.3;
+  else if(/初級|〜500/.test(lv))s-=0.6;
+  if(min>=60)s+=1; else if(min>=45)s+=0.6; else if(min>=30)s+=0.2; else if(min<20)s-=0.4; // 時間負荷
+  return clamp(Math.round(s),1,5);
+}
+const DIFF_LABEL=['とても易しい','易しい','ふつう','やや難しい','難しい'];
+let _aiJudgedDiff=null, _aiNote='', _aiLevel=null; // AI先生が判定した難易度・コツ・対象レベル（保存に反映）
+function refreshAutoDiff(){
+  const box=$('#f_diff_disp'); if(!box)return;
+  _aiJudgedDiff=null; _aiLevel=null; // 選択を変えたらAI判定はリセット（ルール判定に戻す）
+  const cats=$$('#f_cats .chip.a').map(c=>c.dataset.c);
+  const d=autoDifficulty({categories:cats,recMin:$('#f_recmin')?.value});
+  box.innerHTML=`${diffStars(d)} <span class="tiny">（${DIFF_LABEL[d-1]}・自動）</span>`;
+}
+// AI先生（東大卒×脳科学コーチ）が入力内容から難易度・対象レベル・学習のコツを判定
+async function aiJudgeMethod(){
+  if(!activeProviders().length)return toast('AI判定にはAPIキーが必要です（⚙️設定）。今は自動ルール判定中');
+  const name=$('#f_name').value.trim()||'（名称未設定）';
+  const cats=$$('#f_cats .chip.a').map(c=>c.dataset.c), goals=$$('#f_goals .chip.a').map(c=>c.dataset.g);
+  const recMin=$('#f_recmin').value;
+  const note=$('#f_ai_note'); if(note)note.innerHTML='<span class="sub">🧠 AI先生が判定中…</span>';
+  const prompt=`次の英語学習法を評価してください。
+名称:${name} / カテゴリ:${cats.join(',')||'-'} / 目的:${goals.join(',')||'-'} / 1日${recMin}分
+JSONオブジェクトのみで返答:
+{"difficulty":1〜5の整数(5が最難), "targetLevel":"この学習法が最も合う学習者レベルを次から1つ: ${LEVELS.join(' / ')}", "difficultyReason":"難易度と対象レベルをそう判断した理由を1文", "tips":["継続と効果を高めるコツを脳科学/第二言語習得の観点で3つ、各1文"]}`;
+  try{
+    const o=parseLooseJSON(await callLLM(prompt,{json:true,system:AI_PERSONA}))||{};
+    let d=parseInt(o.difficulty,10); if(!(d>=1&&d<=5))d=autoDifficulty({categories:cats,recMin});
+    _aiJudgedDiff=d;
+    _aiLevel=LEVELS.includes(o.targetLevel)?o.targetLevel:(LEVELS.find(l=>String(o.targetLevel||'').includes(l))||null);
+    _aiNote=(o.difficultyReason||'')+(Array.isArray(o.tips)&&o.tips.length?'\n【コツ】\n・'+o.tips.join('\n・'):'');
+    if($('#f_diff_disp'))$('#f_diff_disp').innerHTML=`${diffStars(d)} <span class="tiny">（${DIFF_LABEL[d-1]}・AI判定 by ${esc(lastLLMModel)}）</span>`;
+    if($('#f_level_disp'))$('#f_level_disp').innerHTML=`対象レベル: <b class="hl">${esc(_aiLevel||'中級')}</b>（AI判定）`;
+    if(note)note.innerHTML=(o.difficultyReason?`<div class="tiny" style="margin-bottom:6px">💬 ${esc(o.difficultyReason)}</div>`:'')+
+      (Array.isArray(o.tips)&&o.tips.length?`<div class="ok-box"><b>🧠 学習のコツ</b><ul style="margin:6px 0 0;padding-left:18px">${o.tips.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>`:'');
+    toast('AI先生の判定完了（'+lastLLMModel+'）');
+  }catch(e){ if(note)note.innerHTML=`<div class="warn-box tiny">AI判定に失敗: ${esc(e.message)}<br>自動ルール判定の値を使います。</div>`; }
+}
+
+/* ---------- AI先生チャット（学習法フォーム内・対話で難易度/レベルを決める） ---------- */
+let _aiChat=[];
+function aiChatUI(){
+  return `<div id="ai_chat" style="display:none;border:1px solid var(--line);border-radius:12px;padding:10px;margin-top:8px;background:var(--panel2)">
+    <div id="ai_msgs" style="max-height:250px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;margin-bottom:8px"></div>
+    <div id="ai_quick" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px"></div>
+    <div style="display:flex;gap:6px">
+      <input id="ai_input" placeholder="自由に相談（例: 三日坊主で終わりがち）" onkeydown="if(event.key==='Enter'){event.preventDefault();aiChatSend();}">
+      <button class="btn p sm" style="flex:0 0 auto" onclick="aiChatSend()">送信</button></div>
+  </div>`;
+}
+function aiMsgBubble(role,text){
+  const isAI=role==='ai';
+  return `<div style="display:flex;${isAI?'':'justify-content:flex-end'}">
+    <div style="max-width:86%;padding:8px 11px;border-radius:12px;font-size:13px;line-height:1.55;white-space:pre-wrap;${isAI?'background:var(--panel);border:1px solid var(--line)':'background:linear-gradient(135deg,var(--accent),#39b3a7);color:#062020;font-weight:600'}">${isAI?'🧠 ':''}${esc(text)}</div></div>`;
+}
+let _aiQuick=[], _aiDone=false; // AIが毎ターン生成する返信候補／確定フラグ
+function aiChatRender(typing){
+  const box=$('#ai_msgs'); if(!box)return;
+  box.innerHTML=_aiChat.map(m=>aiMsgBubble(m.role,m.text)).join('')
+    +(typing?`<div class="tiny sub">🧠 先生が考え中…</div>`:'')
+    +(_aiDone&&!typing?`<div class="ok-box tiny" style="margin-top:4px">✅ 判定が確定しました。下の「保存」を押せば反映されます。</div>`:'');
+  box.scrollTop=box.scrollHeight;
+  const quick=$('#ai_quick');
+  if(!quick)return;
+  let chips;
+  if(typing)chips=[];
+  else if(_aiDone)chips=['やっぱり調整したい'];
+  else if(_aiQuick.length)chips=[..._aiQuick,'これで決定！'];
+  else chips=['もっと易しくしたい','1日15分しか取れない','これで決定！']; // 初回フォールバック
+  quick.innerHTML=chips.map(t=>`<span class="chip ${t==='これで決定！'?'a':''}" style="cursor:pointer" onclick="aiChatSend(this.textContent)">${esc(t)}</span>`).join('');
+}
+function methodFormContext(){
+  const name=$('#f_name')?.value.trim()||'（名称未設定）';
+  const cats=$$('#f_cats .chip.a').map(c=>c.dataset.c), goals=$$('#f_goals .chip.a').map(c=>c.dataset.g);
+  return `学習法名:${name} / カテゴリ:${cats.join(',')||'-'} / 目的:${goals.join(',')||'-'} / 1日${$('#f_recmin')?.value||30}分 / 費用:${$('#f_cost')?.value||'無料'}`;
+}
+async function aiChatStart(){
+  if(!activeProviders().length)return toast('AIチャットにはAPIキーが必要です（⚙️設定で1つ入れるだけ）');
+  const panel=$('#ai_chat'); if(!panel)return;
+  panel.style.display='block';
+  if(_aiChat.length){aiChatRender();return;} // 会話継続
+  aiChatRender(true);
+  await aiChatTurn(null);
+}
+async function aiChatSend(preset){
+  const inp=$('#ai_input');
+  const text=(preset||(inp?inp.value:'')).trim(); if(!text)return;
+  if(inp&&!preset)inp.value='';
+  _aiChat.push({role:'user',text});
+  aiChatRender(true);
+  await aiChatTurn(text);
+}
+async function aiChatTurn(userText){
+  const transcript=_aiChat.map(m=>(m.role==='ai'?'先生:':'学習者:')+m.text).join('\n');
+  const prompt=`あなたは学習法の設定を「短い対話」で一緒に決めるコーチです。現在のフォーム入力:
+${methodFormContext()}
+${transcript?`これまでの会話:\n${transcript}\n`:''}
+${userText?'学習者の最新発言に短く答え、状況に合わせて判定(難易度/対象レベル)を更新してください。「これで決定」と言われたら done=true にして励まして締めてください。「やっぱり調整したい」と言われたら done=false に戻して質問してください。':'まず現時点の判定（難易度・対象レベル）を一言で伝え、より正確に判定するための質問を1つだけしてください。'}
+JSONのみで返答:
+{"reply":"学習者への言葉（2〜3文・話し言葉・簡潔）","difficulty":1〜5の整数,"targetLevel":"${LEVELS.join(' / ')} から1つ","quick":["あなたの質問に対して学習者が選びそうな返答の選択肢を3つ（各12字以内・毎回文脈に合わせて変える）"],"done":false,"tips":["脳科学的なコツを1〜3個（任意、更新時のみ）"]}`;
+  try{
+    const o=parseLooseJSON(await callLLM(prompt,{json:true,system:AI_PERSONA}))||{};
+    let d=parseInt(o.difficulty,10);
+    if(d>=1&&d<=5){_aiJudgedDiff=d; if($('#f_diff_disp'))$('#f_diff_disp').innerHTML=`${diffStars(d)} <span class="tiny">（${DIFF_LABEL[d-1]}・AI判定）</span>`;}
+    const lv=LEVELS.includes(o.targetLevel)?o.targetLevel:(LEVELS.find(l=>String(o.targetLevel||'').includes(l))||null);
+    if(lv){_aiLevel=lv; if($('#f_level_disp'))$('#f_level_disp').innerHTML=`対象レベル: <b class="hl">${esc(lv)}</b>（AI判定）`;}
+    if(Array.isArray(o.tips)&&o.tips.length)_aiNote='AI先生と相談して判定\n【コツ】\n・'+o.tips.join('\n・');
+    _aiQuick=Array.isArray(o.quick)?o.quick.filter(x=>typeof x==='string'&&x.trim()).slice(0,3):[];
+    _aiDone=o.done===true||/これで決定/.test(userText||'');
+    _aiChat.push({role:'ai',text:o.reply||'（判定を更新しました）'});
+  }catch(e){
+    _aiChat.push({role:'ai',text:'すみません、通信に失敗しました（'+e.message.slice(0,40)+'）。もう一度送ってください。'});
+  }
+  aiChatRender();
+}
+
+// 日本人（日本発）の有名英語系インフルエンサー（YouTube/Instagramとも大規模・活動中）。一括追加用
+const FAMOUS_INFLUENCERS=[
+  {name:'Atsueigo（ATSU）',platform:'YouTube',youtube:'https://www.youtube.com/@atsueigo',instagram:'https://www.instagram.com/atsueigo/',x:'',tiktok:'',website:'https://atsueigo.com/',theme:'単語暗記法・TOEIC/IELTS・第二言語習得理論',target:'中級〜上級の日本人',note:'日本人。オーストラリア在住。科学的な暗記法・試験対策に強い。YouTube/Instagramとも大規模で更新継続中。'},
+  {name:'バイリンガール英会話（吉田ちか）',platform:'YouTube',youtube:'https://www.youtube.com/@cyoshida1231',instagram:'https://www.instagram.com/bilingirl_chika/',x:'',tiktok:'',website:'',theme:'日常英会話・海外生活・リスニング',target:'初級〜中級の日本人',note:'日本人。YouTube 約150万人規模の老舗英会話チャンネル。実践的な日常英会話。'},
+  {name:'StudyIn ネイティブ英会話',platform:'YouTube',youtube:'https://www.youtube.com/@StudyIn',instagram:'https://www.instagram.com/studyin_english/',x:'',tiktok:'',website:'',theme:'ネイティブ表現・ショート英会話',target:'初級〜中級の日本人',note:'日本人＋バイリンガルのチーム。ショート動画中心でエンゲージメント高。テンポの良いフレーズ学習。'},
+  {name:'タロサック（TAROSAC）',platform:'YouTube',youtube:'https://www.youtube.com/@tarosac',instagram:'https://www.instagram.com/tarosac/',x:'',tiktok:'',website:'',theme:'外国人インタビュー・実践スピーキング',target:'初級〜中級の日本人',note:'日本人。オーストラリアで外国人に突撃インタビュー。生のスピード感ある英語に触れられる。'},
+  {name:'だいじろー（Daijiro）',platform:'YouTube',youtube:'https://www.youtube.com/@daijirojp',instagram:'https://www.instagram.com/daijirojp/',x:'',tiktok:'',website:'',theme:'発音・アクセント比較・ものまね英語',target:'発音を鍛えたい日本人',note:'日本人。各国アクセントのものまねで有名。発音・音声変化の解説が強み。'},
+  {name:"Kevin's English Room",platform:'YouTube',youtube:'https://www.youtube.com/@KevinsEnglishRoom',instagram:'https://www.instagram.com/kevinsenroom/',x:'https://x.com/kevinsenroom',tiktok:'',website:'',theme:'英語×文化・ネイティブ表現・エンタメ',target:'日本の学習者全般',note:'日本の3人組（ケビンは米国育ち）。YouTube 約249万人／Instagram 約70万人。ネイティブ感覚をエンタメで学べる。'},
+  {name:'ニック式英会話',platform:'YouTube',youtube:'https://www.youtube.com/@nicktokunaga',instagram:'https://www.instagram.com/nick_shiki/',x:'',tiktok:'',website:'',theme:'ネイティブの思考法・瞬間英作文・リスニング',target:'初級〜中級の日本人向け',note:'日本向け（ニックは日本語堪能）。「英語の頭の使い方」を体系的に。リスニングのかたまり聞きが有名。'},
+];
+function addFamousInfluencers(){
+  const existing=new Set(DB.influencers.map(i=>i.name));
+  let added=0;
+  FAMOUS_INFLUENCERS.forEach(f=>{
+    if(existing.has(f.name))return;
+    DB.influencers.push({id:uid('inf'),...f}); added++;
+  });
+  saveNow();render();
+  toast(added?`${added}人の英語インフルエンサーを追加しました`:'すでに全員追加済みです');
+}
+
+// 内蔵テスト問題バンク（オフライン・API不要）。level:1易 2中 3難 / a=正解index
+const QUESTION_BANK = [
+  // ---- 語彙 ----
+  {c:'語彙',level:1,q:'"increase" の意味は？',ch:['増やす','減らす','止める','試す'],a:0},
+  {c:'語彙',level:1,q:'"difficult" の意味は？',ch:['簡単な','難しい','静かな','高い'],a:1},
+  {c:'語彙',level:1,q:'"buy" の反対の意味は？',ch:['sell','build','borrow','carry'],a:0},
+  {c:'語彙',level:1,q:'"happy" に近い意味は？',ch:['glad','angry','tired','busy'],a:0},
+  {c:'語彙',level:2,q:'"reliable" の意味は？',ch:['信頼できる','高価な','退屈な','危険な'],a:0},
+  {c:'語彙',level:2,q:'"improve" の意味は？',ch:['改善する','説明する','招待する','含む'],a:0},
+  {c:'語彙',level:2,q:'"require" の意味は？',ch:['必要とする','修理する','後悔する','返す'],a:0},
+  {c:'語彙',level:2,q:'"available" の意味は？',ch:['利用できる','平均の','明らかな','避ける'],a:0},
+  {c:'語彙',level:2,q:'"reduce" に近い意味は？',ch:['decrease','produce','receive','refuse'],a:0},
+  {c:'語彙',level:3,q:'"inevitable" の意味は？',ch:['避けられない','見えない','数えられない','信じられない'],a:0},
+  {c:'語彙',level:3,q:'"ambiguous" の意味は？',ch:['曖昧な','野心的な','豊富な','器用な'],a:0},
+  {c:'語彙',level:3,q:'"scarce" に近い意味は？',ch:['rare','strict','smooth','sudden'],a:0},
+  {c:'語彙',level:3,q:'"deteriorate" の意味は？',ch:['悪化する','決定する','専念する','証明する'],a:0},
+  // ---- 文法 ----
+  {c:'文法',level:1,q:'She ___ to school every day.',ch:['go','goes','going','gone'],a:1},
+  {c:'文法',level:1,q:'I ___ a student.',ch:['am','is','are','be'],a:0},
+  {c:'文法',level:1,q:'They ___ playing soccer now.',ch:['is','am','are','be'],a:2},
+  {c:'文法',level:1,q:'This is ___ apple.',ch:['a','an','the','some'],a:1},
+  {c:'文法',level:1,q:'He can ___ English well.',ch:['speaks','speak','spoke','speaking'],a:1},
+  {c:'文法',level:2,q:'I have ___ finished my homework.',ch:['yet','already','ago','since'],a:1},
+  {c:'文法',level:2,q:'If it ___ tomorrow, I will stay home.',ch:['rains','rained','will rain','raining'],a:0},
+  {c:'文法',level:2,q:'She is interested ___ music.',ch:['on','at','in','of'],a:2},
+  {c:'文法',level:2,q:'This book is ___ than that one.',ch:['interesting','more interesting','most interesting','interest'],a:1},
+  {c:'文法',level:2,q:'I look forward to ___ you.',ch:['see','seeing','saw','seen'],a:1},
+  {c:'文法',level:2,q:'The report ___ by Tom yesterday.',ch:['wrote','was written','has written','writes'],a:1},
+  {c:'文法',level:3,q:'Hardly ___ he arrived when it started to rain.',ch:['had','has','did','was'],a:0},
+  {c:'文法',level:3,q:'I wish I ___ more time.',ch:['have','had','has','having'],a:1},
+  {c:'文法',level:3,q:'___ his advice, I would have failed.',ch:['Without','Unless','Despite','Although'],a:0},
+  {c:'文法',level:3,q:'It is essential that he ___ present.',ch:['is','be','was','being'],a:1},
+  // ---- 熟語 ----
+  {c:'熟語',level:1,q:'"get up" の意味は？',ch:['起きる','あきらめる','手に入れる','戻る'],a:0},
+  {c:'熟語',level:2,q:'"look after" の意味は？',ch:['探す','世話をする','調べる','見上げる'],a:1},
+  {c:'熟語',level:2,q:'"put off" の意味は？',ch:['延期する','脱ぐ','断る','記録する'],a:0},
+  {c:'熟語',level:2,q:'"give up" の意味は？',ch:['あきらめる','手渡す','起き上がる','返す'],a:0},
+  {c:'熟語',level:3,q:'"come up with" の意味は？',ch:['思いつく','追いつく','立ち上がる','偶然会う'],a:0},
+  {c:'熟語',level:3,q:'"put up with" の意味は？',ch:['我慢する','片付ける','提案する','設置する'],a:0},
+  // ---- 読解 ----
+  {c:'読解',level:2,q:'"The store opens at 9 and closes at 6." 何時間営業？',ch:['8時間','9時間','6時間','7時間'],a:1},
+  {c:'読解',level:2,q:'"Tom is taller than Ken but shorter than Sam." 一番背が高いのは？',ch:['Tom','Ken','Sam','同じ'],a:2},
+  {c:'読解',level:2,q:'"Please reply by Friday." 何を求めている？',ch:['金曜までの返信','金曜の会議','支払い','キャンセル'],a:0},
+  {c:'読解',level:3,q:'"The proposal was turned down." 提案はどうなった？',ch:['承認された','却下された','延期された','修正された'],a:1},
+  {c:'読解',level:3,q:'"Sales grew steadily except for a dip in May." 5月は？',ch:['増加','横ばい','一時的に減少','過去最高'],a:2},
+  // ---- リスニング（audio=英文を読み上げ。問題文には英文を表示しない） ----
+  {c:'リスニング',level:1,audio:'I get up at seven every morning.',q:'話者は毎朝何時に起きますか？',ch:['7時','6時','8時','9時'],a:0},
+  {c:'リスニング',level:1,audio:'Can I have a glass of water, please?',q:'話者は何を頼みましたか？',ch:['水','コーヒー','メニュー','会計'],a:0},
+  {c:'リスニング',level:1,audio:'The bus leaves at three thirty.',q:'バスは何時に出発しますか？',ch:['3時30分','3時13分','2時30分','3時'],a:0},
+  {c:'リスニング',level:2,audio:'Could you tell me where the nearest station is?',q:'話者は何を尋ねていますか？',ch:['最寄り駅の場所','電車の時刻','切符の値段','ホテルの場所'],a:0},
+  {c:'リスニング',level:2,audio:"I'm afraid the meeting has been postponed until next Friday.",q:'会議はどうなりましたか？',ch:['来週金曜に延期','中止','今日開催','場所変更'],a:0},
+  {c:'リスニング',level:2,audio:'Would you mind closing the window? It is a bit cold in here.',q:'話者は何を頼んでいますか？',ch:['窓を閉めること','窓を開けること','エアコンをつけること','部屋を出ること'],a:0},
+  {c:'リスニング',level:2,audio:'She has been working at the company for ten years.',q:'彼女はその会社で何年働いていますか？',ch:['10年','2年','7年','当てはまらない'],a:0},
+  {c:'リスニング',level:3,audio:'Had I known about the traffic, I would have taken the train instead.',q:'話者の状況として正しいのは？',ch:['渋滞を知らず電車にしなかった','電車で来た','渋滞を避けた','電車が遅れた'],a:0},
+  {c:'リスニング',level:3,audio:'Despite the initial setbacks, the project turned out to be a remarkable success.',q:'プロジェクトの結果は？',ch:['大きな成功','失敗','中断','延期'],a:0},
+  {c:'リスニング',level:3,audio:'The refund will be processed within five business days, provided you submit the receipt.',q:'返金の条件は？',ch:['レシートの提出','5日待つこと','電話すること','再購入'],a:0},
+  {c:'リスニング',level:1,audio:'Let us meet at the library after lunch.',q:'どこで会いますか？',ch:['図書館','食堂','駅','公園'],a:0},
+  {c:'リスニング',level:1,audio:'It will rain tomorrow afternoon.',q:'明日の午後の天気は？',ch:['雨','晴れ','雪','曇り'],a:0},
+  {c:'リスニング',level:1,audio:'This shirt is too small for me.',q:'シャツについて何と言っていますか？',ch:['小さすぎる','大きすぎる','高すぎる','ちょうどいい'],a:0},
+  {c:'リスニング',level:1,audio:'I have two brothers and one sister.',q:'話者の兄弟構成は？',ch:['兄弟2人と姉妹1人','兄弟1人と姉妹2人','兄弟3人','姉妹1人だけ'],a:0},
+  {c:'リスニング',level:1,audio:'My favorite subject is science.',q:'好きな科目は？',ch:['理科','数学','英語','歴史'],a:0},
+  {c:'リスニング',level:2,audio:'The flight has been delayed due to heavy snow.',q:'フライトが遅れた理由は？',ch:['大雪','機体の故障','強風','ストライキ'],a:0},
+  {c:'リスニング',level:2,audio:'Could you send me the report by the end of the day?',q:'いつまでに送るよう頼まれましたか？',ch:['今日中','明日の朝','今週末','来週'],a:0},
+  {c:'リスニング',level:2,audio:'I used to play tennis, but now I prefer swimming.',q:'話者が今好きなのは？',ch:['水泳','テニス','ランニング','ゴルフ'],a:0},
+  {c:'リスニング',level:2,audio:'The museum is closed on Mondays, so let us go on Tuesday instead.',q:'いつ行くことにしましたか？',ch:['火曜日','月曜日','水曜日','週末'],a:0},
+  {c:'リスニング',level:2,audio:'Take the second left, and the bank is on your right.',q:'銀行への行き方は？',ch:['2つ目を左折して右側','2つ目を右折して左側','直進して突き当たり','1つ目を左折してすぐ'],a:0},
+  {c:'リスニング',level:3,audio:'Not only did she pass the exam, but she also got the highest score.',q:'彼女の結果は？',ch:['最高点で合格した','不合格だった','ぎりぎりで合格した','再試験になった'],a:0},
+  {c:'リスニング',level:3,audio:'The CEO announced that the merger would be finalized by the third quarter.',q:'何が発表されましたか？',ch:['第3四半期までに合併完了','第3四半期の決算','新CEOの就任','合併の中止'],a:0},
+  {c:'リスニング',level:3,audio:'Attendance is mandatory unless you have prior approval from your supervisor.',q:'欠席できる条件は？',ch:['上司の事前承認','当日の連絡','理由書の提出','代理人の出席'],a:0},
+  {c:'リスニング',level:3,audio:'Rather than expanding overseas, the firm opted to consolidate its domestic operations.',q:'会社は何を選びましたか？',ch:['国内事業の強化','海外展開','事業の売却','一時休業'],a:0},
+  // ---- 追加：語彙 ----
+  {c:'語彙',level:1,q:'"cheap" の意味は？',ch:['安い','高い','新しい','古い'],a:0},
+  {c:'語彙',level:1,q:'"begin" に近い意味は？',ch:['start','stop','stay','step'],a:0},
+  {c:'語彙',level:1,q:'"angry" の意味は？',ch:['怒った','眠い','嬉しい','悲しい'],a:0},
+  {c:'語彙',level:2,q:'"postpone" の意味は？',ch:['延期する','中止する','承認する','提案する'],a:0},
+  {c:'語彙',level:2,q:'"purchase" に近い意味は？',ch:['buy','sell','rent','return'],a:0},
+  {c:'語彙',level:2,q:'"annual" の意味は？',ch:['年1回の','月1回の','毎日の','半年ごとの'],a:0},
+  {c:'語彙',level:2,q:'"estimate" の意味は？',ch:['見積もる','削除する','設置する','雇用する'],a:0},
+  {c:'語彙',level:3,q:'"feasible" の意味は？',ch:['実現可能な','壊れやすい','柔軟な','忠実な'],a:0},
+  {c:'語彙',level:3,q:'"meticulous" の意味は？',ch:['細心の','大胆な','曖昧な','頑固な'],a:0},
+  {c:'語彙',level:3,q:'"alleviate" の意味は？',ch:['和らげる','悪化させる','蓄積する','放棄する'],a:0},
+  // ---- 追加：文法 ----
+  {c:'文法',level:1,q:'She ___ TV every night.',ch:['watch','watches','watching','watched'],a:1},
+  {c:'文法',level:1,q:'There ___ a book on the desk.',ch:['is','are','be','am'],a:0},
+  {c:'文法',level:2,q:'I have lived here ___ 2019.',ch:['since','for','from','at'],a:0},
+  {c:'文法',level:2,q:'He made me ___ the room.',ch:['clean','to clean','cleaning','cleaned'],a:0},
+  {c:'文法',level:2,q:'The movie was ___ boring that I fell asleep.',ch:['so','such','too','very'],a:0},
+  {c:'文法',level:3,q:'___ the meeting, please switch off your phone.',ch:['During','While','Among','Despite of'],a:0},
+  {c:'文法',level:3,q:'Scarcely had the concert begun ___ it started to rain.',ch:['when','than','as','while'],a:0},
+  // ---- 追加：熟語 ----
+  {c:'熟語',level:1,q:'"turn on" の意味は？',ch:['電源を入れる','曲がる','戻る','裏返す'],a:0},
+  {c:'熟語',level:2,q:'"run out of" の意味は？',ch:['使い果たす','走り出る','追い出す','乗り遅れる'],a:0},
+  {c:'熟語',level:2,q:'"get over" の意味は？',ch:['乗り越える','取り戻す','引き渡す','通り過ぎる'],a:0},
+  {c:'熟語',level:3,q:'"make up for" の意味は？',ch:['埋め合わせる','化粧する','仲直りする','でっち上げる'],a:0},
+  {c:'熟語',level:3,q:'"do away with" の意味は？',ch:['廃止する','持ち去る','逃げ切る','片付ける'],a:0},
+  // ---- 追加：読解 ----
+  {c:'読解',level:2,q:'"The office will be closed for renovation from May 1 to May 7." 何日間閉まりますか？',ch:['7日間','6日間','5日間','8日間'],a:0},
+  {c:'読解',level:2,q:'"Employees may work from home up to three days per week." 在宅勤務の上限は？',ch:['週3日','週2日','週4日','制限なし'],a:0},
+  {c:'読解',level:2,q:'"Breakfast is included in the room rate." 朝食について正しいのは？',ch:['宿泊料金に含まれる','別料金','提供なし','予約が必要'],a:0},
+  {c:'読解',level:3,q:'"The warranty covers parts but not labor costs." 保証の対象は？',ch:['部品のみ','工賃のみ','部品と工賃','対象なし'],a:0},
+  {c:'読解',level:3,q:'"Applications received after the deadline will not be considered under any circumstances." 締切後の応募は？',ch:['一切受理されない','審査が遅れる','条件付きで受理','翌回に回される'],a:0},
+  {c:'読解',level:3,q:'"While the new policy reduced costs, it drew criticism from long-serving staff." 新方針の説明として正しいのは？',ch:['コストは減ったが古参社員から批判','全員に歓迎された','コストが増えた','すぐ撤回された'],a:0},
+];
+// 学習カテゴリ→テスト出題分野のマッピング（学習法に合ったテストを出す）
+const TEST_FIELDS=['語彙','文法','熟語','読解','リスニング'];
+const CAT2FIELD={'単語':['語彙'],'文法':['文法'],'リーディング':['読解','語彙'],'リスニング':['リスニング'],
+  'スピーキング':['リスニング','熟語'],'ライティング':['文法','語彙'],'発音':['リスニング'],
+  'TOEIC':['語彙','文法','読解','リスニング'],'英会話':['リスニング','熟語','語彙'],'学習習慣':[],'その他':[]};
+function fieldsForMethod(m){
+  const set=new Set();
+  (m&&m.categories||[]).forEach(c=>(CAT2FIELD[c]||[]).forEach(f=>set.add(f)));
+  return set.size?[...set]:TEST_FIELDS.slice(); // 対応が無ければ全分野
+}
+// 英語読み上げ（無料・オフライン・ブラウザ内蔵TTS）
+// ※「最初に見つかった声」を使うとMacのふざけたノベルティ音声(Albert等)に当たるため、品質スコアで最良の声を選ぶ
+let _enVoice=null;
+function pickENVoice(){
+  const vs=(speechSynthesis.getVoices&&speechSynthesis.getVoices())||[];
+  if(!vs.length)return null;
+  const score=v=>{
+    const n=(v.name||'')+' '+(v.voiceURI||'');
+    if(!/^en/i.test(v.lang))return -1;
+    let s=0;
+    if(/en[-_]US/i.test(v.lang))s+=30; else if(/en[-_](GB|AU|CA)/i.test(v.lang))s+=15;
+    if(/Samantha/i.test(n))s+=50;                                   // macOSの標準高品質
+    if(/\b(Ava|Allison|Susan|Zoe|Evan|Nathan|Noelle|Joelle)\b/i.test(n))s+=45; // Apple高品質系
+    if(/Google/i.test(n))s+=40;                                     // Chromeの高品質
+    if(/Natural|Neural|Online|Premium|Enhanced|拡張/i.test(n))s+=35; // Edge/拡張品質
+    if(/compact/i.test(n))s-=40;                                    // 低品質
+    if(/Albert|Bad News|Bahh|Bells|Boing|Bubbles|Cellos|Wobble|Fred|Junior|Kathy|Organ|Superstar|Trinoids|Whisper|Zarvox|Jester|Ralph|Grandma|Grandpa|Rocko|Shelley|Eddy|Flo|Reed|Sandy/i.test(n))s-=100; // ノベルティ声を除外
+    return s;
+  };
+  const ranked=vs.map(v=>[score(v),v]).filter(x=>x[0]>=0).sort((a,b)=>b[0]-a[0]);
+  return ranked.length?ranked[0][1]:null;
+}
+if('speechSynthesis' in window){
+  try{ speechSynthesis.onvoiceschanged=()=>{_enVoice=pickENVoice();}; setTimeout(()=>{if(!_enVoice)_enVoice=pickENVoice();},400); }catch(_){}
+}
+function speakEN(text,rate){
+  try{
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang='en-US'; u.rate=rate||0.9; u.pitch=1; u.volume=1;
+    if(!_enVoice)_enVoice=pickENVoice();
+    if(_enVoice)u.voice=_enVoice;
+    speechSynthesis.speak(u);
+  }catch(e){ toast('この環境では音声再生が使えません'); }
+}
+function playQuizAudio(i,slow){ const q=quizState&&quizState.questions[i]; if(q&&q.audio)speakEN(q.audio, slow?0.62:0.9); }
+
+// 総合スコア配点（要件7-11、カスタマイズ可）
+const DEFAULT_WEIGHTS = {
+  test:30, retention:20, efficiency:15, effect:10, sustain:10, fun:5, cost:5, continue:5
+};
+
+/* ---------- store ---------- */
+const KEY='eigo_lab_v1';
+const blankDB = ()=>({
+  profile:{name:'運営者',level:'中級',toeic:'',target:'',goal:'',dailyMin:30},
+  influencers:[], methods:[], challenges:[], tests:[], logs:[], reviews:[],
+  settings:{weights:{...DEFAULT_WEIGHTS}, llmKeys:{groq:'',openrouter:'',gemini:''}, llmPrefer:'auto', gasUrl:''}
+});
+// localStorageが使えない環境(file://のSafari等/プライベートモード)でも動くようにラップ
+let STORAGE_OK=true;
+const LS={
+  get(k){try{return localStorage.getItem(k);}catch(e){STORAGE_OK=false;return null;}},
+  set(k,v){try{localStorage.setItem(k,v);return true;}catch(e){STORAGE_OK=false;return false;}},
+  del(k){try{localStorage.removeItem(k);}catch(e){STORAGE_OK=false;}}
+};
+let DB = load();
+function load(){
+  try{const d=JSON.parse(LS.get(KEY));
+    if(!d) return blankDB();
+    const b=blankDB(); const os=d.settings||{};
+    const out={...b,...d,
+      profile:{...b.profile,...(d.profile||{})},
+      settings:{...b.settings,...os,
+        weights:{...DEFAULT_WEIGHTS,...(os.weights||{})},
+        llmKeys:{...b.settings.llmKeys,...(os.llmKeys||{})}}};
+    // 旧形式(単一キー llmProvider/llmKey)からの移行
+    if(os.llmKey && os.llmProvider && out.settings.llmKeys[os.llmProvider]!==undefined && !out.settings.llmKeys[os.llmProvider]){
+      out.settings.llmKeys[os.llmProvider]=os.llmKey;
+    }
+    return out;
+  }catch(e){return blankDB();}
+}
+let saveT;
+function save(){clearTimeout(saveT);saveT=setTimeout(saveNow,120);}
+function saveNow(){LS.set(KEY,JSON.stringify(DB));}
+
+/* helpers to fetch */
+const infById = id => DB.influencers.find(x=>x.id===id);
+const methodById = id => DB.methods.find(x=>x.id===id);
+const chById = id => DB.challenges.find(x=>x.id===id);
+const logsOf = cid => DB.logs.filter(l=>l.challengeId===cid).sort((a,b)=>a.date<b.date?-1:1);
+const testsOf = cid => DB.tests.filter(t=>t.challengeId===cid);
+const reviewOf = cid => DB.reviews.find(r=>r.challengeId===cid);
+const preTest = cid => testsOf(cid).find(t=>t.timing==='pre');
+const postTest = cid => testsOf(cid).find(t=>t.timing==='post');
+
+/* =========================================================================
+   スコア計算エンジン
+   ========================================================================= */
+function computeStats(ch){
+  const pre=preTest(ch.id), post=postTest(ch.id), rev=reviewOf(ch.id);
+  const logs=logsOf(ch.id);
+  const doneLogs = logs.filter(l=>l.status==='完了'||l.status==='一部実施');
+  const totalMin = logs.reduce((s,l)=>s+num(l.minutes),0);
+  const totalHr = totalMin/60;
+  const daysPracticed = doneLogs.length;
+  const retentionPct = Math.round((daysPracticed/7)*100);
+  // test diffs
+  let rateDiff=null, scoreDiff=null, correctDiff=null, timeDiff=null;
+  if(pre&&post){
+    if(pre.rate!=null&&post.rate!=null) rateDiff = round1(post.rate-pre.rate);
+    if(pre.score!=null&&post.score!=null) scoreDiff = round1(post.score-pre.score);
+    if(pre.correct!=null&&post.correct!=null) correctDiff = post.correct-pre.correct;
+    if(pre.seconds!=null&&post.seconds!=null) timeDiff = post.seconds-pre.seconds;
+  }
+  // 100点換算の各サブスコア
+  const s = {};
+  // test改善: 正答率diff優先(+20pt→100)、無ければscore diff(+50→100)
+  if(rateDiff!=null) s.test = clamp(50 + rateDiff*2.5, 0, 100);      // 0pt→50, +20→100, -20→0
+  else if(scoreDiff!=null) s.test = clamp(50 + scoreDiff, 0, 100);
+  else s.test = null;
+  s.retention = clamp(retentionPct,0,100);
+  // 時間効率: 改善/時間。rateDiff/hr, 5pt/h→100。無ければreview
+  if(rateDiff!=null && totalHr>0) s.efficiency = clamp(50 + (rateDiff/totalHr)*10, 0, 100);
+  else if(rev&&rev.time_efficiency) s.efficiency = rev.time_efficiency*20;
+  else s.efficiency = null;
+  const rv = k => rev&&rev[k]?rev[k]*20:null; // 5段階→100
+  s.effect = rev? clamp(num(rev.effectiveness)*20,0,100):null;
+  s.sustain = rev? clamp(num(rev.sustainability)*20,0,100): (logs.length?clamp(avg(logs.map(l=>num(l.sustain)))*20,0,100):null);
+  s.fun = rev? clamp(num(rev.enjoyment)*20,0,100): (logs.length?clamp(avg(logs.map(l=>num(l.fun)))*20,0,100):null);
+  s.cost = rev? clamp(num(rev.cost_performance)*20,0,100):null;
+  s.continue = rev? clamp(num(rev.continuation)*20,0,100):null;
+  // 総合スコア（欠損項目は配点を除外して正規化）
+  const W=DB.settings.weights;
+  let acc=0,wsum=0;
+  for(const k in W){ if(s[k]!=null){acc += s[k]*(W[k]/100); wsum += W[k];} }
+  const total = wsum>0? round1(acc*(100/wsum)) : null;
+  return {pre,post,rev,logs,totalMin,totalHr,daysPracticed,retentionPct,
+    rateDiff,scoreDiff,correctDiff,timeDiff,sub:s,total,
+    perHrImprove: (rateDiff!=null&&totalHr>0)? round1(rateDiff/totalHr):null,
+    sameProblem: pre&&post&&pre.material&&post.material&&pre.material===post.material&&!pre.auto&&!post.auto};
+}
+/* 良い/悪い自動判定（ルールベース・API不要） */
+function verdict(st){
+  if(st.total==null)return null;
+  const t=st.total, rd=st.rateDiff, ret=st.retentionPct;
+  let tier,emoji,color,head;
+  if(t>=78 && (rd==null||rd>=0)){tier='とても良い（おすすめ）';emoji='◎';color='var(--good)';}
+  else if(t>=63 && (rd==null||rd>=0)){tier='良い';emoji='○';color='var(--accent)';}
+  else if(t>=48){tier='ふつう';emoji='△';color='var(--warn)';}
+  else {tier='相性いまひとつ';emoji='✕';color='var(--bad)';}
+  head=`この学習法は「${tier}」`;
+  const reasons=[];
+  if(rd!=null)reasons.push(rd>0?`正答率が+${rd}pt伸びた`:rd<0?`正答率が${rd}pt下がった`:'正答率は横ばい');
+  reasons.push(ret>=85?`継続率が高い(${ret}%)`:ret>=60?`継続率まずまず(${ret}%)`:`継続が続かなかった(${ret}%)`);
+  if(st.perHrImprove!=null)reasons.push(st.perHrImprove>0?`時間効率が良い(1hで+${st.perHrImprove}pt)`:'時間のわりに伸びが小さい');
+  // ひとことアドバイス
+  let advice='';
+  if(t>=78)advice='今後も続ける価値が高い方法です。';
+  else if(rd!=null&&rd<0)advice='テストが下がっているため、教材やテスト条件を見直すとより正確に評価できます。';
+  else if(ret<60)advice='効果より先に「続けやすさ」が課題。時間や頻度を下げて再挑戦すると良いかも。';
+  else advice='悪くはないが、他の方法と比較して相性を見極めましょう。';
+  return {tier,emoji,color,head,reasons,advice};
+}
+const round1 = n => Math.round(n*10)/10;
+const avg = a => a.length? a.reduce((x,y)=>x+num(y),0)/a.length : 0;
+
+/* completed challenges with score, for ranking/compare */
+function scoredChallenges(){
+  return DB.challenges.map(ch=>({ch,m:methodById(ch.methodId),st:computeStats(ch)}))
+    .filter(x=>x.st.total!=null)
+    .sort((a,b)=>b.st.total-a.st.total);
+}
+
+/* 発信者の実証評価：その発信者の学習法を実践した「実際の結果」で採点 */
+function influencerStats(){
+  const scored=scoredChallenges();
+  return DB.influencers.map(inf=>{
+    const results=scored.filter(x=>x.m&&x.m.influencerId===inf.id);
+    if(!results.length)return {inf,n:0,avg:null,avgDiff:null,avgRet:null,grade:gradeOf(null,0)};
+    const avg=round1(avg_(results.map(x=>x.st.total)));
+    const diffs=results.map(x=>x.st.rateDiff).filter(v=>v!=null);
+    const avgDiff=diffs.length?round1(avg_(diffs)):null;
+    const avgRet=Math.round(avg_(results.map(x=>x.st.retentionPct)));
+    return {inf,n:results.length,avg,avgDiff,avgRet,grade:gradeOf(avg,results.length)};
+  }).sort((a,b)=>(b.avg??-1)-(a.avg??-1));
+}
+const avg_=a=>a.reduce((x,y)=>x+y,0)/a.length;
+function gradeOf(avg,n){
+  if(!n||avg==null)return {g:'—',label:'未検証（データなし）',color:'var(--sub)',bg:'transparent'};
+  if(avg>=78)return {g:'S',label:'◎ 効果実証済み',color:'#062020',bg:'linear-gradient(135deg,#4dd0c3,#39b3a7)'};
+  if(avg>=63)return {g:'A',label:'○ 良い',color:'var(--good)',bg:'#12281f'};
+  if(avg>=48)return {g:'B',label:'△ ふつう',color:'var(--warn)',bg:'#2a2213'};
+  return {g:'C',label:'✕ 効果が出ていない',color:'var(--bad)',bg:'#331b21'};
+}
+function gradeBadge(gr){
+  return `<span style="display:inline-flex;align-items:center;gap:4px;background:${gr.bg};color:${gr.color};
+    border:1px solid ${gr.g==='—'?'var(--line)':'transparent'};border-radius:8px;padding:3px 9px;font-size:11.5px;font-weight:800">${gr.g!=='—'?gr.g+'：':''}${gr.label}</span>`;
+}
+
+/* =========================================================================
+   ルーター / ナビ
+   ========================================================================= */
+const TABS=[
+  {k:'home',ic:'🏠',t:'ホーム'},
+  {k:'methods',ic:'📚',t:'学習法'},
+  {k:'influencers',ic:'⭐',t:'発信者'},
+  {k:'challenges',ic:'🎯',t:'チャレンジ'},
+  {k:'compare',ic:'⚖️',t:'比較'},
+  {k:'ranking',ic:'🏆',t:'ランキング'},
+];
+let currentView='home', viewArg=null;
+function renderTabs(){
+  $('#tabs').innerHTML = TABS.map(t=>`<button class="${currentView===t.k?'on':''}" onclick="openView('${t.k}')">
+    <span class="ic">${t.ic}</span>${t.t}</button>`).join('');
+}
+function openView(k,arg=null){currentView=k;viewArg=arg;window.scrollTo(0,0);render();}
+function render(){
+  renderTabs();
+  const v=$('#app');
+  ({home:viewHome,methods:viewMethods,influencers:viewInfluencers,challenges:viewChallenges,
+    challenge:viewChallengeDetail,compare:viewCompare,ranking:viewRanking,settings:viewSettings}[currentView]||viewHome)(v);
+}
+
+/* =========================================================================
+   ホーム / ダッシュボード
+   ========================================================================= */
+function viewHome(v){
+  const active = DB.challenges.filter(c=>c.status==='実践中').sort((a,b)=>a.start<b.start?1:-1);
+  const scored = scoredChallenges();
+  const totalMinAll = DB.logs.reduce((s,l)=>s+num(l.minutes),0);
+  const streak = calcStreak();
+  let html = `<div class="row" style="align-items:baseline"><h2 style="flex:1">こんにちは、${esc(DB.profile.name)}さん 👋</h2></div>`;
+
+  if(DB.challenges.length===0 && DB.methods.length===0){
+    html += onboardCard();
+  }
+
+  html += `<div class="grid g4">
+    ${kpi(DB.methods.length,'登録した学習法')}
+    ${kpi(scored.length,'比較可能な結果')}
+    ${kpi(fmtMin(totalMinAll),'累計学習時間')}
+    ${kpi(streak+'日','連続学習')}
+  </div>`;
+
+  // 実践中チャレンジ
+  html += `<h3 style="margin-top:18px">実践中のチャレンジ</h3>`;
+  if(active.length===0){
+    html += `<div class="card"><div class="sub">実践中のチャレンジはありません。</div>
+      <button class="btn p" style="margin-top:10px" onclick="openMethodPickForChallenge()">＋ 新しい1週間チャレンジ</button></div>`;
+  }else{
+    active.forEach(ch=>{ html += activeChallengeCard(ch); });
+  }
+
+  // 最新ランキング
+  html += `<h3 style="margin-top:18px">総合ランキング（上位）</h3>`;
+  if(scored.length===0){
+    html += `<div class="card sub">チャレンジを完了してレビューを入力すると、ここにランキングが表示されます。</div>`;
+  }else{
+    html += `<div class="card pad0">`+ scored.slice(0,5).map((x,i)=>rankRow(x,i)).join('') +`</div>
+      <button class="btn gho sm" onclick="openView('ranking')">すべてのランキングを見る →</button>`;
+  }
+
+  // クイックアクション
+  html += `<h3 style="margin-top:18px">クイックスタート</h3>
+    <div class="grid g2">
+      <button class="btn o" onclick="openMethodPickForChallenge()">🎯 新しい1週間チャレンジ</button>
+      <button class="btn" onclick="openMethodForm()">📚 学習法を登録</button>
+      <button class="btn" onclick="openInfluencerForm()">⭐ 発信者を登録</button>
+      <button class="btn" onclick="loadSampleData()">✨ サンプルデータで試す</button>
+    </div>`;
+  v.innerHTML=html;
+}
+function onboardCard(){
+  return `<div class="card" style="border-color:var(--accent)">
+    <h3>はじめかた（3ステップ）</h3>
+    <div class="sub" style="margin-bottom:10px">運営者専用MVP。まずは1つ試してみましょう。</div>
+    <ol style="margin:0;padding-left:20px;line-height:2">
+      <li>⭐ <b>発信者</b>と 📚 <b>学習法</b>を登録</li>
+      <li>🎯 学習法を選んで <b>7日間チャレンジ</b>を開始・実践前テストを記録</li>
+      <li>毎日1分で記録 → 実践後テスト＆週次レビュー → 自動でスコア＆比較</li>
+    </ol>
+    <button class="btn p" style="margin-top:12px" onclick="loadSampleData()">✨ サンプルデータを入れて動きを見る</button>
+  </div>`;
+}
+function kpi(n,l){return `<div class="kpi"><div class="n">${n}</div><div class="l">${l}</div></div>`;}
+function activeChallengeCard(ch){
+  const m=methodById(ch.methodId), st=computeStats(ch);
+  const dayIdx = challengeDayIndex(ch); // 1..7 (0 if before)
+  const todayLog = logsOf(ch.id).find(l=>l.date===todayStr());
+  return `<div class="card">
+    <div class="row" style="align-items:flex-start">
+      <div style="flex:1;min-width:0">
+        <span class="badge active">実践中</span>
+        <h3 style="margin:6px 0 2px">${esc(ch.name)}</h3>
+        <div class="sub">${esc(m?m.name:'学習法')} ${m&&infById(m.influencerId)?'／ '+esc(infById(m.influencerId).name):''}</div>
+      </div>
+      <div class="center"><div class="hl" style="font-size:22px;font-weight:800">${dayIdx>0?dayIdx:'—'}<span class="tiny">/7</span></div><div class="tiny">日目</div></div>
+    </div>
+    <div style="margin:10px 0">${daysStrip(ch)}</div>
+    <div class="row">
+      <button class="btn p" onclick="openTimer('${ch.id}')">⏱ 学習タイマー</button>
+      <button class="btn ${todayLog?'':'o'}" onclick="openDailyLog('${ch.id}','${todayStr()}')">${todayLog?'✓ 今日の記録を編集':'📝 今日の記録'}</button>
+      <button class="btn gho" onclick="openView('challenge','${ch.id}')">詳細</button>
+    </div>
+  </div>`;
+}
+function daysStrip(ch){
+  const logs=logsOf(ch.id);
+  let out='<div class="days7">';
+  for(let i=0;i<7;i++){
+    const d=addDays(ch.start,i);
+    const l=logs.find(x=>x.date===d);
+    const done=l&&(l.status==='完了'||l.status==='一部実施');
+    out+=`<div class="day ${done?'done':(l&&l.status==='未実施'?'miss':'')}" onclick="openDailyLog('${ch.id}','${d}')">
+      <div class="dn">${i+1}日</div><div class="dm">${done?fmtMin(num(l.minutes)):(l?'✕':'·')}</div></div>`;
+  }
+  return out+'</div>';
+}
+function rankRow(x,i){
+  const g=i<3?'g'+(i+1):'';
+  return `<div class="list-item" style="margin:0;border:none;border-bottom:1px solid var(--line);border-radius:0" onclick="openView('challenge','${x.ch.id}')">
+    <span class="rank-badge ${g}">${i+1}</span>
+    <div style="flex:1;min-width:0">
+      <div style="font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(x.m?x.m.name:x.ch.name)}</div>
+      <div class="tiny">${x.st.rateDiff!=null?`正答率 ${x.st.rateDiff>0?'+':''}${x.st.rateDiff}pt`:'—'} ・ 継続 ${x.st.retentionPct}% ・ ${fmtMin(x.st.totalMin)}</div>
+    </div>
+    <div class="right"><div class="hl" style="font-size:22px;font-weight:800">${x.st.total}</div><div class="tiny">点</div></div>
+  </div>`;
+}
+function calcStreak(){
+  const days=new Set(DB.logs.filter(l=>l.status==='完了'||l.status==='一部実施').map(l=>l.date));
+  let s=0,d=new Date();
+  for(;;){const k=d.toISOString().slice(0,10);
+    if(days.has(k)){s++;d.setDate(d.getDate()-1);}
+    else if(k===todayStr()){d.setDate(d.getDate()-1);} // today not yet logged still ok to continue
+    else break;
+    if(s>400)break;}
+  return s;
+}
+
+/* =========================================================================
+   発信者（インフルエンサー）
+   ========================================================================= */
+function viewInfluencers(v){
+  let html=`<div class="row" style="align-items:center"><h2 style="flex:1">⭐ 発信者</h2>
+    <button class="btn p" onclick="openInfluencerForm()">＋ 登録</button></div>
+    <button class="btn o" style="width:100%;margin-bottom:12px" onclick="addFamousInfluencers()">⚡ 有名英語系インフルエンサーをまとめて追加（YouTube/Instagram 大規模・活動中）</button>`;
+  if(DB.influencers.length===0){
+    html+=emptyState('👤','発信者がまだいません','上の「まとめて追加」ボタンか、＋登録で発信者を登録しましょう。','＋ 発信者を登録','openInfluencerForm()');
+  }else{
+    const iStats=influencerStats();
+    html+=DB.influencers.map(inf=>{
+      const cnt=DB.methods.filter(m=>m.influencerId===inf.id).length;
+      const s=iStats.find(x=>x.inf.id===inf.id);
+      return `<div class="list-item" onclick="openInfluencerForm('${inf.id}')">
+        <div class="av">${esc((inf.name||'?')[0])}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:700">${esc(inf.name)}</div>
+          <div class="tiny">${esc(inf.platform||'')} ・ 学習法 ${cnt}件 ${s&&s.n?'・ 平均'+s.avg+'点('+s.n+'回検証)':''} ${inf.theme?'・ '+esc(inf.theme):''}</div>
+        </div>
+        ${s?gradeBadge(s.grade):''}
+      </div>`;
+    }).join('');
+  }
+  v.innerHTML=html;
+}
+function openInfluencerForm(id){
+  const inf = id?infById(id):{id:uid('inf'),name:'',platform:'YouTube',youtube:'',instagram:'',tiktok:'',x:'',website:'',theme:'',target:'',note:''};
+  modal(`${id?'発信者を編集':'発信者を登録'}`,`
+    <label>発信者名 *</label><input id="f_name" value="${esc(inf.name)}" placeholder="例: Atsueigo">
+    <label>主な媒体</label>${select('f_platform',PLATFORMS,inf.platform)}
+    <div class="row"><div><label>YouTube URL</label><input id="f_youtube" value="${esc(inf.youtube)}"></div>
+      <div><label>Instagram URL</label><input id="f_instagram" value="${esc(inf.instagram)}"></div></div>
+    <div class="row"><div><label>TikTok URL</label><input id="f_tiktok" value="${esc(inf.tiktok)}"></div>
+      <div><label>X URL</label><input id="f_x" value="${esc(inf.x)}"></div></div>
+    <label>Web / その他URL</label><input id="f_website" value="${esc(inf.website)}">
+    <label>主な発信テーマ</label><input id="f_theme" value="${esc(inf.theme)}" placeholder="例: 発音・シャドーイング">
+    <label>想定対象者</label><input id="f_target" value="${esc(inf.target)}">
+    <label>備考（運営メモ・要約）</label><textarea id="f_note">${esc(inf.note)}</textarea>
+    <div class="warn-box" style="margin-top:10px">画像や投稿の転載はしない方針。名前・URL・自作要約のみ登録します（著作権/肖像権配慮）。</div>
+  `,[
+    id?{t:'削除',cls:'dang',fn:()=>{delInfluencer(id);}}:null,
+    {t:'保存',cls:'p',fn:()=>{
+      const name=$('#f_name').value.trim(); if(!name)return toast('名前を入力してください');
+      Object.assign(inf,{name,platform:$('#f_platform').value,youtube:$('#f_youtube').value,instagram:$('#f_instagram').value,
+        tiktok:$('#f_tiktok').value,x:$('#f_x').value,website:$('#f_website').value,theme:$('#f_theme').value,
+        target:$('#f_target').value,note:$('#f_note').value});
+      if(!id)DB.influencers.push(inf); saveNow();closeModal();render();toast('保存しました');
+    }}
+  ]);
+}
+function delInfluencer(id){
+  const cnt=DB.methods.filter(m=>m.influencerId===id).length;
+  if(!confirm(cnt?`削除しますか？（紐づく学習法${cnt}件は「発信者未設定」に切り替わります。学習法・記録は消えません）`:'削除しますか？'))return;
+  DB.methods.forEach(m=>{if(m.influencerId===id)m.influencerId='';}); // 学習法は残して切り離す
+  DB.influencers=DB.influencers.filter(x=>x.id!==id);saveNow();closeModal();render();toast('削除しました');
+}
+
+/* =========================================================================
+   学習法
+   ========================================================================= */
+function viewMethods(v){
+  let html=`<div class="row" style="align-items:center"><h2 style="flex:1">📚 学習法</h2>
+    <button class="btn p" onclick="openMethodForm()">＋ 登録</button></div>`;
+  if(DB.methods.length===0){
+    html+=emptyState('📖','学習法がまだありません','試したい英語学習メソッドを登録しましょう。','＋ 学習法を登録','openMethodForm()');
+  }else{
+    html+=DB.methods.map(m=>{
+      const inf=infById(m.influencerId);
+      const done=DB.challenges.filter(c=>c.methodId===m.id&&computeStats(c).total!=null).length;
+      return `<div class="list-item" onclick="openMethodDetail('${m.id}')">
+        <div class="av">${esc((m.name||'?')[0])}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(m.name)}</div>
+          <div class="tiny">${inf?esc(inf.name)+' ・ ':''}${(m.categories||[]).slice(0,3).map(esc).join('・')||'—'} ・ ${m.recMin||'?'}分/日</div>
+        </div>
+        ${done?`<span class="pill">✓${done}回</span>`:''}
+      </div>`;
+    }).join('');
+  }
+  v.innerHTML=html;
+}
+function openMethodDetail(id){
+  const m=methodById(id), inf=infById(m.influencerId);
+  const chals=DB.challenges.filter(c=>c.methodId===id);
+  modal(esc(m.name),`
+    <div class="sub">${inf?'📢 '+esc(inf.name):''}</div>
+    <div style="margin:8px 0">${(m.categories||[]).map(c=>`<span class="chip a">${esc(c)}</span>`).join('')}</div>
+    <div class="grid g3" style="margin:10px 0">
+      ${kpi(m.recMin+'分','推奨/日')}${kpi((m.recDays||7)+'日','推奨日数')}${kpi(diffStars(m.difficulty),'難易度')}
+    </div>
+    ${m.aiNote?`<div class="ok-box tiny" style="white-space:pre-wrap;margin:8px 0"><b>🧠 AI先生の判定・コツ</b><br>${esc(m.aiNote)}</div>`:''}
+    ${m.description?`<label>概要</label><div>${esc(m.description)}</div>`:''}
+    ${m.instructions?`<label>学習手順</label><div style="white-space:pre-wrap">${esc(m.instructions)}</div>`:''}
+    ${m.material?`<label>使用教材</label><div>${esc(m.material)}</div>`:''}
+    ${m.cost?`<label>費用</label><div>${esc(m.cost)}</div>`:''}
+    ${m.sourceUrl?`<label>紹介元</label><div><a href="${esc(m.sourceUrl)}" target="_blank" rel="noopener">${esc(m.sourceUrl)}</a></div>`:''}
+    ${chals.length?`<label>この方法のチャレンジ (${chals.length})</label>`+chals.map(c=>{
+      const st=computeStats(c);return `<div class="list-item" style="margin:6px 0" onclick="closeModal();openView('challenge','${c.id}')">
+        <div style="flex:1"><b>${esc(c.name)}</b><div class="tiny">${statusBadgeText(c.status)}</div></div>
+        ${st.total!=null?`<div class="right"><span class="hl" style="font-weight:800">${st.total}</span><div class="tiny">点</div></div>`:''}</div>`;
+    }).join(''):''}
+  `,[
+    {t:'編集',cls:'',fn:()=>{closeModal();openMethodForm(id);}},
+    {t:'🎯 このメソッドで挑戦',cls:'o',fn:()=>{closeModal();openChallengeForm(null,id);}}
+  ]);
+}
+function openMethodForm(id){
+  _aiJudgedDiff=null; _aiNote=''; _aiLevel=null; _aiChat=[]; _aiQuick=[]; _aiDone=false; // AI判定・チャット状態をリセット
+  const m=id?methodById(id):{id:uid('m'),name:'',influencerId:'',description:'',categories:[],targetLevel:'中級',
+    targetGoal:'',recMin:30,recDays:7,cost:'無料',material:'',sourceUrl:'',instructions:'',difficulty:3,expectation:3,aiNote:''};
+  const infOpts=`<option value="">（未設定）</option>`+DB.influencers.map(i=>`<option value="${i.id}" ${m.influencerId===i.id?'selected':''}>${esc(i.name)}</option>`).join('');
+  modal(id?'学習法を編集':'学習法を登録',`
+    <label>学習法名 *</label><input id="f_name" value="${esc(m.name)}" placeholder="例: 毎日30分シャドーイング">
+    <label>紹介元の発信者</label><select id="f_inf">${infOpts}</select>
+    <div class="tiny" style="margin-top:4px"><a onclick="closeModal();openInfluencerForm()" style="cursor:pointer">＋ 発信者を新規登録</a></div>
+    <label>学習カテゴリ（タップで選択・複数可）</label>
+    <div id="f_cats" style="display:flex;flex-wrap:wrap;gap:6px">${CATEGORIES.map(c=>
+      `<span class="chip ${m.categories.includes(c)?'a':''}" data-c="${c}" onclick="this.classList.toggle('a');refreshAutoDiff()" style="cursor:pointer">${c}</span>`).join('')}</div>
+    <label>対象目的（タップで選択・複数可）</label>
+    <div id="f_goals" style="display:flex;flex-wrap:wrap;gap:6px">${GOALS.map(g=>
+      `<span class="chip ${(m.targetGoal||'').includes(g)?'a':''}" data-g="${g}" onclick="this.classList.toggle('a')" style="cursor:pointer">${g}</span>`).join('')}</div>
+    <div class="row">
+      <div><label>1日の学習時間</label><select id="f_recmin" onchange="refreshAutoDiff()">${RECMINS.map(x=>`<option value="${x}" ${num(m.recMin)===x?'selected':''}>${x}分</option>`).join('')}</select></div>
+      <div><label>実践日数</label><select id="f_recdays">${RECDAYS.map(x=>`<option value="${x}" ${num(m.recDays,7)===x?'selected':''}>${x}日</option>`).join('')}</select></div>
+    </div>
+    <label>費用</label><select id="f_cost">${COSTS.map(c=>`<option ${m.cost===c?'selected':''}>${c}</option>`).join('')}</select>
+    <div class="kpi" style="margin-top:12px">
+      <div class="l">難易度・対象レベル（自動判定・あなたが決める必要はありません）</div>
+      <div class="n" id="f_diff_disp" style="font-size:20px">${diffStars(autoDifficulty(m))} <span class="tiny">（${DIFF_LABEL[autoDifficulty(m)-1]}・自動）</span></div>
+      <div class="tiny" id="f_level_disp">対象レベル: ${esc(m.targetLevel||'中級')}（AI判定で更新されます）</div>
+    </div>
+    <button class="btn o sm" style="width:100%;margin-top:8px" onclick="aiChatStart()">💬 AI先生とチャットで相談（難易度・レベルを対話で決める）</button>
+    ${aiChatUI()}
+    <div id="f_ai_note" style="margin-top:8px">${m.aiNote?`<div class="ok-box tiny" style="white-space:pre-wrap">${esc(m.aiNote)}</div>`:''}</div>
+    <details class="acc" style="margin-top:12px"><summary class="sub">任意項目（概要・手順・URL）</summary>
+      <label>概要</label><textarea id="f_desc">${esc(m.description)}</textarea>
+      <label>学習手順（1行ずつ）</label><textarea id="f_inst" placeholder="1. 音声を聞く&#10;2. スクリプト確認&#10;3. 3回音読">${esc(m.instructions)}</textarea>
+      <label>紹介動画・投稿URL</label><input id="f_url" value="${esc(m.sourceUrl)}">
+      <div style="height:6px"></div>
+    </details>
+  `,[
+    id?{t:'削除',cls:'dang',fn:()=>delMethod(id)}:null,
+    {t:'保存',cls:'p',fn:()=>{
+      const name=$('#f_name').value.trim(); if(!name)return toast('名前を入力してください');
+      const cats=$$('#f_cats .chip.a').map(c=>c.dataset.c);
+      const goals=$$('#f_goals .chip.a').map(c=>c.dataset.g);
+      const recMin=num($('#f_recmin').value,30);
+      const level=_aiLevel||m.targetLevel||'中級'; // レベルは自動（AI判定があれば優先）
+      const difficulty=_aiJudgedDiff||autoDifficulty({categories:cats,targetLevel:level,recMin});
+      Object.assign(m,{name,influencerId:$('#f_inf').value,categories:cats,targetLevel:level,
+        difficulty,recMin,recDays:num($('#f_recdays').value,7),
+        targetGoal:goals.join('・'),description:$('#f_desc').value,instructions:$('#f_inst').value,
+        cost:$('#f_cost').value,sourceUrl:$('#f_url').value,material:m.material||'',aiNote:_aiNote||m.aiNote||''});
+      if(!id)DB.methods.push(m); saveNow();closeModal();render();
+      toast('保存（難易度は自動判定：'+diffStars(difficulty)+'）');
+    }}
+  ]);
+}
+function delMethod(id){
+  const chs=DB.challenges.filter(c=>c.methodId===id);
+  if(!confirm(chs.length?`この学習法と、関連チャレンジ${chs.length}件（記録・テスト・レビュー含む）をまとめて削除します。よろしいですか？`:'削除しますか？'))return;
+  const chIds=new Set(chs.map(c=>c.id));
+  DB.challenges=DB.challenges.filter(c=>!chIds.has(c.id));
+  DB.logs=DB.logs.filter(l=>!chIds.has(l.challengeId));
+  DB.tests=DB.tests.filter(t=>!chIds.has(t.challengeId));
+  DB.reviews=DB.reviews.filter(r=>!chIds.has(r.challengeId));
+  DB.methods=DB.methods.filter(x=>x.id!==id);saveNow();closeModal();render();toast('削除しました');
+}
+const diffStars = d => '★'.repeat(num(d,0))+'☆'.repeat(5-num(d,0));
+
+/* =========================================================================
+   チャレンジ
+   ========================================================================= */
+function viewChallenges(v){
+  let html=`<div class="row" style="align-items:center"><h2 style="flex:1">🎯 チャレンジ</h2>
+    <button class="btn p" onclick="openMethodPickForChallenge()">＋ 新規</button></div>`;
+  const order={'実践中':0,'下書き':1,'完了':2};
+  const list=[...DB.challenges].sort((a,b)=>(order[a.status]-order[b.status])|| (a.start<b.start?1:-1));
+  if(list.length===0){
+    html+=emptyState('🎯','チャレンジがまだありません','学習法を選んで7日間チャレンジを始めましょう。','＋ チャレンジを作成','openMethodPickForChallenge()');
+  }else{
+    html+=list.map(ch=>{
+      const m=methodById(ch.methodId),st=computeStats(ch);
+      return `<div class="list-item" onclick="openView('challenge','${ch.id}')">
+        <div style="flex:1;min-width:0">
+          <span class="badge ${ch.status==='完了'?'done':ch.status==='実践中'?'active':'draft'}">${statusBadgeText(ch.status)}</span>
+          <div style="font-weight:700;margin-top:4px">${esc(ch.name)}</div>
+          <div class="tiny">${esc(m?m.name:'')} ・ ${esc(ch.start)}〜 ・ ${fmtMin(st.totalMin)} ・ 継続${st.retentionPct}%</div>
+        </div>
+        ${st.total!=null?`<div class="right"><span class="hl" style="font-size:20px;font-weight:800">${st.total}</span><div class="tiny">点</div></div>`:''}
+      </div>`;
+    }).join('');
+  }
+  v.innerHTML=html;
+}
+const statusBadgeText = s => s||'下書き';
+function openMethodPickForChallenge(){
+  if(DB.methods.length===0){
+    return modal('先に学習法を登録','<div class="sub">チャレンジには学習法が必要です。まず学習法を登録しましょう。</div>',
+      [{t:'学習法を登録',cls:'p',fn:()=>{closeModal();openMethodForm();}}]);
+  }
+  modal('どの学習法で挑戦する？', DB.methods.map(m=>{
+    const inf=infById(m.influencerId);
+    return `<div class="list-item" onclick="closeModal();openChallengeForm(null,'${m.id}')">
+      <div class="av">${esc((m.name||'?')[0])}</div>
+      <div style="flex:1"><b>${esc(m.name)}</b><div class="tiny">${inf?esc(inf.name)+' ・ ':''}${m.recMin}分/日</div></div>→</div>`;
+  }).join(''),[]);
+}
+function openChallengeForm(id,methodId){
+  const m=methodById(methodId||(id&&chById(id).methodId));
+  const ch=id?chById(id):{id:uid('ch'),methodId:m.id,name:m?m.name:'',start:todayStr(),end:addDays(todayStr(),6),
+    dailyTarget:m?m.recMin:30,weeklyGoal:'',hypothesis:'',success:'7日中6日以上・毎日'+(m?m.recMin:30)+'分以上',status:'下書き'};
+  modal(id?'チャレンジ編集':'1週間チャレンジ作成',`
+    <div class="ok-box" style="margin-bottom:10px">📌 ${esc(m?m.name:'')}${m&&infById(m.influencerId)?'（'+esc(infById(m.influencerId).name)+'）':''}</div>
+    <label>チャレンジ名</label><input id="f_name" value="${esc(ch.name)}">
+    <div class="row">
+      <div><label>開始日</label><input id="f_start" type="date" value="${ch.start}"></div>
+      <div><label>1日の目標(分)</label><input id="f_target" type="number" value="${ch.dailyTarget}"></div>
+    </div>
+    <label>1週間の目標</label><input id="f_weekly" value="${esc(ch.weeklyGoal)}" placeholder="例: リスニング正答率を5pt上げる">
+    <label>実践前の仮説</label><textarea id="f_hypo">${esc(ch.hypothesis)}</textarea>
+    <label>成功条件</label><input id="f_success" value="${esc(ch.success)}">
+    <div class="warn-box" style="margin-top:10px">公平な比較のため、1日の学習時間はできるだけ他の方法とそろえるのがおすすめ（推奨: 30分×7日）。</div>
+  `,[
+    id?{t:'削除',cls:'dang',fn:()=>delChallenge(id)}:null,
+    {t:'保存して開始',cls:'p',fn:()=>{
+      const start=$('#f_start').value||todayStr();
+      Object.assign(ch,{name:$('#f_name').value.trim()||m.name,start,end:addDays(start,6),
+        dailyTarget:num($('#f_target').value,30),weeklyGoal:$('#f_weekly').value,hypothesis:$('#f_hypo').value,
+        success:$('#f_success').value, status: ch.status==='完了'?'完了':'実践中'});
+      if(!id)DB.challenges.push(ch); saveNow();closeModal();openView('challenge',ch.id);toast('チャレンジ開始！');
+    }}
+  ]);
+}
+function delChallenge(id){
+  if(!confirm('チャレンジと関連する記録・テスト・レビューを削除します。よろしいですか？'))return;
+  DB.challenges=DB.challenges.filter(c=>c.id!==id);
+  DB.logs=DB.logs.filter(l=>l.challengeId!==id);
+  DB.tests=DB.tests.filter(t=>t.challengeId!==id);
+  DB.reviews=DB.reviews.filter(r=>r.challengeId!==id);
+  saveNow();closeModal();openView('challenges');
+}
+
+/* ---------- チャレンジ詳細 ---------- */
+function viewChallengeDetail(v){
+  const ch=chById(viewArg); if(!ch)return openView('challenges');
+  const m=methodById(ch.methodId),inf=m?infById(m.influencerId):null,st=computeStats(ch);
+  let h=`<button class="btn gho sm" onclick="openView('challenges')">← 一覧</button>
+  <div class="card">
+    <div class="row" style="align-items:flex-start">
+      <div style="flex:1"><span class="badge ${ch.status==='完了'?'done':ch.status==='実践中'?'active':'draft'}">${statusBadgeText(ch.status)}</span>
+        <h2 style="margin:6px 0 2px">${esc(ch.name)}</h2>
+        <div class="sub">${esc(m?m.name:'')}${inf?' ／ '+esc(inf.name):''} ・ ${esc(ch.start)}〜${esc(ch.end)}</div>
+      </div>
+      <button class="btn sm gho" onclick="openChallengeForm('${ch.id}')">✎ 編集</button>
+    </div>`;
+  if(st.total!=null){
+    h+=`<div class="center" style="margin:14px 0 4px"><div class="score-big hl">${st.total}<span style="font-size:20px">点</span></div>
+      <div class="tiny">総合スコア（100点満点）</div></div>`;
+  }
+  h+=`<div style="margin:10px 0">${daysStrip(ch)}</div>
+    <div class="grid g4">
+      ${kpi(fmtMin(st.totalMin),'総学習時間')}
+      ${kpi(st.retentionPct+'%','継続率')}
+      ${kpi(st.rateDiff!=null?(st.rateDiff>0?'+':'')+st.rateDiff+'pt':'—','正答率の変化')}
+      ${kpi(st.perHrImprove!=null?(st.perHrImprove>0?'+':'')+st.perHrImprove:'—','1h改善効率')}
+    </div>
+  </div>`;
+
+  // 良い/悪い自動判定
+  const vd=verdict(st);
+  if(vd){
+    h+=`<div class="card" style="border-color:${vd.color}">
+      <div class="row" style="align-items:center">
+        <div style="font-size:38px;flex:0 0 auto;color:${vd.color};line-height:1">${vd.emoji}</div>
+        <div style="flex:1;min-width:0"><h3 style="margin:0;color:${vd.color}">${vd.head}</h3>
+          <div class="tiny" style="margin-top:2px">${vd.reasons.map(r=>esc(r)).join(' ・ ')}</div></div></div>
+      <div class="tiny" style="margin-top:8px">💬 ${esc(vd.advice)}</div></div>`;
+  } else if(preTest(ch.id)&&!postTest(ch.id)){
+    h+=`<div class="card"><div class="tiny">📝 実践前テスト済み。7日間実践して「実践後テスト」を受けると、自動で <b>良い/悪い</b> を判定します。</div></div>`;
+  }
+
+  // アクション
+  h+=`<div class="grid g2">
+    <button class="btn p" onclick="openTimer('${ch.id}')">⏱ 学習タイマー</button>
+    <button class="btn o" onclick="openDailyLog('${ch.id}','${todayStr()}')">📝 今日の記録</button>
+    <button class="btn" onclick="openTestForm('${ch.id}','pre')">${preTest(ch.id)?'✎ 実践前テスト':'① 実践前テスト'}</button>
+    <button class="btn" onclick="openTestForm('${ch.id}','post')">${postTest(ch.id)?'✎ 実践後テスト':'② 実践後テスト'}</button>
+    <button class="btn" onclick="openReviewForm('${ch.id}')">${reviewOf(ch.id)?'✎ 週次レビュー':'③ 週次レビュー'}</button>
+    <button class="btn" onclick="openShare('${ch.id}')">📤 SNS画像を作る</button>
+  </div>`;
+  if(ch.status!=='完了' && postTest(ch.id) && reviewOf(ch.id)){
+    h+=`<button class="btn p" style="width:100%;margin-bottom:14px" onclick="completeChallenge('${ch.id}')">✅ チャレンジを完了にする</button>`;
+  }
+
+  // テスト比較
+  const pre=st.pre,post=st.post;
+  if(pre||post){
+    h+=`<div class="card"><h3>実践前後テスト</h3>`;
+    if(st.sameProblem) h+=`<div class="warn-box" style="margin-bottom:10px">⚠️ 前後で同じ教材を使用。問題を覚えたことによるスコア上昇の可能性があります。</div>`;
+    if(post&&post.reused) h+=`<div class="warn-box" style="margin-bottom:10px">⚠️ 実践後テストに一部既出問題が含まれています（バンク残不足）。伸びがやや過大の可能性があります。</div>`;
+    h+=`<div class="scroll-x"><table><tr><th></th><th>正答率</th><th>スコア</th><th>正答数</th><th>時間</th></tr>
+      <tr><td class="sub">実践前</td><td>${pre&&pre.rate!=null?pre.rate+'%':'—'}</td><td>${pre&&pre.score!=null?pre.score:'—'}</td><td>${pre&&pre.correct!=null?pre.correct+'/'+(pre.qcount||'?'):'—'}</td><td>${pre&&pre.seconds?fmtSec(pre.seconds):'—'}</td></tr>
+      <tr><td class="sub">実践後</td><td>${post&&post.rate!=null?post.rate+'%':'—'}</td><td>${post&&post.score!=null?post.score:'—'}</td><td>${post&&post.correct!=null?post.correct+'/'+(post.qcount||'?'):'—'}</td><td>${post&&post.seconds?fmtSec(post.seconds):'—'}</td></tr>
+      <tr style="font-weight:700"><td class="hl">変化</td>
+        <td class="${diffCls(st.rateDiff)}">${fmtDiff(st.rateDiff,'pt')}</td>
+        <td class="${diffCls(st.scoreDiff)}">${fmtDiff(st.scoreDiff)}</td>
+        <td class="${diffCls(st.correctDiff)}">${fmtDiff(st.correctDiff)}</td>
+        <td class="${diffCls(st.timeDiff!=null?-st.timeDiff:null)}">${st.timeDiff!=null?fmtDiff(st.timeDiff,'秒'):'—'}</td></tr>
+      </table></div>
+      ${fieldDiffTable(pre,post)}</div>`;
+  }
+
+  // グラフ
+  const logs=logsOf(ch.id);
+  if(logs.length){
+    h+=`<div class="card"><h3>日別グラフ</h3>
+      <div class="tiny" style="margin-bottom:6px">学習時間（分）</div>${barChart(logs.map((l,i)=>({label:(i+1)+'日',v:num(l.minutes)})))}
+      <div class="tiny" style="margin:14px 0 6px">モチベーション（集中・楽しさ・理解度の平均, 5点）</div>
+      ${lineChart(logs.map((l,i)=>({label:(i+1)+'日', v:round1(avg([l.focus,l.fun,l.understand]))})),5)}
+    </div>`;
+  }
+  if(st.rev){
+    h+=`<div class="card"><h3>評価レーダー</h3>${radarChart([
+      ['効果',st.rev.effectiveness],['継続',st.rev.sustainability],['楽しさ',st.rev.enjoyment],
+      ['時間効率',st.rev.time_efficiency],['費用対効果',st.rev.cost_performance],['おすすめ',st.rev.recommendation]
+    ])}</div>`;
+  }
+
+  // AI分析
+  h+=`<div class="card"><div class="row" style="align-items:center">
+      <h3 style="flex:1;margin:0">🤖 AI分析</h3>
+      <button class="btn sm ${st.total!=null?'o':'gho'}" onclick="runAI('${ch.id}')">分析する</button></div>
+    <div id="ai_out" class="tiny" style="margin-top:10px">${ch.aiAnalysis?aiOutHtml(ch.aiAnalysis,ch.aiModel):'<span class="sub">結果を無料LLM（Gemini / Groq / OpenRouter）で分析します。設定でAPIキーを入れてから「分析する」を押してください。</span>'}</div>
+  </div>`;
+
+  // レビューまとめ
+  if(st.rev&&(st.rev.good_points||st.rev.overall)){
+    h+=`<div class="card"><h3>週次レビュー</h3>
+      ${st.rev.good_points?`<label>良かった点</label><div>${esc(st.rev.good_points)}</div>`:''}
+      ${st.rev.bad_points?`<label>悪かった点</label><div>${esc(st.rev.bad_points)}</div>`:''}
+      ${st.rev.suitable?`<label>向いている人</label><div>${esc(st.rev.suitable)}</div>`:''}
+      ${st.rev.overall?`<label>総評</label><div>${esc(st.rev.overall)}</div>`:''}</div>`;
+  }
+  h+=disclaimer();
+  v.innerHTML=h;
+}
+function completeChallenge(id){const c=chById(id);c.status='完了';saveNow();render();toast('お疲れさまでした！完了しました🎉');}
+function diffCls(d){return d==null?'':d>0?'':d<0?'':'';}
+function fmtDiff(d,u=''){if(d==null)return'—';return (d>0?'+':'')+round1(d)+u;}
+// 分野別の伸び（pre/post両方にfieldStatsがあるとき）＝「どの力が伸びたか」を明示
+function fieldDiffTable(pre,post){
+  if(!pre?.fieldStats||!post?.fieldStats)return'';
+  const fields=[...new Set([...Object.keys(pre.fieldStats),...Object.keys(post.fieldStats)])];
+  if(!fields.length)return'';
+  const pct=(fs,f)=>fs[f]&&fs[f].total?round1(fs[f].correct/fs[f].total*100):null;
+  const rows=fields.map(f=>{
+    const a=pct(pre.fieldStats,f), b=pct(post.fieldStats,f);
+    const d=(a!=null&&b!=null)?round1(b-a):null;
+    const col=d==null?'var(--sub)':d>0?'var(--good)':d<0?'var(--bad)':'var(--warn)';
+    const mark=d==null?'—':d>0?'📈':d<0?'📉':'→';
+    return `<tr><td>${esc(f)}</td><td>${a!=null?a+'%':'—'}</td><td>${b!=null?b+'%':'—'}</td>
+      <td style="color:${col};font-weight:800">${mark} ${d!=null?fmtDiff(d,'pt'):''}</td></tr>`;}).join('');
+  // ひとこと要約（最も伸びた/落ちた分野）
+  const diffs=fields.map(f=>({f,d:(pct(pre.fieldStats,f)!=null&&pct(post.fieldStats,f)!=null)?pct(post.fieldStats,f)-pct(pre.fieldStats,f):null})).filter(x=>x.d!=null);
+  let summary='';
+  if(diffs.length){
+    const up=diffs.slice().sort((x,y)=>y.d-x.d)[0], down=diffs.slice().sort((x,y)=>x.d-y.d)[0];
+    summary=`<div class="tiny" style="margin-top:6px">`+
+      (up.d>0?`最も伸びたのは<b class="hl">${esc(up.f)}（+${round1(up.d)}pt）</b>。`:'伸びた分野はありませんでした。')+
+      (down.d<0?` <span style="color:var(--bad)">${esc(down.f)}は${round1(down.d)}pt低下</span>。`:'')+`</div>`;
+  }
+  return `<div style="margin-top:12px"><div class="tiny" style="font-weight:700;margin-bottom:4px">分野別の伸び（この学習法がどの力に効いたか）</div>
+    <div class="scroll-x"><table><tr><th>分野</th><th>実践前</th><th>実践後</th><th>変化</th></tr>${rows}</table></div>${summary}</div>`;
+}
+
+/* ---------- テスト入力 ---------- */
+function openTestForm(cid,timing){
+  const ex=testsOf(cid).find(t=>t.timing===timing);
+  const t=ex||{id:uid('t'),challengeId:cid,timing,type:'TOEIC模擬',name:'',qcount:20,correct:'',rate:'',score:'',seconds:'',material:'',memo:'',
+    grew:'',notGrew:''};
+  modal((timing==='pre'?'① 実践前':'② 実践後')+'テスト',`
+    <button class="btn o" style="width:100%" onclick="launchQuiz('${cid}','${timing}')">▶ アプリでテストを受ける（自動出題・自動採点）</button>
+    <div class="tiny center" style="margin:10px 0 4px">— または、外部で受けた結果を手入力 —</div>
+    <label>テスト種別</label>${select('t_type',TEST_TYPES,t.type)}
+    <label>テスト名 / 使用教材</label><input id="t_mat" value="${esc(t.material||t.name)}" placeholder="例: TOEIC公式問題集 Part3">
+    <div class="row">
+      <div><label>問題数</label><input id="t_qc" type="number" value="${t.qcount}"></div>
+      <div><label>正答数</label><input id="t_correct" type="number" value="${t.correct}" oninput="autoRate()"></div>
+    </div>
+    <div class="row">
+      <div><label>正答率(%)<span class="tiny">自動計算</span></label><input id="t_rate" type="number" value="${t.rate}"></div>
+      <div><label>スコア(任意/TOEIC等)</label><input id="t_score" type="number" value="${t.score}"></div>
+    </div>
+    <label>回答時間(秒)</label><input id="t_sec" type="number" value="${t.seconds}">
+    ${timing==='post'?`<label>特に伸びた能力</label><input id="t_grew" value="${esc(t.grew||'')}">
+      <label>伸びなかった能力</label><input id="t_notgrew" value="${esc(t.notGrew||'')}">`:''}
+    <label>感想メモ</label><textarea id="t_memo">${esc(t.memo)}</textarea>
+    <div class="warn-box" style="margin-top:10px">前後で「同じ問題数・難易度・制限時間」をそろえると比較精度が上がります。</div>
+  `,[
+    {t:'保存',cls:'p',fn:()=>{
+      const qc=num($('#t_qc').value),correct=$('#t_correct').value===''?null:num($('#t_correct').value);
+      let rate=$('#t_rate').value===''?null:num($('#t_rate').value);
+      if(rate==null&&correct!=null&&qc>0)rate=round1(correct/qc*100);
+      Object.assign(t,{type:$('#t_type').value,material:$('#t_mat').value,name:$('#t_mat').value,qcount:qc,correct,
+        rate,score:$('#t_score').value===''?null:num($('#t_score').value),seconds:$('#t_sec').value===''?null:num($('#t_sec').value),
+        memo:$('#t_memo').value, grew: timing==='post'?$('#t_grew').value:'', notGrew: timing==='post'?$('#t_notgrew').value:''});
+      if(!ex)DB.tests.push(t);saveNow();closeModal();render();toast('テストを保存しました');
+    }}
+  ]);
+}
+function autoRate(){const qc=num($('#t_qc').value),c=num($('#t_correct').value);if(qc>0&&$('#t_correct').value!=='')$('#t_rate').value=round1(c/qc*100);}
+
+/* ---------- アプリ内テスト（自動出題→自動採点→自動保存） ---------- */
+let quizState=null;
+const qKey=q=>(q.q||'')+'|'+(q.audio||''); // 問題の同一性キー（前後の重複排除に使用）
+function launchQuiz(cid,timing){
+  closeModal();
+  const ch=chById(cid), m=ch?methodById(ch.methodId):null;
+  const pre=timing==='post'?preTest(cid):null;
+  // 実践後は「実践前と同じ分野構成」を初期値に（同じ土俵で測るため）
+  const preFields=(pre&&pre.fieldsArr&&pre.fieldsArr.length)?pre.fieldsArr:fieldsForMethod(m);
+  modal((timing==='pre'?'① 実践前':'② 実践後')+'テストを受ける',`
+    ${m?`<div class="ok-box" style="margin-bottom:8px">📌 ${pre?'実践前テストと同じ分野・難易度構成で出題します（比較の公平性のため）。':`学習法「<b>${esc(m.name)}</b>」に合わせて出題分野を自動選択しました。`}</div>`:''}
+    <label>出題分野（この学習法で伸ばす力に対応）</label>
+    <div id="q_fields" style="display:flex;flex-wrap:wrap;gap:6px">${TEST_FIELDS.map(f=>
+      `<span class="chip ${preFields.includes(f)?'a':''}" data-f="${f}" onclick="this.classList.toggle('a')" style="cursor:pointer">${f==='リスニング'?'🔊 ':''}${f}</span>`).join('')}</div>
+    <div class="row" style="margin-top:6px">
+      <div><label>出題数</label>${select('q_count',[10,15,20],pre?(pre.qcount||15):15)}</div>
+      <div><label>難易度（目安）</label><select id="q_diff">
+        <option value="all">おまかせ(混合)</option>
+        <option value="1">易（〜TOEIC450/英検3級）</option>
+        <option value="2" selected>中（〜TOEIC600/英検2級）</option>
+        <option value="3">難（〜TOEIC800/英検準1級）</option></select></div>
+    </div>
+    <label>出題方法</label>
+    <div class="seg" id="q_src">
+      <button class="on" data-v="bank" onclick="segPick(this)">内蔵問題（API不要）</button>
+      <button data-v="ai" onclick="segPick(this)">AIで生成（分野に特化）</button></div>
+    <div class="ok-box" style="margin-top:10px">公平性の担保: ①${timing==='post'?'実践前に出た問題は出題しません（暗記による水増し防止）':'実践後テストでは今回の問題を除外します'} ②分野とレベルを均等に混ぜて出題（層化抽出） ③🔊リスニングは音声読み上げ。</div>
+  `,[
+    {t:'テスト開始 ▶',cls:'p',fn:async()=>{
+      const count=num($('#q_count').value,15), diff=$('#q_diff').value, src=$('#q_src .on').dataset.v;
+      let fields=$$('#q_fields .chip.a').map(c=>c.dataset.f);
+      if(!fields.length)fields=TEST_FIELDS.slice();
+      const exclude=new Set((pre&&pre.qTexts)||[]); // 実践前に出た問題を除外
+      let qs;
+      if(src==='ai'){
+        if(!activeProviders().length){toast('AI生成にはAPIキーが必要です。内蔵問題で出題します');qs=pickQuestions(count,diff,fields,exclude);}
+        else{ toast('🤖 AIが「'+fields.join('・')+'」のテストを作成中…');
+          try{ qs=await genAITest(count,diff,fields,m,exclude); toast('AI生成OK（'+lastLLMModel+'）'); }
+          catch(e){ toast('AI生成に失敗: '+e.message.slice(0,50)); qs=pickQuestions(count,diff,fields,exclude); }
+        }
+      }else qs=pickQuestions(count,diff,fields,exclude);
+      if(!qs||!qs.length)qs=pickQuestions(count,diff,fields,new Set()); // 保険：必ずテストを出す
+      beginQuiz(cid,timing,qs,fields);
+    }}
+  ]);
+}
+// 層化抽出：分野→レベル(1易/2中/3難)を均等に混ぜ、前回出題分を除外して抽出
+function pickQuestions(count,diff,fields,exclude){
+  fields=fields&&fields.length?fields:TEST_FIELDS.slice();
+  exclude=exclude||new Set();
+  const fresh=q=>!exclude.has(qKey(q));
+  let pool=QUESTION_BANK.filter(q=>fields.includes(q.c)&&(diff==='all'||q.level===num(diff))&&fresh(q));
+  if(pool.length<count)pool=QUESTION_BANK.filter(q=>fields.includes(q.c)&&fresh(q)); // レベル条件をゆるめる
+  let reused=false;
+  if(pool.length<count && exclude.size){ // 未出題だけでは足りない→既出も許可（結果に警告を残す）
+    pool=QUESTION_BANK.filter(q=>fields.includes(q.c)); reused=true;
+  }
+  if(pool.length<Math.min(count,5))pool=QUESTION_BANK.slice();
+  // 層化: 分野ごと→レベル1,2,3の順で交互に取り出し（構成が毎回そろう）
+  const byField={};
+  pool.forEach(q=>{(byField[q.c]=byField[q.c]||{1:[],2:[],3:[]})[q.level||2].push(q);});
+  Object.values(byField).forEach(lv=>Object.values(lv).forEach(a=>a.sort(()=>Math.random()-0.5)));
+  const fieldKeys=Object.keys(byField);
+  const seqs={};
+  fieldKeys.forEach(f=>{const lv=byField[f],seq=[];let li=0;
+    while(lv[1].length||lv[2].length||lv[3].length){const l=[1,2,3][li%3];li++;if(lv[l].length)seq.push(lv[l].shift());}
+    seqs[f]=seq;});
+  const picked=[];let fi=0,guard=0;
+  while(picked.length<count&&guard++<500){
+    const f=fieldKeys[fi%fieldKeys.length];fi++;
+    if(seqs[f]&&seqs[f].length)picked.push(seqs[f].shift());
+    if(fieldKeys.every(k=>!seqs[k].length))break;
+  }
+  const res=picked.slice(0,count).map(q=>{
+    const opts=q.ch.map((t,i)=>[t,i===q.a]).map(o=>[Math.random(),o]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+    return {c:q.c,q:q.q,audio:q.audio||null,level:q.level||2,ch:opts.map(o=>o[0]),a:opts.findIndex(o=>o[1])};
+  });
+  res._reused=reused;
+  return res;
+}
+async function genAITest(count,diff,fields,method,exclude){
+  // 難易度アンカー：CEFR/TOEIC/英検の水準に紐付けて生成させる（レベルのブレを抑える）
+  const lvMap={all:'CEFR A2〜B2を1:2:1で混合（TOEIC450〜800相当）','1':'CEFR A2（TOEIC400〜450・英検3級）レベルで統一','2':'CEFR B1（TOEIC550〜650・英検2級）レベルで統一','3':'CEFR B2（TOEIC750〜850・英検準1級）レベルで統一'};
+  fields=fields&&fields.length?fields:TEST_FIELDS.slice();
+  const hasListening=fields.includes('リスニング');
+  const banned=exclude&&exclude.size?[...exclude].slice(0,30).map(k=>k.split('|')[0]||k.split('|')[1]).filter(Boolean):[];
+  const prompt=`英語力の変化を正確に測定するためのテストを${count}問、試験作成の専門家として作成してください。
+難易度基準: ${lvMap[diff]}。この基準から外れる問題を混ぜないこと（前後比較の等質性が最重要）。
+${method?`このテストは学習法「${method.name}」（カテゴリ: ${(method.categories||[]).join('・')}）の効果測定用です。この学習法で鍛えられる能力を直接測る問題にしてください。`:''}
+出題分野は「${fields.join('・')}」のみ。分野ごとの問題数はできるだけ均等に。各問4択。
+${banned.length?`\n【出題禁止】以下と同じ・類似の問題は禁止（実践前テストで出題済み。同じ知識点も避ける）:\n${banned.map(b=>'- '+b).join('\n')}\n`:''}
+
+測定に耐える問題の条件（厳守）:
+- 誤答肢は「明らかに変」ではなく、学習者が実際に間違えやすいもの（品詞違い・時制違い・意味の近い語・音の似た語）にする
+- 知識を問う: 文法は文脈中の空所補充、語彙は文中での使われ方、読解は推論を要する内容一致
+- 単なる和訳当てクイズは禁止。実際の使用場面を想定した文で出題する
+- 同じ知識点を問う問題を重複させない
+${hasListening?'- リスニングは "audio" に自然な口語英文(1〜2文、TOEIC Part2-3風)を入れ、"q" には英文を含めない日本語の設問。設問は「詳細」「意図」「次の行動」など多様に':''}
+出力は次の形の JSON オブジェクトのみ（説明文・コードフェンスは書かない）:
+{"questions":[{"c":"分野名","q":"設問（日本語可）","audio":"リスニングの場合のみ英文、他はnull","ch":["A","B","C","D"],"a":0}]}
+"a" は正解の0始まりインデックス（0〜3の整数）。正解の位置は偏らせずランダムに配置。`;
+  const txt=await callLLM(prompt,{json:true,system:AI_PERSONA});
+  const obj=parseLooseJSON(txt);
+  const arr=Array.isArray(obj)?obj:(obj&&(obj.questions||obj.items||obj.data))||[];
+  const clean=[];
+  for(const q of arr){
+    if(!q)continue;
+    const ch=q.ch||q.choices||q.options||q.answers;
+    let a=q.a; if(a==null)a=q.answer!=null?q.answer:q.correct;
+    if(typeof a==='string')a=parseInt(a,10);
+    const text=q.q||q.question||q.prompt;
+    if(!Array.isArray(ch)||ch.length<2||!Number.isInteger(a)||!text)continue;
+    const audio=(typeof q.audio==='string'&&q.audio.trim()&&q.audio!=='null')?q.audio.trim():null;
+    if(exclude&&exclude.has(qKey({q:String(text),audio})))continue; // 既出は捨てる
+    clean.push({c:q.c||q.category||q.type||'問',q:String(text),audio,level:num(diff==='all'?2:diff,2),ch:ch.map(String),a:clamp(a,0,ch.length-1)});
+    if(clean.length>=count)break;
+  }
+  if(!clean.length)throw new Error('AIの返答をテスト形式に変換できませんでした（内蔵問題に切替）');
+  return clean;
+}
+function parseLooseJSON(txt){
+  let t=String(txt||'').replace(/```json/gi,'').replace(/```/g,'').trim();
+  try{return JSON.parse(t);}catch(_){}
+  const o=t.slice(t.indexOf('{'),t.lastIndexOf('}')+1); // オブジェクト抽出
+  try{return JSON.parse(o);}catch(_){}
+  const a=t.slice(t.indexOf('['),t.lastIndexOf(']')+1); // 配列抽出
+  try{return JSON.parse(a);}catch(_){}
+  return null;
+}
+function beginQuiz(cid,timing,questions,fields){
+  if(!questions||!questions.length)return toast('問題を用意できませんでした');
+  closeModal(); // 設定モーダルを閉じてから出題
+  quizState={cid,timing,questions,fields:fields||[],reused:!!questions._reused,start:Date.now()};
+  const body=questions.map((q,i)=>`<div class="card" style="margin-bottom:10px;padding:13px">
+    <div style="font-weight:600;margin-bottom:8px"><span class="chip a">${esc(q.c||'問')}</span> Q${i+1}. ${esc(q.q)}</div>
+    ${q.audio?`<div style="display:flex;gap:6px;margin-bottom:8px">
+      <button class="btn o sm" onclick="playQuizAudio(${i})">🔊 音声を再生（何回でもOK）</button>
+      <button class="btn gho sm" onclick="playQuizAudio(${i},true)">🐢 ゆっくり</button></div>`:''}
+    ${q.ch.map((c,ci)=>`<label style="display:flex;align-items:center;gap:8px;margin:5px 0;color:var(--txt);cursor:pointer;font-weight:400">
+      <input type="radio" name="q${i}" value="${ci}" style="width:auto;flex:0 0 auto"> ${esc(c)}</label>`).join('')}
+  </div>`).join('');
+  modalRaw(`<div class="modal">
+    <div class="row" style="align-items:center;position:sticky;top:0;background:var(--panel);padding-bottom:8px;z-index:2">
+      <h2 style="flex:1;margin:0">📝 テスト（${questions.length}問）</h2><button class="x" onclick="speechSynthesis.cancel();quizState=null;closeModal()">×</button></div>
+    <div class="tiny" style="margin-bottom:8px">${questions.some(q=>q.audio)?'🔊マークの問題は音声を再生して答えてください。':''}すべて選んで「採点する」を押してください。</div>
+    ${body}
+    <button class="btn p" style="width:100%" onclick="submitQuiz()">採点する →</button>
+  </div>`);
+}
+function submitQuiz(){
+  if(!quizState)return;
+  const {cid,timing,questions,fields,reused,start}=quizState;
+  const answers=questions.map((q,i)=>{const sel=document.querySelector('input[name="q'+i+'"]:checked');return sel?+sel.value:-1;});
+  if(answers.some(a=>a<0) && !confirm('未回答の問題があります。このまま採点しますか？（未回答は不正解扱い）'))return;
+  speechSynthesis.cancel();
+  const correct=questions.filter((q,i)=>answers[i]===q.a).length;
+  const qcount=questions.length, rate=round1(correct/qcount*100);
+  const seconds=Math.round((Date.now()-start)/1000);
+  const fieldsLabel=(fields&&fields.length&&fields.length<TEST_FIELDS.length)?fields.join('・'):'総合';
+  // 分野別成績（前後比較で「どの力が伸びたか」を分析するための核データ）
+  const fieldStats={};
+  questions.forEach((q,i)=>{const f=q.c||'その他';
+    fieldStats[f]=fieldStats[f]||{correct:0,total:0};
+    fieldStats[f].total++; if(answers[i]===q.a)fieldStats[f].correct++;});
+  // 保存（既存があれば置換）
+  let t=testsOf(cid).find(x=>x.timing===timing); const isNew=!t;
+  if(!t)t={id:uid('t'),challengeId:cid,timing};
+  Object.assign(t,{type:'アプリ自動テスト（'+fieldsLabel+'）',material:'内蔵テスト('+fieldsLabel+')',name:'内蔵テスト('+fieldsLabel+')',qcount,correct,rate,score:null,seconds,auto:true,fieldStats,
+    qTexts:questions.map(qKey), fieldsArr:fields&&fields.length?fields.slice():[], reused:!!reused,
+    memo:`自動採点 ${correct}/${qcount}正解（分野: ${fieldsLabel}）${reused?'※問題数不足のため一部既出問題を再出題':''}`});
+  if(isNew)DB.tests.push(t);
+  saveNow();
+  // 結果画面（未回答は赤で明示）
+  const review=questions.map((q,i)=>{const ok=answers[i]===q.a, blank=answers[i]<0;
+    return `<div style="border-bottom:1px solid var(--line);padding:8px 0">
+      <div class="tiny">${ok?'<span style="color:var(--good)">✓ 正解</span>':blank?'<span style="color:var(--bad);font-weight:800">⚠ 未回答</span>':'<span style="color:var(--bad)">✗ 不正解</span>'} Q${i+1}. ${esc(q.q)}</div>
+      ${q.audio?`<div class="tiny mut">🔊 読み上げ英文: ${esc(q.audio)}</div>`:''}
+      ${ok?'':`<div class="tiny">正解: <b class="hl">${esc(q.ch[q.a])}</b>${blank?' ／ <span style="color:var(--bad)">あなた: 未回答</span>':' ／ あなた: '+esc(q.ch[answers[i]])}</div>`}</div>`;}).join('');
+  quizState=null;closeModal();
+  // 分野別内訳
+  const fsRows=Object.entries(fieldStats).map(([f,s])=>{
+    const p=round1(s.correct/s.total*100);
+    return `<div style="display:flex;align-items:center;gap:8px;margin:5px 0">
+      <div class="tiny" style="flex:0 0 72px">${esc(f)}</div>
+      <div class="bar-track" style="flex:1"><div class="bar-fill" style="width:${p}%"></div></div>
+      <div class="tiny" style="flex:0 0 76px;font-weight:700;color:var(--txt)">${s.correct}/${s.total} (${p}%)</div></div>`;}).join('');
+  modalRaw(`<div class="modal">
+    <div class="center" style="margin-bottom:6px">
+      <div class="score-big hl">${rate}<span style="font-size:20px">%</span></div>
+      <div class="tiny">${correct} / ${qcount} 正解 ・ 所要 ${fmtSec(seconds)} ・ ${timing==='pre'?'実践前':'実践後'}テストに保存しました</div></div>
+    ${reused?'<div class="warn-box" style="margin:8px 0">⚠️ 問題バンクの残りが足りず、一部に実践前と同じ問題が含まれます（スコアがやや高めに出る可能性）。「AIで生成」を使うと完全に新しい問題で受けられます。</div>':''}
+    <div class="card" style="padding:12px;margin:10px 0"><div class="tiny" style="margin-bottom:4px;font-weight:700">分野別の成績</div>${fsRows}</div>
+    <details class="acc"><summary class="sub">解答を確認</summary><div style="padding-bottom:10px">${review}</div></details>
+    <button class="btn p" style="width:100%;margin-top:10px" onclick="closeModal();openView('challenge','${cid}')">結果を見る →</button>
+  </div>`);
+}
+
+/* ---------- 毎日の記録（1分入力） ---------- */
+function openDailyLog(cid,date){
+  const ex=DB.logs.find(l=>l.challengeId===cid&&l.date===date);
+  const ch=chById(cid);
+  const prev=logsOf(cid).filter(l=>l.date<date).slice(-1)[0];
+  const l=ex||{id:uid('log'),challengeId:cid,date,status:'完了',minutes:ch?ch.dailyTarget:30,
+    focus:prev?prev.focus:3,fun:prev?prev.fun:3,difficulty:prev?prev.difficulty:3,
+    effect:prev?prev.effect:3,sustain:prev?prev.sustain:3,understand:prev?prev.understand:3,memo:''};
+  const sl=(id,label,val)=>`<div class="slider-row"><label>${label}</label>
+    <input type="range" min="1" max="5" value="${val}" id="${id}" oninput="this.nextElementSibling.textContent=this.value">
+    <span class="v">${val}</span></div>`;
+  modal('📝 '+date+' の記録',`
+    <label>実践状況</label>
+    <div class="seg" id="l_status">${['完了','一部実施','未実施','休息日'].map(s=>
+      `<button class="${l.status===s?'on':''}" onclick="segPick(this)">${s}</button>`).join('')}</div>
+    <div class="row" style="margin-top:10px">
+      <div><label>学習時間(分)</label><input id="l_min" type="number" value="${l.minutes}"></div>
+      <div style="display:flex;align-items:flex-end"><button class="btn gho sm" style="width:100%" onclick="openTimer('${cid}','${date}')">⏱ タイマーで測る</button></div>
+    </div>
+    <div class="divider"></div>
+    <div class="tiny" style="margin-bottom:6px">5段階評価（スライダー）</div>
+    ${sl('l_focus','集中',l.focus)}
+    ${sl('l_fun','楽しさ',l.fun)}
+    ${sl('l_difficulty','難しさ',l.difficulty)}
+    ${sl('l_effect','効果実感',l.effect)}
+    ${sl('l_understand','理解度',l.understand)}
+    ${sl('l_sustain','続けやすさ',l.sustain)}
+    <label>ひとことメモ（任意）</label><textarea id="l_memo" placeholder="今日やった内容・気づき">${esc(l.memo)}</textarea>
+  `,[
+    ex?{t:'削除',cls:'dang',fn:()=>{DB.logs=DB.logs.filter(x=>x.id!==l.id);saveNow();closeModal();render();}}:null,
+    {t:'保存',cls:'p',fn:()=>{
+      const st=$('#l_status .on').textContent;
+      Object.assign(l,{status:st,minutes:st==='未実施'||st==='休息日'?0:num($('#l_min').value,0),
+        focus:num($('#l_focus').value),fun:num($('#l_fun').value),difficulty:num($('#l_difficulty').value),
+        effect:num($('#l_effect').value),understand:num($('#l_understand').value),sustain:num($('#l_sustain').value),
+        memo:$('#l_memo').value});
+      if(!ex)DB.logs.push(l);saveNow();closeModal();render();toast('記録しました！');
+    }}
+  ]);
+}
+function segPick(b){$$('.on',b.parentElement).forEach(x=>x.classList.remove('on'));b.classList.add('on');}
+
+/* ---------- 週次レビュー ---------- */
+function openReviewForm(cid){
+  const ex=reviewOf(cid);
+  const r=ex||{id:uid('rev'),challengeId:cid,effectiveness:3,sustainability:3,enjoyment:3,difficulty:3,
+    time_efficiency:3,cost_performance:3,preparation:3,recommendation:3,continuation:3,
+    good_points:'',bad_points:'',suitable:'',unsuitable:'',overall:''};
+  const sl=(id,label,val)=>`<div class="slider-row"><label>${label}</label>
+    <input type="range" min="1" max="5" value="${val}" id="${id}" oninput="this.nextElementSibling.textContent=this.value">
+    <span class="v">${val}</span></div>`;
+  modal('③ 週次レビュー',`
+    <div class="tiny" style="margin-bottom:6px">各項目を5段階で評価（総合スコアに反映されます）</div>
+    ${sl('r_effect','効果実感',r.effectiveness)}
+    ${sl('r_sustain','継続しやすさ',r.sustainability)}
+    ${sl('r_fun','楽しさ',r.enjoyment)}
+    ${sl('r_diff','難易度',r.difficulty)}
+    ${sl('r_eff','時間効率',r.time_efficiency)}
+    ${sl('r_cost','費用対効果',r.cost_performance)}
+    ${sl('r_prep','準備のしやすさ',r.preparation)}
+    ${sl('r_rec','おすすめ度',r.recommendation)}
+    ${sl('r_cont','今後も続けたい',r.continuation)}
+    <div class="divider"></div>
+    <label>良かった点</label><textarea id="r_good">${esc(r.good_points)}</textarea>
+    <label>悪かった点</label><textarea id="r_bad">${esc(r.bad_points)}</textarea>
+    <div class="row"><div><label>向いている人</label><input id="r_suit" value="${esc(r.suitable)}"></div>
+      <div><label>向いていない人</label><input id="r_unsuit" value="${esc(r.unsuitable)}"></div></div>
+    <label>総評</label><textarea id="r_overall">${esc(r.overall)}</textarea>
+  `,[
+    {t:'保存',cls:'p',fn:()=>{
+      Object.assign(r,{effectiveness:num($('#r_effect').value),sustainability:num($('#r_sustain').value),
+        enjoyment:num($('#r_fun').value),difficulty:num($('#r_diff').value),time_efficiency:num($('#r_eff').value),
+        cost_performance:num($('#r_cost').value),preparation:num($('#r_prep').value),recommendation:num($('#r_rec').value),
+        continuation:num($('#r_cont').value),good_points:$('#r_good').value,bad_points:$('#r_bad').value,
+        suitable:$('#r_suit').value,unsuitable:$('#r_unsuit').value,overall:$('#r_overall').value});
+      if(!ex)DB.reviews.push(r);saveNow();closeModal();render();toast('レビューを保存しました');
+    }}
+  ]);
+}
+
+/* =========================================================================
+   学習タイマー
+   ========================================================================= */
+let timerState=null;
+function openTimer(cid,date){
+  const ch=chById(cid);date=date||todayStr();
+  timerState={cid,date,elapsed:0,running:false,int:null};
+  modalRaw(`<div class="modal" style="max-width:420px">
+    <div class="row" style="align-items:center"><h2 style="flex:1;margin:0">⏱ タイマー</h2><button class="x" onclick="stopTimerClose()">×</button></div>
+    <div class="sub center" style="margin:4px 0 10px">${esc(ch?methodById(ch.methodId)?.name:'')}</div>
+    <div class="timer-big" id="t_disp">00:00</div>
+    <div class="tiny center" id="t_target">目標 ${ch?ch.dailyTarget:30}分</div>
+    <div class="bar-track" style="margin:14px 0"><div class="bar-fill" id="t_bar" style="width:0%"></div></div>
+    <div class="row">
+      <button class="btn p" id="t_toggle" onclick="timerToggle()" style="flex:2">▶ 開始</button>
+      <button class="btn gho" onclick="timerReset()">リセット</button>
+    </div>
+    <button class="btn o" style="width:100%;margin-top:10px" onclick="timerSaveToLog()">この時間で記録する →</button>
+  </div>`);
+}
+function timerToggle(){
+  if(!timerState)return;
+  if(timerState.running){clearInterval(timerState.int);timerState.running=false;$('#t_toggle').innerHTML='▶ 再開';}
+  else{timerState.running=true;$('#t_toggle').innerHTML='⏸ 一時停止';
+    timerState.int=setInterval(()=>{timerState.elapsed++;updTimer();},1000);}
+}
+function timerReset(){if(!timerState)return;clearInterval(timerState.int);timerState.running=false;timerState.elapsed=0;$('#t_toggle').innerHTML='▶ 開始';updTimer();}
+function updTimer(){
+  const s=timerState.elapsed,mm=String(Math.floor(s/60)).padStart(2,'0'),ss=String(s%60).padStart(2,'0');
+  $('#t_disp').textContent=mm+':'+ss;
+  const ch=chById(timerState.cid),tgt=(ch?ch.dailyTarget:30)*60;
+  $('#t_bar').style.width=clamp(s/tgt*100,0,100)+'%';
+}
+function timerSaveToLog(){
+  if(!timerState)return;
+  const mins=Math.max(1,Math.round(timerState.elapsed/60));
+  const cid=timerState.cid,date=timerState.date;
+  clearInterval(timerState.int);timerState=null;closeModal();
+  openDailyLog(cid,date);
+  setTimeout(()=>{if($('#l_min'))$('#l_min').value=mins;toast('タイマーの'+mins+'分を反映しました');},60);
+}
+function stopTimerClose(){if(timerState){clearInterval(timerState.int);timerState=null;}closeModal();}
+
+/* =========================================================================
+   比較
+   ========================================================================= */
+let compareSel=[];
+function viewCompare(v){
+  const scored=scoredChallenges();
+  let h=`<h2>⚖️ 比較</h2>`;
+  if(scored.length<1){
+    v.innerHTML=h+emptyState('⚖️','比較できる結果がありません','チャレンジを完了し、テスト・レビューを入力すると比較できます。','','');
+    return;
+  }
+  h+=`<div class="card"><div class="tiny" style="margin-bottom:8px">比較する結果を2〜5件選択</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px">${scored.map(x=>
+      `<span class="chip ${compareSel.includes(x.ch.id)?'a':''}" onclick="toggleCompare('${x.ch.id}')" style="cursor:pointer">${esc(x.m?x.m.name:x.ch.name)} (${x.st.total})</span>`).join('')}</div></div>`;
+  const sel=compareSel.map(id=>scored.find(x=>x.ch.id===id)).filter(Boolean);
+  if(sel.length>=1){
+    // 自動コメント
+    h+=autoCompareComment(sel);
+    // AI比較分析
+    if(sel.length>=2){
+      const cKey=compareSel.slice().sort().join(',');
+      const cached=_cmpAICache[cKey];
+      h+=`<div class="card"><div class="row" style="align-items:center">
+        <h3 style="flex:1;margin:0">🧠 AI先生の比較分析</h3>
+        <button class="btn sm o" onclick="runCompareAI()">${cached?'再分析':'分析する'}</button></div>
+        <div id="cmp_ai" style="margin-top:8px">${cached?aiOutHtml(cached.text,cached.model):'<span class="tiny sub">東大卒×脳科学コーチが「なぜこの差が出たか」「どう使い分けるべきか」まで深掘りします。</span>'}</div></div>`;
+    }
+    // 比較表
+    const rows=[
+      ['総合スコア',x=>x.st.total+'点'],
+      ['正答率の伸び',x=>x.st.rateDiff!=null?fmtDiff(x.st.rateDiff,'pt'):'—'],
+      ['スコアの伸び',x=>x.st.scoreDiff!=null?fmtDiff(x.st.scoreDiff):'—'],
+      ['総学習時間',x=>fmtMin(x.st.totalMin)],
+      ['継続率',x=>x.st.retentionPct+'%'],
+      ['1h改善効率',x=>x.st.perHrImprove!=null?fmtDiff(x.st.perHrImprove,'pt'):'—'],
+      ['効果実感',x=>starN(x.st.rev?.effectiveness)],
+      ['楽しさ',x=>starN(x.st.rev?.enjoyment)],
+      ['難易度',x=>starN(x.st.rev?.difficulty)],
+      ['続けやすさ',x=>starN(x.st.rev?.sustainability)],
+      ['費用対効果',x=>starN(x.st.rev?.cost_performance)],
+      ['向いている人',x=>esc(x.st.rev?.suitable||'—')],
+    ];
+    h+=`<div class="card pad0 scroll-x"><table><tr><th>項目</th>${sel.map(x=>`<th>${esc(x.m?x.m.name:x.ch.name)}</th>`).join('')}</tr>
+      ${rows.map(r=>`<tr><td class="sub">${r[0]}</td>${sel.map(x=>`<td>${r[1](x)}</td>`).join('')}</tr>`).join('')}</table></div>`;
+    // レーダー重ね
+    if(sel.every(x=>x.st.rev)){
+      h+=`<div class="card"><h3>評価レーダー比較</h3>${radarChartMulti(sel.map(x=>({
+        name:x.m?x.m.name:x.ch.name,
+        vals:[['効果',x.st.rev.effectiveness],['継続',x.st.rev.sustainability],['楽しさ',x.st.rev.enjoyment],
+          ['時間効率',x.st.rev.time_efficiency],['費用',x.st.rev.cost_performance],['おすすめ',x.st.rev.recommendation]]
+      })))}</div>`;
+    }
+    // 総合スコア棒
+    h+=`<div class="card"><h3>総合スコア</h3>${barChart(sel.map(x=>({label:(x.m?x.m.name:x.ch.name).slice(0,6),v:x.st.total})),100)}</div>`;
+  }else{
+    h+=`<div class="card sub">上のチップから2件以上選ぶと比較表・グラフが表示されます。</div>`;
+  }
+  v.innerHTML=h+disclaimer();
+}
+function toggleCompare(id){
+  if(compareSel.includes(id))compareSel=compareSel.filter(x=>x!==id);
+  else{if(compareSel.length>=5)return toast('最大5件まで');compareSel.push(id);}
+  render();
+}
+const starN = n => n?('★'.repeat(n)+'☆'.repeat(5-n)):'—';
+// 比較の深掘り解析：各メソッドの「何が良くて何が悪いか」を次元別に判定
+function autoCompareComment(sel){
+  if(sel.length<2)return'';
+  const nm=x=>x?.m?x.m.name:x?.ch.name;
+  const DIMS=[
+    {k:'テストの伸び', v:x=>x.st.rateDiff, fmt:v=>fmtDiff(v,'pt'), good:v=>v>0, bad:v=>v<=0},
+    {k:'継続率', v:x=>x.st.retentionPct, fmt:v=>v+'%', good:v=>v>=85, bad:v=>v<60},
+    {k:'時間効率', v:x=>x.st.perHrImprove, fmt:v=>fmtDiff(v,'pt/h'), good:v=>v>0, bad:v=>v<=0},
+    {k:'楽しさ', v:x=>x.st.rev?.enjoyment, fmt:v=>starN(v), good:v=>v>=4, bad:v=>v<=2},
+    {k:'続けやすさ', v:x=>x.st.rev?.sustainability, fmt:v=>starN(v), good:v=>v>=4, bad:v=>v<=2},
+    {k:'費用対効果', v:x=>x.st.rev?.cost_performance, fmt:v=>starN(v), good:v=>v>=4, bad:v=>v<=2},
+  ];
+  // 各メソッドの強み・弱み（選択中での相対1位/最下位＋絶対値の良し悪し）
+  const cards=sel.map(x=>{
+    const vd=verdict(x.st);
+    const strengths=[],weaknesses=[];
+    DIMS.forEach(d=>{
+      const mine=d.v(x); if(mine==null)return;
+      const vals=sel.map(s=>d.v(s)).filter(v=>v!=null);
+      if(vals.length<2)return;
+      const isBest=mine===Math.max(...vals), isWorst=mine===Math.min(...vals);
+      if(isBest&&d.good(mine))strengths.push(`${d.k} ${d.fmt(mine)}（選択中1位）`);
+      else if(isWorst&&d.bad(mine))weaknesses.push(`${d.k} ${d.fmt(mine)}（選択中最下位）`);
+      else if(d.bad(mine))weaknesses.push(`${d.k} ${d.fmt(mine)}`);
+    });
+    // 分野別の伸び（あれば）
+    const pre=preTest(x.ch.id),post=postTest(x.ch.id);
+    if(pre?.fieldStats&&post?.fieldStats){
+      const pct=(fs,f)=>fs[f]&&fs[f].total?fs[f].correct/fs[f].total*100:null;
+      const fd=[...new Set([...Object.keys(pre.fieldStats),...Object.keys(post.fieldStats)])]
+        .map(f=>({f,d:(pct(pre.fieldStats,f)!=null&&pct(post.fieldStats,f)!=null)?pct(post.fieldStats,f)-pct(pre.fieldStats,f):null}))
+        .filter(o=>o.d!=null).sort((a,b)=>b.d-a.d);
+      if(fd.length&&fd[0].d>0)strengths.push(`${fd[0].f}が特に伸びた（+${round1(fd[0].d)}pt）`);
+      if(fd.length&&fd[fd.length-1].d<0)weaknesses.push(`${fd[fd.length-1].f}は低下（${round1(fd[fd.length-1].d)}pt）`);
+    }
+    return `<div style="border:1px solid var(--line);border-radius:10px;padding:11px;margin-bottom:8px;border-left:4px solid ${vd?vd.color:'var(--line)'}">
+      <div style="font-weight:700">${vd?`<span style="color:${vd.color}">${vd.emoji}</span> `:''}${esc(nm(x))} <span class="tiny">${x.st.total}点${vd?'・'+vd.tier:''}</span></div>
+      ${strengths.length?`<div class="tiny" style="margin-top:4px;color:var(--good)">✅ 良い: ${strengths.map(esc).join(' ／ ')}</div>`:''}
+      ${weaknesses.length?`<div class="tiny" style="margin-top:2px;color:var(--bad)">⚠️ 課題: ${weaknesses.map(esc).join(' ／ ')}</div>`:''}
+      ${!strengths.length&&!weaknesses.length?`<div class="tiny mut" style="margin-top:4px">突出した強み・弱みなし（平均的）</div>`:''}
+    </div>`;
+  }).join('');
+  // 目的別の結論
+  const by=(f)=>sel.slice().sort((a,b)=>(f(b)??-99)-(f(a)??-99))[0];
+  const top=by(x=>x.st.total), bestScore=by(x=>x.st.rateDiff), bestSus=by(x=>(x.st.retentionPct??0)+(x.st.rev?.sustainability??0)*10);
+  const concl=`<div class="ok-box" style="margin-top:4px"><b>🎯 結論（目的別）</b><br>
+    ・スコアを上げたい → <b>${esc(nm(bestScore))}</b>${bestScore.st.rateDiff!=null?'（'+fmtDiff(bestScore.st.rateDiff,'pt')+'）':''}<br>
+    ・挫折せず続けたい → <b>${esc(nm(bestSus))}</b>（継続${bestSus.st.retentionPct}%）<br>
+    ・総合で選ぶなら → <b class="hl">${esc(nm(top))}</b>（${top.st.total}点）</div>`;
+  return `<div class="card"><h3>💡 何が良くて、何が悪かったか</h3>${cards}${concl}</div>`;
+}
+// AIによる比較の深掘り分析（東大卒×脳科学コーチ）
+let _cmpAICache={};
+async function runCompareAI(){
+  const scored=scoredChallenges();
+  const sel=compareSel.map(id=>scored.find(x=>x.ch.id===id)).filter(Boolean);
+  if(sel.length<2)return toast('2件以上選択してください');
+  if(!activeProviders().length)return toast('AI分析にはAPIキーが必要です（⚙️設定）');
+  const key=compareSel.slice().sort().join(',');
+  const box=$('#cmp_ai'); if(box)box.innerHTML='<span class="sub">🧠 AI先生が比較分析中…</span>';
+  const nm=x=>x?.m?x.m.name:x?.ch.name;
+  const data=sel.map(x=>{
+    const pre=preTest(x.ch.id),post=postTest(x.ch.id);
+    let fd='';
+    if(pre?.fieldStats&&post?.fieldStats){
+      const pct=(fs,f)=>fs[f]&&fs[f].total?round1(fs[f].correct/fs[f].total*100):null;
+      fd=[...new Set([...Object.keys(pre.fieldStats),...Object.keys(post.fieldStats)])]
+        .map(f=>`${f}:${pct(pre.fieldStats,f)??'?'}→${pct(post.fieldStats,f)??'?'}%`).join(', ');
+    }
+    return `【${nm(x)}】総合${x.st.total}点 / 正答率${x.st.rateDiff!=null?fmtDiff(x.st.rateDiff,'pt'):'不明'} / 継続${x.st.retentionPct}% / 学習${fmtMin(x.st.totalMin)} / 楽しさ${x.st.rev?.enjoyment??'-'}／5 続けやすさ${x.st.rev?.sustainability??'-'}／5${fd?' / 分野別:'+fd:''}${x.st.rev?.good_points?' / 良:'+x.st.rev.good_points:''}${x.st.rev?.bad_points?' / 悪:'+x.st.rev.bad_points:''}`;
+  }).join('\n');
+  const prompt=`同一学習者が1週間ずつ実践した複数の英語学習法の比較データです。専門家として厳密に比較分析してください。
+${data}
+
+次の見出しで日本語・各2〜4文で出力:
+【① 総合勝者とその科学的根拠】
+【② 各方法の「何が良く・何が悪かった」か（1方法ずつ）】
+【③ 数字の裏にある要因の仮説（SLA/脳科学の観点）】
+【④ この学習者への最適な組み合わせ・使い分け提案】`;
+  try{
+    const text=await callLLM(prompt,{system:AI_PERSONA});
+    _cmpAICache[key]={text,model:lastLLMModel};
+    if(box)box.innerHTML=aiOutHtml(text,lastLLMModel);
+    toast('比較分析が完了（'+lastLLMModel+'）');
+  }catch(e){ if(box)box.innerHTML=`<div class="warn-box tiny">分析に失敗: ${esc(e.message)}</div>`; }
+}
+
+/* =========================================================================
+   ランキング
+   ========================================================================= */
+function viewRanking(v){
+  const scored=scoredChallenges();
+  let h=`<h2>🏆 ランキング</h2>`;
+  if(scored.length===0){v.innerHTML=h+emptyState('🏆','まだランキングがありません','チャレンジを完了しレビューを入力すると集計されます。','','');return;}
+  const cats=[
+    {t:'総合ランキング',f:x=>x.st.total,u:'点'},
+    {t:'最もスコアが伸びた',f:x=>x.st.rateDiff??-999,u:'pt',fmt:v=>fmtDiff(v,'pt')},
+    {t:'最も続けやすい',f:x=>x.st.retentionPct,u:'%'},
+    {t:'最も時間効率が良い',f:x=>x.st.perHrImprove??-999,u:'',fmt:v=>fmtDiff(v,'pt/h')},
+    {t:'最も楽しい',f:x=>x.st.rev?.enjoyment||0,u:'★',fmt:v=>starN(v)},
+  ];
+  h+=`<div class="card"><div class="tiny" style="margin-bottom:6px">総合スコア</div>${barChart(scored.slice(0,8).map(x=>({label:(x.m?x.m.name:x.ch.name).slice(0,7),v:x.st.total})),100)}</div>`;
+  // 発信者ランキング（実践結果ベース＝どの発信者の情報が本当に効くか）
+  const infRank=influencerStats();
+  if(infRank.some(x=>x.n>0)){
+    h+=`<div class="card"><h3>📢 発信者ランキング（実証ベース）</h3>
+      <div class="tiny" style="margin-bottom:8px">その発信者の学習法を<b>実際に1週間試した結果</b>で採点。宣伝ではなく実測です。</div>`
+      +infRank.map((x,i)=>{
+        const tested=x.n>0;
+        return `<div class="list-item" style="margin:6px 0;${tested?'':'opacity:.55'}" onclick="openInfluencerForm('${x.inf.id}')">
+          <span class="rank-badge ${tested&&i<3?'g'+(i+1):''}">${tested?i+1:'—'}</span>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(x.inf.name)}</div>
+            <div class="tiny">${tested?`平均${x.avg}点 ・ ${x.avgDiff!=null?'正答率'+fmtDiff(x.avgDiff,'pt')+' ・ ':''}継続${x.avgRet}% ・ 検証${x.n}回`:'まだこの発信者の方法を試していません'}</div>
+          </div>
+          ${gradeBadge(x.grade)}
+        </div>`;}).join('')
+      +`<div class="tiny mut" style="margin-top:6px">※あなた個人の1週間実践に基づく評価です。検証回数が増えるほど信頼度が上がります。</div></div>`;
+  }
+  cats.forEach(cat=>{
+    const list=scored.slice().sort((a,b)=>cat.f(b)-cat.f(a)).slice(0,5);
+    h+=`<div class="card"><h3>${cat.t}</h3><div class="pad0">`+list.map((x,i)=>{
+      const val=cat.fmt?cat.fmt(cat.f(x)):cat.f(x)+cat.u;
+      return `<div class="list-item" style="margin:6px 0" onclick="openView('challenge','${x.ch.id}')">
+        <span class="rank-badge ${i<3?'g'+(i+1):''}">${i+1}</span>
+        <div style="flex:1;min-width:0"><b style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block">${esc(x.m?x.m.name:x.ch.name)}</b>
+          <span class="tiny">${x.m&&infById(x.m.influencerId)?esc(infById(x.m.influencerId).name):''}</span></div>
+        <div class="right hl" style="font-weight:800">${val}</div></div>`;
+    }).join('')+`</div></div>`;
+  });
+  v.innerHTML=h+disclaimer();
+}
+
+/* =========================================================================
+   SNS共有画像
+   ========================================================================= */
+const SHARE_SIZES={'正方形 1080²':[1080,1080],'縦長 1080×1350':[1080,1350],'ストーリー 1080×1920':[1080,1920],'X 1200×675':[1200,675],'YouTube 1280×720':[1280,720]};
+let shareCid=null, shareSize='正方形 1080²';
+function openShare(cid){
+  shareCid=cid;
+  const st=computeStats(chById(cid));
+  if(st.total==null&&!postTest(cid)){/*allow anyway*/}
+  modalRaw(`<div class="modal" style="max-width:560px">
+    <div class="row" style="align-items:center"><h2 style="flex:1;margin:0">📤 SNS画像</h2><button class="x" onclick="closeModal()">×</button></div>
+    <div class="seg" id="s_size" style="margin:10px 0">${Object.keys(SHARE_SIZES).map(k=>`<button class="${k===shareSize?'on':''}" onclick="shareSize='${k}';$$('#s_size button').forEach(b=>b.classList.remove('on'));this.classList.add('on');drawShare()">${k.split(' ')[0]}</button>`).join('')}</div>
+    <div style="text-align:center;background:#000;border-radius:12px;padding:10px;overflow:auto"><canvas id="s_canvas"></canvas></div>
+    <button class="btn p" style="width:100%;margin-top:12px" onclick="downloadShare()">⬇︎ 画像をダウンロード</button>
+  </div>`);
+  setTimeout(drawShare,50);
+}
+function drawShare(){
+  const cid=shareCid,ch=chById(cid),m=methodById(ch.methodId),inf=m?infById(m.influencerId):null,st=computeStats(ch);
+  const [w,h]=SHARE_SIZES[shareSize];
+  const cv=$('#s_canvas');cv.width=w;cv.height=h;
+  const g=cv.getContext('2d');
+  // bg gradient
+  const grad=g.createLinearGradient(0,0,w,h);grad.addColorStop(0,'#141b2e');grad.addColorStop(1,'#0c1a2c');
+  g.fillStyle=grad;g.fillRect(0,0,w,h);
+  // accent bar
+  const ag=g.createLinearGradient(0,0,w,0);ag.addColorStop(0,'#4dd0c3');ag.addColorStop(1,'#ff8a4c');
+  g.fillStyle=ag;g.fillRect(0,0,w,h*0.014);
+  // 縦方向カーソル方式（重なり防止・全サイズ対応）。U=高さを基準にリズムを作る
+  const cx=w/2, pad=w*0.08, U=h;
+  g.textAlign='center'; g.textBaseline='alphabetic';
+  let cy=U*0.11;
+  // ブランド
+  g.fillStyle='#93a0bd';g.font=`600 ${U*0.030}px sans-serif`;g.fillText('🧪 1週間英語ラボ',cx,cy);
+  // タイトル（1〜2行に自動折返し）
+  cy+=U*0.078;
+  g.fillStyle='#fff';g.font=`800 ${U*0.056}px sans-serif`;
+  const lines=wrapText(g,m?m.name:ch.name,cx,cy,w-pad*2,U*0.066);
+  cy+=(lines-1)*U*0.066;
+  // 発信者
+  if(inf){cy+=U*0.052;g.fillStyle='#4dd0c3';g.font=`600 ${U*0.032}px sans-serif`;g.fillText('📢 '+inf.name,cx,cy);}
+  // 実践前後
+  const pre=preTest(cid),post=postTest(cid);
+  if(pre&&post&&pre.rate!=null&&post.rate!=null){
+    cy+=U*0.078;
+    g.fillStyle='#93a0bd';g.font=`600 ${U*0.030}px sans-serif`;g.fillText('実践前 → 実践後（正答率）',cx,cy);
+    cy+=U*0.074;
+    g.fillStyle='#fff';g.font=`800 ${U*0.070}px sans-serif`;g.fillText(`${pre.rate}%  →  ${post.rate}%`,cx,cy);
+    cy+=U*0.056;
+    g.fillStyle=st.rateDiff>=0?'#4ade80':'#f87171';g.font=`800 ${U*0.040}px sans-serif`;g.fillText(`${st.rateDiff>0?'+':''}${st.rateDiff}pt`,cx,cy);
+  }
+  // 総合スコア円
+  if(st.total!=null){
+    const r=U*0.125, ccy=cy+U*0.05+r;
+    g.beginPath();g.arc(cx,ccy,r,0,Math.PI*2);g.strokeStyle='#243052';g.lineWidth=U*0.018;g.stroke();
+    g.beginPath();g.arc(cx,ccy,r,-Math.PI/2,-Math.PI/2+Math.PI*2*(clamp(st.total,0,100)/100));g.strokeStyle='#4dd0c3';g.lineWidth=U*0.018;g.lineCap='round';g.stroke();
+    g.fillStyle='#fff';g.font=`800 ${U*0.078}px sans-serif`;g.textBaseline='middle';g.fillText(st.total,cx,ccy);g.textBaseline='alphabetic';
+    g.fillStyle='#93a0bd';g.font=`600 ${U*0.026}px sans-serif`;g.fillText('総合スコア',cx,ccy+r+U*0.042);
+  }
+  // フッター（下端固定）
+  g.fillStyle='#c9d4ee';g.font=`600 ${U*0.026}px sans-serif`;
+  g.fillText(`⏱ ${fmtMin(st.totalMin)}   ・   📅 継続 ${st.retentionPct}%   ・   ${ch.start.replace(/-/g,'/')}〜`,cx,h*0.95);
+}
+// 先頭行のベースラインを y に置き、以降を下に描画。行数を返す
+function wrapText(g,text,x,y,maxW,lh){
+  const chars=[...String(text)];let line='',lines=[];
+  for(const c of chars){if(g.measureText(line+c).width>maxW&&line){lines.push(line);line=c;}else line+=c;}
+  lines.push(line);
+  lines.forEach((l,i)=>g.fillText(l,x,y+i*lh));
+  return lines.length;
+}
+function downloadShare(){
+  const a=document.createElement('a');a.download=`eigolab_${shareSize.split(' ')[0]}.png`;
+  a.href=$('#s_canvas').toDataURL('image/png');a.click();toast('画像を保存しました');
+}
+
+/* =========================================================================
+   AI分析（無料LLM: Groq / Gemini）
+   ========================================================================= */
+async function runAI(cid){
+  if(!activeProviders().length)return modal('AI設定が必要',`<div class="sub">AI分析には無料LLMのAPIキーが必要です（1つでOK）。⚙️設定で入力してください。</div>
+    <div class="warn-box" style="margin-top:10px">・Groq: <a href="https://console.groq.com/keys" target="_blank">console.groq.com/keys</a><br>
+    ・OpenRouter: <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a><br>
+    ・Gemini: <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a></div>`,
+    [{t:'設定を開く',cls:'p',fn:()=>{closeModal();openView('settings');}}]);
+  const ch=chById(cid),m=methodById(ch.methodId),st=computeStats(ch);
+  const others=scoredChallenges().filter(x=>x.ch.id!==cid).slice(0,5)
+    .map(x=>`- ${x.m?x.m.name:x.ch.name}: ${x.st.total}点 (正答率${x.st.rateDiff!=null?(x.st.rateDiff>0?'+':'')+x.st.rateDiff+'pt':'—'}, 継続${x.st.retentionPct}%)`).join('\n');
+  const prompt=`以下の「1週間英語チャレンジ」の実践データを、専門家として分析してください。日本語で、各見出し2〜3文で簡潔に。
+## 学習法: ${m?m.name:ch.name} (${m?m.categories?.join('/'):''} / 対象:${m?.targetLevel||'-'} / ${m?.recMin||'-'}分)
+## 結果
+- 総合スコア: ${st.total}/100
+- 正答率変化: ${st.rateDiff!=null?st.rateDiff+'pt':'不明'} (前${st.pre?.rate??'?'}% → 後${st.post?.rate??'?'}%)
+- 総学習時間: ${fmtMin(st.totalMin)} / 継続率: ${st.retentionPct}% (7日中${st.daysPracticed}日)
+- 自己評価(5点): 効果${st.rev?.effectiveness??'-'} 継続${st.rev?.sustainability??'-'} 楽しさ${st.rev?.enjoyment??'-'} 難易度${st.rev?.difficulty??'-'}
+- 良かった点: ${st.rev?.good_points||'-'} / 悪かった点: ${st.rev?.bad_points||'-'}
+## 過去の他メソッド
+${others||'なし'}
+
+第二言語習得や脳科学の観点（想起練習・分散学習・インプット/アウトプットのバランス・認知負荷・習慣化など）も交えて、次の4見出しで出力:
+【① なぜこの結果になったか（脳科学/SLAの観点）】
+【② 過去の方法と比べた強み・弱み】
+【③ 次回の改善点（具体的に）】
+【④ このタイプの学習者に次に薦める学習法】`;
+  $('#ai_out').innerHTML=`<span class="sub">🧠 東大卒×脳科学コーチが分析中…（一番性能の良いAPIを自動選択）</span>`;
+  try{
+    const text=await callLLM(prompt,{system:AI_PERSONA});
+    ch.aiAnalysis=text; ch.aiModel=lastLLMModel; saveNow();
+    $('#ai_out').innerHTML=aiOutHtml(text,lastLLMModel);
+    toast('AI分析が完了しました（'+lastLLMModel+'）');
+  }catch(e){
+    $('#ai_out').innerHTML=`<div class="warn-box">分析に失敗しました: ${esc(e.message)}</div>`;
+  }
+}
+function aiOutHtml(text,model){
+  return `<div style="white-space:pre-wrap;font-size:13.5px;line-height:1.6">${esc(text)}</div>`+
+    (model?`<div class="tiny" style="margin-top:8px;text-align:right">🤖 使用モデル: <b>${esc(model)}</b></div>`:'');
+}
+// プロバイダ既定モデル（無料枠はモデルごとに別クォータ→複数を順に試す）
+let lastLLMModel='';
+const LLM_MODELS={
+  groq:['llama-3.3-70b-versatile','llama-3.1-8b-instant'],
+  gemini:['gemini-2.0-flash','gemini-2.5-flash','gemini-2.0-flash-lite'],
+  openrouter:['meta-llama/llama-3.3-70b-instruct:free','deepseek/deepseek-chat-v3-0324:free','mistralai/mistral-7b-instruct:free']
+};
+// AIの「人格」設定：東大卒の英語教師＋認知/脳科学の知見を持つコーチ（全解析に適用）
+const AI_PERSONA='あなたは東京大学卒の英語教師で、第二言語習得(SLA)・認知科学・脳科学にも精通した学習コーチです。'+
+  '記憶の定着（分散学習・想起練習・睡眠）、モチベーション、可処分時間、学習者のレベルを踏まえ、'+
+  '専門知識に基づきつつ断定しすぎず、根拠を添えて日本人学習者に分かりやすく助言します。';
+// モデルの性能ランク（高いほど高性能）。「一番いいやつ」を選ぶための指標
+function modelRank(prov,model){
+  const m=(model||'').toLowerCase(); let s=50;
+  if(/405b|large|123b|72b|70b|80b/.test(m))s+=40;
+  else if(/gemini-2\.5|2\.0-flash|gemini-2/.test(m))s+=38;
+  else if(/deepseek|qwen3|qwen-2\.5-72|32b|30b|27b|26b|24b/.test(m))s+=28;
+  else if(/gemma|9b|8b|7b|3b|1b|mini|lite|flash-8b/.test(m))s+=10;
+  if(prov==='groq')s+=6; else if(prov==='gemini')s+=4; // 速度/安定性の加点
+  return s;
+}
+// OpenRouterは無料モデルの名前が頻繁に変わるため、有効な無料モデルを実行時に自動取得（自己修復）＋性能順に並べる
+let _orModels=null;
+async function getModelsFor(prov){
+  if(prov!=='openrouter')return LLM_MODELS[prov];
+  if(_orModels)return _orModels;
+  try{
+    const r=await fetch('https://openrouter.ai/api/v1/models');
+    const j=await r.json();
+    const free=(j.data||[]).filter(m=>m.pricing&&String(m.pricing.prompt)==='0'&&String(m.pricing.completion)==='0');
+    const good=free.filter(m=>/llama-3\.|llama-4|deepseek|qwen|gemini|gemma|mistral/i.test(m.id||''));
+    const list=(good.length?good:free).map(m=>m.id).filter(Boolean).sort((a,b)=>modelRank('openrouter',b)-modelRank('openrouter',a)).slice(0,6);
+    _orModels=list.length?list:LLM_MODELS.openrouter;
+  }catch(_){ _orModels=LLM_MODELS.openrouter; }
+  return _orModels;
+}
+// 入れたキーのうち繋がるものを自動で使う。優先順→残りの順で総当たり
+function activeProviders(){
+  const keys=DB.settings.llmKeys||{};
+  const all=['groq','openrouter','gemini'];
+  const pref=DB.settings.llmPrefer;
+  const order = (pref&&pref!=='auto') ? [pref,...all.filter(p=>p!==pref)] : all;
+  return order.filter(p=>keys[p]&&String(keys[p]).trim());
+}
+async function callLLM(prompt,opts={}){
+  const provs=activeProviders();
+  if(!provs.length)throw new Error('APIキーが未設定です（⚙️設定でGroq/OpenRouter/Geminiのいずれかを入力してください）');
+  const keys=DB.settings.llmKeys;
+  // 候補(プロバイダ×モデル)を集めて、性能ランクの高い順に並べる＝「繋がる中で一番いいやつ」を使う
+  let cands=[];
+  for(const prov of provs){
+    for(const model of await getModelsFor(prov)) cands.push({prov,model,rank:modelRank(prov,model)});
+  }
+  const pref=DB.settings.llmPrefer;
+  if(pref&&pref!=='auto') cands.sort((a,b)=>(b.prov===pref)-(a.prov===pref) || b.rank-a.rank); // 指定プロバイダ最優先→性能順
+  else cands.sort((a,b)=>b.rank-a.rank); // 自動＝純粋に性能順
+  let last, had429=false, had404=false, had401=false, had_net=false;
+  const dead=new Set(); // キー無効/CORSのプロバイダは以降スキップ
+  for(const c of cands){
+    if(dead.has(c.prov))continue;
+    try{ return await callLLMOnce(c.prov,c.model,String(keys[c.prov]).trim(),prompt,opts); }
+    catch(e){ last=e;
+      if(e.code===429)had429=true; else if(e.code===404)had404=true;
+      else if(e.code===401||e.code===403){had401=true; dead.add(c.prov);}
+      else if(e.code==='net'){had_net=true; dead.add(c.prov);}
+    }
+  }
+  // 429があった場合のみ、2秒待って「生きている中で最高性能」を1回だけ再試行
+  if(had429){
+    await new Promise(r=>setTimeout(r,2000));
+    const best=cands.find(c=>!dead.has(c.prov));
+    if(best){ try{ return await callLLMOnce(best.prov,best.model,String(keys[best.prov]).trim(),prompt,opts); }catch(e){ last=e; } }
+  }
+  // 全滅時のエラー案内
+  const names={groq:'Groq',openrouter:'OpenRouter',gemini:'Gemini'};
+  const tried=provs.map(p=>names[p]).join('・');
+  if(had429) throw new Error(`繋がるAPIを探しましたが（${tried}）、いずれもクォータ/レート上限（429）でした。数分待って再実行するか、別のプロバイダのAPIキーを追加してください。※AI分析なしでも内蔵テスト・良い/悪い判定・比較は使えます。`);
+  if(had401) throw new Error(`APIキーが無効でした（${tried}）。キーの発行元とプロバイダ欄が合っているか、前後の空白が無いか確認してください。`);
+  if(had_net) throw new Error(`通信に失敗しました（CORS/ネットワーク）。別のプロバイダのキーを入れると繋がることがあります（特にGeminiは安定）。`);
+  if(had404) throw new Error(`利用可能なモデルが見つかりませんでした（404）。別プロバイダのキー追加、または時間をおいて再試行してください。`);
+  throw last||new Error('不明なエラー');
+}
+async function callLLMOnce(prov,model,key,prompt,opts={}){
+  const isGem=prov==='gemini';
+  const base=prov==='openrouter'?'https://openrouter.ai/api/v1/chat/completions':'https://api.groq.com/openai/v1/chat/completions';
+  const url=isGem?`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`:base;
+  const gemBody={contents:[{parts:[{text:prompt}]}]};
+  if(opts.system)gemBody.systemInstruction={parts:[{text:opts.system}]};
+  if(opts.json)gemBody.generationConfig={responseMimeType:'application/json'};
+  const msgs=[]; if(opts.system)msgs.push({role:'system',content:opts.system});
+  msgs.push({role:'user',content:prompt});
+  const oaiBody={model,messages:msgs,temperature:opts.json?0.4:0.6};
+  if(opts.json)oaiBody.response_format={type:'json_object'};
+  const opt=isGem
+    ? {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(gemBody)}
+    : {method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify(oaiBody)};
+  let r;
+  try{ r=await fetch(url,opt); }
+  catch(net){ const e=new Error(`通信に失敗（CORS/ネットワーク）。${isGem?'ネット接続とキーを確認してください。':'このサービスがブラウザからブロックされている可能性。設定で別プロバイダに切替を。'}`); e.code='net'; throw e; }
+  let j; try{ j=await r.json(); }catch(_){ j={}; }
+  if(!r.ok){
+    const msg=j.error?.message||('HTTP '+r.status); let m;
+    if(r.status===401||r.status===403) m=`APIキーが無効か権限がありません（${r.status}）。プロバイダとキーの発行元が一致しているか確認してください。`;
+    else if(r.status===400 && isGem) m=`リクエスト拒否（400）。Geminiのキーが無効な可能性。キーを貼り直してください。`;
+    else if(r.status===404) m=`モデル「${model}」が見つかりません（404）。`;
+    else if(r.status===429) m=`レート/クォータ上限（429）。`;
+    else m=msg;
+    const e=new Error(m); e.code=r.status; throw e;
+  }
+  lastLLMModel=model; // 実際に応答したモデルを記録
+  return isGem
+    ? (j.candidates?.[0]?.content?.parts?.[0]?.text||'(空の応答)')
+    : (j.choices?.[0]?.message?.content||'(空の応答)');
+}
+async function testLLMConnection(){
+  saveLLM();
+  const names={groq:'Groq',openrouter:'OpenRouter',gemini:'Gemini'};
+  const all=['groq','openrouter','gemini'];
+  const keys=DB.settings.llmKeys||{};
+  const hasKey=p=>!!(keys[p]&&String(keys[p]).trim());
+  if(!all.some(hasKey))return modal('キーが入力されていません',
+    `<div class="sub">Groq / OpenRouter / Gemini の<b>入力欄にAPIキーを貼り付けて「保存」</b>してからテストしてください。<br><br>※「優先的に使う」の選択は<b>順番を決めるだけ</b>で、キーの代わりにはなりません。</div>`,[]);
+  toast('接続テスト中…');
+  const rows=[];
+  let anyOK=false;
+  for(const p of all){
+    if(!hasKey(p)){ rows.push(`⚪ <b>${names[p]}</b>：キー未入力（スキップ）`); continue; }
+    let ok=false, err='';
+    for(const model of await getModelsFor(p)){
+      try{ await callLLMOnce(p,model,String(keys[p]).trim(),'「OK」とだけ返して'); rows.push(`✅ <b>${names[p]}</b>：繋がりました（${model}）`); ok=true; anyOK=true; break; }
+      catch(e){ err=e.message; if(e.code===401||e.code===403||e.code==='net'){break;} }
+    }
+    if(!ok) rows.push(`❌ <b>${names[p]}</b>：${esc(err.slice(0,60))}`);
+  }
+  modal(anyOK?'✅ 接続テスト結果':'❌ 繋がるキーがありません',
+    rows.map(r=>`<div style="padding:5px 0;border-bottom:1px solid var(--line)">${r}</div>`).join('')+
+    `<div class="tiny" style="margin-top:10px">${anyOK?'分析時は、繋がった（✅）ものを自動で使います。':'⚪のプロバイダは、その入力欄にAPIキーを貼れば使えます。❌はキーの発行元・前後の空白を確認、または時間をおいてください（429は無料枠の一時上限）。'}</div>`,[]);
+}
+
+/* =========================================================================
+   設定 / スプシ連携 / エクスポート
+   ========================================================================= */
+function viewSettings(v){
+  const p=DB.profile,s=DB.settings,w=s.weights;
+  let h=`<button class="btn gho sm" onclick="openView('home')">← 戻る</button><h2>⚙️ 設定</h2>`;
+
+  // プロフィール
+  h+=`<div class="card"><h3>プロフィール・目標</h3>
+    <div class="row"><div><label>表示名</label><input id="p_name" value="${esc(p.name)}"></div>
+      <div><label>現在のレベル</label>${select('p_level',LEVELS,p.level)}</div></div>
+    <div class="row"><div><label>現在のTOEIC</label><input id="p_toeic" type="number" value="${esc(p.toeic)}"></div>
+      <div><label>目標TOEIC</label><input id="p_target" type="number" value="${esc(p.target)}"></div>
+      <div><label>1日確保時間(分)</label><input id="p_daily" type="number" value="${esc(p.dailyMin)}"></div></div>
+    <label>学習目的</label><input id="p_goal" value="${esc(p.goal)}">
+    <button class="btn p sm" style="margin-top:10px" onclick="saveProfile()">保存</button></div>`;
+
+  // 総合スコア配点
+  const sl=(id,label,val)=>`<div class="slider-row"><label>${label}</label>
+    <input type="range" min="0" max="40" value="${val}" id="${id}" oninput="this.nextElementSibling.textContent=this.value;wSum()">
+    <span class="v">${val}</span></div>`;
+  h+=`<div class="card"><h3>総合スコアの配点（カスタマイズ）</h3>
+    <div class="tiny">目的に応じて重み付けを変更できます。合計は自動で正規化されます。</div>
+    ${sl('w_test','テスト改善',w.test)}${sl('w_ret','継続率',w.retention)}${sl('w_eff','時間効率',w.efficiency)}
+    ${sl('w_effect','効果実感',w.effect)}${sl('w_sus','続けやすさ',w.sustain)}${sl('w_fun','楽しさ',w.fun)}
+    ${sl('w_cost','費用対効果',w.cost)}${sl('w_con','続けたい',w.continue)}
+    <div class="tiny">合計: <span id="w_total" class="hl">${Object.values(w).reduce((a,b)=>a+b,0)}</span></div>
+    <div class="row" style="margin-top:8px"><button class="btn p sm" onclick="saveWeights()">保存</button>
+      <button class="btn gho sm" onclick="resetWeights()">初期値に戻す</button></div></div>`;
+
+  // LLM（繋がるキーを自動使用）
+  const kk=s.llmKeys||{groq:'',openrouter:'',gemini:''};
+  const prefOpt=(v,t)=>`<option value="${v}" ${s.llmPrefer===v?'selected':''}>${t}</option>`;
+  h+=`<div class="card"><h3>🤖 AI分析（繋がるAPIを自動使用）</h3>
+    <div class="tiny" style="margin-bottom:8px">下の3つのうち<b>持っているキーだけ</b>入れてください。分析時は<b>実際に繋がったものを自動で使います</b>（手動切替は不要）。1つでOK。AI分析は任意で、内蔵テスト・良い/悪い判定・比較はAPI無しでも動きます。</div>
+    <label>Groq APIキー <a href="https://console.groq.com/keys" target="_blank" class="tiny">（発行）</a></label>
+    <input id="k_groq" type="password" value="${esc(kk.groq||'')}" placeholder="gsk_... 空欄可">
+    <label>OpenRouter APIキー <a href="https://openrouter.ai/keys" target="_blank" class="tiny">（発行）</a></label>
+    <input id="k_openrouter" type="password" value="${esc(kk.openrouter||'')}" placeholder="sk-or-... 空欄可">
+    <label>Gemini APIキー <a href="https://aistudio.google.com/apikey" target="_blank" class="tiny">（発行）</a></label>
+    <input id="k_gemini" type="password" value="${esc(kk.gemini||'')}" placeholder="AIza... 空欄可">
+    <label>優先的に使う（任意）</label>
+    <select id="llm_prefer">${prefOpt('auto','自動（Groq→OpenRouter→Gemini の順で試す）')}${prefOpt('groq','Groqを優先')}${prefOpt('openrouter','OpenRouterを優先')}${prefOpt('gemini','Geminiを優先')}</select>
+    <div class="warn-box" style="margin-top:8px">キーはこの端末のブラウザ内のみに保存されます（外部送信なし）。</div>
+    <div class="row" style="margin-top:10px"><button class="btn p sm" onclick="saveLLM()">保存</button>
+      <button class="btn o sm" onclick="testLLMConnection()">🔌 接続テスト（全キー）</button></div></div>`;
+
+  // スプシ連携
+  h+=`<div class="card"><h3>📊 スプレッドシート連携</h3>
+    <div class="ok-box" style="margin-bottom:10px">✅ あなた専用のスプレッドシート（6タブ・発信者データ入り）を作成済みです。<br>
+      <a href="https://docs.google.com/spreadsheets/d/1_UlW2j3J4L45QG9tC8zz0a6-3nAfRIlWxFjUQw6RsnI/edit" target="_blank"><b>📊 「1週間英語ラボ データ」を開く</b></a></div>
+    <div class="tiny">方法A（かんたん）: 下でCSVを書き出し、上のシートに「ファイル→インポート→アップロード→シートを置換/追加」で取り込み。</div>
+    <div class="row" style="margin:8px 0"><button class="btn sm" onclick="exportAllCSV()">⬇︎ 全データCSV</button>
+      <button class="btn sm gho" onclick="exportTableCSV('challenges')">チャレンジ</button>
+      <button class="btn sm gho" onclick="exportTableCSV('logs')">毎日記録</button>
+      <button class="btn sm gho" onclick="exportTableCSV('tests')">テスト</button></div>
+    <div class="divider"></div>
+    <div class="tiny">方法B（自動同期）: Google Apps Script のWeb App URLを設定すると、ボタン1つでスプシへ送信。手順は同梱の <b>README / google-apps-script.gs</b> 参照。</div>
+    <label>GAS Web App URL</label><input id="gas_url" value="${esc(s.gasUrl)}" placeholder="https://script.google.com/macros/s/.../exec">
+    <div class="row" style="margin-top:8px"><button class="btn p sm" onclick="saveGas()">保存</button>
+      <button class="btn o sm" onclick="syncToSheet()">📤 スプシへ同期</button></div></div>`;
+
+  // データ管理
+  h+=`<div class="card"><h3>データ管理</h3>
+    <div class="row"><button class="btn sm" onclick="exportJSON()">⬇︎ バックアップ(JSON)</button>
+      <button class="btn sm" onclick="$('#imp').click()">⬆︎ 復元(JSON)</button>
+      <input type="file" id="imp" hidden accept=".json" onchange="importJSON(this)"></div>
+    <div class="row" style="margin-top:8px"><button class="btn sm gho" onclick="loadSampleData()">✨ サンプルデータ投入</button>
+      <button class="btn sm dang" onclick="wipe()">全データ削除</button></div>
+    <div class="tiny" style="margin-top:8px">データはこの端末のブラウザ(localStorage)に保存。バックアップJSONを時々保存しておくと安全です。</div></div>`;
+  v.innerHTML=h;
+}
+function saveProfile(){Object.assign(DB.profile,{name:$('#p_name').value,level:$('#p_level').value,toeic:$('#p_toeic').value,
+  target:$('#p_target').value,dailyMin:num($('#p_daily').value,30),goal:$('#p_goal').value});saveNow();toast('保存しました');}
+function wSum(){$('#w_total').textContent=['w_test','w_ret','w_eff','w_effect','w_sus','w_fun','w_cost','w_con'].reduce((a,id)=>a+num($('#'+id).value),0);}
+function saveWeights(){DB.settings.weights={test:num($('#w_test').value),retention:num($('#w_ret').value),efficiency:num($('#w_eff').value),
+  effect:num($('#w_effect').value),sustain:num($('#w_sus').value),fun:num($('#w_fun').value),cost:num($('#w_cost').value),continue:num($('#w_con').value)};
+  saveNow();toast('配点を保存しました');render();}
+function resetWeights(){DB.settings.weights={...DEFAULT_WEIGHTS};saveNow();render();}
+function saveLLM(){
+  if($('#k_groq')){
+    DB.settings.llmKeys={groq:$('#k_groq').value.trim(),openrouter:$('#k_openrouter').value.trim(),gemini:$('#k_gemini').value.trim()};
+    DB.settings.llmPrefer=$('#llm_prefer').value;
+  }
+  saveNow();toast('AI設定を保存しました');}
+function saveGas(){DB.settings.gasUrl=$('#gas_url').value.trim();saveNow();toast('保存しました');}
+function wipe(){if(confirm('全データを削除します。取り消せません。よろしいですか？')){LS.del(KEY);DB=blankDB();compareSel=[];openView('home');toast('削除しました');}}
+
+/* ---------- CSV / JSON ---------- */
+function toCSV(rows){
+  if(!rows.length)return'';
+  const keys=[...new Set(rows.flatMap(r=>Object.keys(r)))];
+  const esc=v=>{v=v==null?'':(typeof v==='object'?JSON.stringify(v):String(v));return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+  return keys.join(',')+'\n'+rows.map(r=>keys.map(k=>esc(r[k])).join(',')).join('\n');
+}
+function dl(name,text,type='text/csv'){
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+text],{type}));a.download=name;a.click();
+}
+function enrichedChallenges(){
+  return DB.challenges.map(ch=>{const m=methodById(ch.methodId),st=computeStats(ch);
+    return {challenge:ch.name,method:m?m.name:'',influencer:m&&infById(m.influencerId)?infById(m.influencerId).name:'',
+      status:ch.status,start:ch.start,end:ch.end,total_score:st.total,rate_diff:st.rateDiff,score_diff:st.scoreDiff,
+      total_min:st.totalMin,retention_pct:st.retentionPct,days:st.daysPracticed};});
+}
+function exportTableCSV(t){
+  const map={challenges:()=>enrichedChallenges(),logs:()=>DB.logs,tests:()=>DB.tests,reviews:()=>DB.reviews,
+    methods:()=>DB.methods,influencers:()=>DB.influencers};
+  dl(`eigolab_${t}.csv`,toCSV(map[t]()));toast('CSVを書き出しました');
+}
+function exportAllCSV(){
+  const parts=[['== 総合ランキング / チャレンジ ==',enrichedChallenges()],['== 学習法 ==',DB.methods],
+    ['== 発信者 ==',DB.influencers],['== 毎日記録 ==',DB.logs],['== テスト ==',DB.tests],['== 週次レビュー ==',DB.reviews]];
+  const text=parts.map(([t,rows])=>t+'\n'+toCSV(rows)).join('\n\n');
+  dl('eigolab_all.csv',text);toast('全データをCSVで書き出しました');
+}
+function exportJSON(){dl('eigolab_backup.json',JSON.stringify(DB,null,2),'application/json');toast('バックアップを保存しました');}
+function importJSON(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();
+  r.onload=()=>{try{DB=JSON.parse(r.result);saveNow();DB=load();compareSel=[];openView('home');toast('復元しました');}catch(e){toast('ファイルが不正です');}};r.readAsText(f);}
+
+/* ---------- スプシ自動同期(GAS) ---------- */
+async function syncToSheet(){
+  const url=DB.settings.gasUrl;if(!url)return toast('先にGAS URLを設定してください');
+  toast('同期中…');
+  const payload={challenges:enrichedChallenges(),methods:DB.methods,influencers:DB.influencers,
+    logs:DB.logs,tests:DB.tests,reviews:DB.reviews};
+  try{
+    await fetch(url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
+    toast('スプシへ送信しました（no-corsのため結果はスプシで確認）');
+  }catch(e){toast('送信失敗: '+e.message);}
+}
+
+/* =========================================================================
+   SVGチャート（依存なし・オフライン）
+   ========================================================================= */
+function barChart(data,max){
+  if(!data.length)return'<div class="sub">データなし</div>';
+  const mx=max||Math.max(...data.map(d=>d.v),1);
+  return `<div style="display:flex;flex-direction:column;gap:7px">`+data.map(d=>`
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="tiny" style="flex:0 0 78px;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(d.label)}</div>
+      <div class="bar-track" style="flex:1"><div class="bar-fill" style="width:${clamp(d.v/mx*100,0,100)}%"></div></div>
+      <div class="tiny" style="flex:0 0 34px;font-weight:700;color:var(--txt)">${round1(d.v)}</div></div>`).join('')+`</div>`;
+}
+function lineChart(data,max){
+  if(data.length<1)return'<div class="sub">データなし</div>';
+  const W=320,H=110,pad=16,mx=max||Math.max(...data.map(d=>d.v),1);
+  const step=data.length>1?(W-pad*2)/(data.length-1):0;
+  const pts=data.map((d,i)=>[pad+i*step, H-pad-(d.v/mx)*(H-pad*2)]);
+  const path=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+  const area=`M${pts[0][0]} ${H-pad} `+pts.map(p=>'L'+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ')+` L${pts[pts.length-1][0]} ${H-pad} Z`;
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:520px">
+    <defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4dd0c3" stop-opacity=".35"/><stop offset="1" stop-color="#4dd0c3" stop-opacity="0"/></linearGradient></defs>
+    <path d="${area}" fill="url(#lg)"/><path d="${path}" fill="none" stroke="#4dd0c3" stroke-width="2.5" stroke-linejoin="round"/>
+    ${pts.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="3" fill="#4dd0c3"/><text x="${p[0]}" y="${H-4}" fill="#93a0bd" font-size="8" text-anchor="middle">${esc(data[i].label)}</text>`).join('')}
+  </svg>`;
+}
+function radarChart(pairs){return radarChartMulti([{name:'',vals:pairs}]);}
+function radarChartMulti(series){
+  const axes=series[0].vals.map(v=>v[0]);const N=axes.length,S=260,c=S/2,r=S*0.34,max=5;
+  const colors=['#4dd0c3','#ff8a4c','#a78bfa','#f472b6','#facc15'];
+  const ang=i=>-Math.PI/2+i*2*Math.PI/N;
+  const pt=(i,val)=>[c+Math.cos(ang(i))*r*(val/max),c+Math.sin(ang(i))*r*(val/max)];
+  let grid='';for(let g=1;g<=max;g++){grid+=`<polygon points="${axes.map((_,i)=>{const[x,y]=[c+Math.cos(ang(i))*r*(g/max),c+Math.sin(ang(i))*r*(g/max)];return x.toFixed(1)+','+y.toFixed(1)}).join(' ')}" fill="none" stroke="#2a3350" stroke-width="1"/>`;}
+  const axLines=axes.map((_,i)=>{const[x,y]=pt(i,max);return `<line x1="${c}" y1="${c}" x2="${x}" y2="${y}" stroke="#2a3350"/>`}).join('');
+  const labels=axes.map((a,i)=>{const[x,y]=[c+Math.cos(ang(i))*r*1.22,c+Math.sin(ang(i))*r*1.22];
+    return `<text x="${x}" y="${y}" fill="#93a0bd" font-size="10" text-anchor="middle" dominant-baseline="middle">${esc(a)}</text>`}).join('');
+  const polys=series.map((s,si)=>{const col=colors[si%colors.length];
+    const p=s.vals.map((v,i)=>pt(i,num(v[1])).map(n=>n.toFixed(1)).join(',')).join(' ');
+    return `<polygon points="${p}" fill="${col}33" stroke="${col}" stroke-width="2"/>`}).join('');
+  const legend=series[0].name?`<div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:6px">${series.map((s,i)=>`<span class="tiny"><span style="color:${colors[i%colors.length]}">●</span> ${esc(s.name)}</span>`).join('')}</div>`:'';
+  return `<div style="text-align:center"><svg viewBox="0 0 ${S} ${S}" style="width:100%;max-width:300px">${grid}${axLines}${polys}${labels}</svg>${legend}</div>`;
+}
+
+/* =========================================================================
+   共通UI: modal / toast / helpers
+   ========================================================================= */
+function select(id,opts,val,suffix=''){
+  return `<select id="${id}">${opts.map(o=>`<option value="${o}" ${String(val)===String(o)?'selected':''}>${o}${suffix?' '+suffix.repeat(o):''}</option>`).join('')}</select>`;
+}
+function emptyState(e,t,d,btnT,btnFn){
+  return `<div class="card"><div class="empty"><div class="e">${e}</div><h3>${t}</h3><div class="sub">${d}</div>
+    ${btnT?`<button class="btn p" style="margin-top:12px" onclick="${btnFn}">${btnT}</button>`:''}</div></div>`;
+}
+function disclaimer(){
+  return `<details class="acc"><summary class="sub">⚠️ 結果の見方について</summary>
+    <div class="tiny" style="padding-bottom:12px;line-height:1.8">
+    ・この結果は<b>1週間・実践者個人</b>の記録です。<br>
+    ・開始時点の英語力やテスト内容によって結果は変わります。<br>
+    ・学習方法によって効果が出るまでの期間は異なります。<br>
+    ・医学的・科学的な効果を保証するものではありません。<br>
+    ・同じ問題を使うと「問題を覚えた」ことでスコアが上がる場合があります。</div></details>`;
+}
+let modalStack=[];
+function modal(title,body,actions=[]){
+  const acts=(actions.filter(Boolean).map((a,i)=>`<button class="btn ${a.cls||'gho'}" data-act="${i}">${a.t}</button>`).join(''));
+  modalRaw(`<div class="modal">
+    <div class="row" style="align-items:center;margin-bottom:6px"><h2 style="flex:1;margin:0">${title}</h2><button class="x" onclick="closeModal()">×</button></div>
+    <div class="mbody">${body}</div>
+    <div class="row" style="margin-top:16px;justify-content:flex-end">${acts}</div></div>`);
+  const validActs=actions.filter(Boolean);
+  $$('#modalbg [data-act]').forEach(b=>b.onclick=()=>validActs[+b.dataset.act].fn());
+}
+function modalRaw(html){
+  const bg=document.createElement('div');bg.className='modal-bg';bg.id='modalbg';bg.innerHTML=html;
+  bg.onclick=e=>{if(e.target===bg)closeModal();};
+  document.body.appendChild(bg);modalStack.push(bg);
+}
+function closeModal(){const m=modalStack.pop();if(m)m.remove();}
+let toastT;
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2200);}
+
+/* ---------- date/format helpers ---------- */
+function addDays(d,n){const dt=new Date(d+'T00:00:00');dt.setDate(dt.getDate()+n);return dt.toISOString().slice(0,10);}
+function challengeDayIndex(ch){const diff=Math.floor((new Date(todayStr())-new Date(ch.start))/86400000)+1;return clamp(diff,0,7);}
+function fmtMin(m){m=num(m);if(m<60)return m+'分';const h=Math.floor(m/60),mm=m%60;return h+'時間'+(mm?mm+'分':'');}
+function fmtSec(s){s=num(s);const m=Math.floor(s/60);return m?m+'分'+(s%60)+'秒':s+'秒';}
+
+/* =========================================================================
+   サンプルデータ
+   ========================================================================= */
+function loadSampleData(){
+  if(DB.methods.length&&!confirm('サンプルデータを追加します。よろしいですか？'))return;
+  const inf1={id:uid('inf'),name:'Atsueigo',platform:'YouTube',theme:'発音・単語',youtube:'',instagram:'',tiktok:'',x:'',website:'',target:'中〜上級',note:'アカデミックな英語学習'};
+  const inf2={id:uid('inf'),name:'サマー先生',platform:'Instagram',theme:'英会話フレーズ',youtube:'',instagram:'',tiktok:'',x:'',website:'',target:'初〜中級',note:''};
+  DB.influencers.push(inf1,inf2);
+  const m1={id:uid('m'),name:'毎日30分シャドーイング',influencerId:inf1.id,categories:['リスニング','スピーキング','発音'],targetLevel:'中級',targetGoal:'英会話・リスニング',recMin:30,recDays:7,difficulty:3,cost:'無料',material:'TEDトーク',instructions:'1. 音声を聞く\n2. スクリプト確認\n3. 音声に合わせ3回音読\n4. スクリプト無しでシャドーイング\n5. 録音',sourceUrl:'',description:'音声に少し遅れて発話し続ける'};
+  const m2={id:uid('m'),name:'英単語100語/日',influencerId:inf1.id,categories:['単語','TOEIC'],targetLevel:'中級',targetGoal:'語彙力',recMin:30,recDays:7,difficulty:2,cost:'無料',material:'金のフレーズ',instructions:'1. 100語を確認\n2. 音声再生\n3. 3周する',sourceUrl:'',description:'高速で反復'};
+  const m3={id:uid('m'),name:'オンライン英会話 毎日',influencerId:inf2.id,categories:['スピーキング','英会話'],targetLevel:'中級',targetGoal:'英会話',recMin:30,recDays:7,difficulty:4,cost:'月6000円',material:'DMM英会話',instructions:'1. 予約\n2. 25分レッスン\n3. 復習',sourceUrl:'',description:''};
+  DB.methods.push(m1,m2,m3);
+  const seed=(m,startOffset,rateFrom,rateTo,retention,revScores)=>{
+    const start=addDays(todayStr(),startOffset);
+    const ch={id:uid('ch'),methodId:m.id,name:m.name,start,end:addDays(start,6),dailyTarget:30,weeklyGoal:'',hypothesis:'',success:'',status:'完了'};
+    DB.challenges.push(ch);
+    DB.tests.push({id:uid('t'),challengeId:ch.id,timing:'pre',type:'リスニング',material:'共通模試',qcount:20,correct:Math.round(rateFrom/5),rate:rateFrom,score:null,seconds:600,memo:''});
+    DB.tests.push({id:uid('t'),challengeId:ch.id,timing:'post',type:'リスニング',material:'共通模試',qcount:20,correct:Math.round(rateTo/5),rate:rateTo,score:null,seconds:540,memo:'',grew:'リスニング',notGrew:''});
+    for(let i=0;i<7;i++){const done=i<retention;
+      DB.logs.push({id:uid('log'),challengeId:ch.id,date:addDays(start,i),status:done?'完了':'未実施',
+        minutes:done?28+Math.round(Math.random()*10):0,focus:3+(i%3===0?1:0),fun:revScores.fun,difficulty:revScores.diff,
+        effect:4,understand:3+(i%2),sustain:revScores.sus,memo:''});}
+    DB.reviews.push({id:uid('rev'),challengeId:ch.id,effectiveness:revScores.eff,sustainability:revScores.sus,
+      enjoyment:revScores.fun,difficulty:revScores.diff,time_efficiency:revScores.te,cost_performance:revScores.cost,
+      preparation:revScores.prep,recommendation:revScores.rec,continuation:revScores.con,
+      good_points:revScores.good||'続けやすかった',bad_points:'',suitable:revScores.suit||'中級者',unsuitable:'',overall:''});
+  };
+  seed(m1,-21,55,68,6,{eff:5,sus:4,fun:4,diff:3,te:5,cost:5,prep:4,rec:5,con:5,good:'耳が慣れた',suit:'リスニングを伸ばしたい人'});
+  seed(m2,-14,60,66,7,{eff:4,sus:5,fun:3,diff:2,te:4,cost:5,prep:5,rec:4,con:4,good:'手軽',suit:'単語が弱い人'});
+  seed(m3,-7,58,64,5,{eff:4,sus:3,fun:5,diff:4,te:3,cost:2,prep:3,rec:4,con:3,good:'話す度胸がついた',suit:'アウトプットしたい人'});
+  saveNow();openView('home');toast('サンプルデータを投入しました');
+}
+
+/* ---------- boot ---------- */
+render();
+// PWA: Service Worker登録（http(s)配信時のみ。file://では黙ってスキップ）
+if('serviceWorker' in navigator && location.protocol.startsWith('http')){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+// 保存できるか起動時に自己診断（file://のSafari/プライベートモード対策）
+(function storageCheck(){
+  LS.set('__probe__','1'); LS.del('__probe__');
+  if(!STORAGE_OK){
+    const b=document.createElement('div');
+    b.style.cssText='position:fixed;top:0;left:0;right:0;z-index:90;background:#4a2530;color:#ffd1d1;padding:9px 12px;font-size:12.5px;text-align:center;border-bottom:1px solid #f87171';
+    b.innerHTML='⚠️ このブラウザではデータ保存(localStorage)が使えないため、入力が残りません。'
+      +'<b>ファイルを直接開いている（file://）場合はこの現象が起きます。</b>付属の「英語ラボを開く.command」から起動するか、Chromeで開いてください。';
+    document.body.appendChild(b);
+    document.querySelector('.wrap').style.paddingTop='52px';
+  }
+})();
+</script>

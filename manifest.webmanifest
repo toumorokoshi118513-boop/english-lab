@@ -1,0 +1,15 @@
+{
+  "name": "1週間英語ラボ",
+  "short_name": "英語ラボ",
+  "description": "英語学習メソッドを1週間ずつ実践して比較・可視化する記録ツール",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f1420",
+  "theme_color": "#131a29",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
