@@ -171,7 +171,27 @@ function autoDifficulty(o){
   return clamp(Math.round(s),1,5);
 }
 const DIFF_LABEL=['とても易しい','易しい','ふつう','やや難しい','難しい'];
-let _aiJudgedDiff=null, _aiNote='', _aiLevel=null; // AI先生が判定した難易度・コツ・対象レベル（保存に反映）
+// 難易度の5指標（AIが題名・選択肢・会話からそれぞれ採点→加重平均が総合難易度）
+const DIFF_INDICATORS=[
+  {k:'cognitive', label:'認知負荷',   w:30, hint:'アウトプット量・同時処理（例:シャドーイングは高い）'},
+  {k:'prerequisite',label:'前提知識', w:25, hint:'必要な語彙・文法の土台'},
+  {k:'habit',     label:'続けにくさ', w:20, hint:'飽きやすさ・意志力への依存'},
+  {k:'barrier',   label:'準備・環境', w:15, hint:'教材・相手・予約などのハードル'},
+  {k:'timeload',  label:'時間負荷',   w:10, hint:'1回の長さ×頻度'},
+];
+function renderDiffBreak(b){
+  if(!b)return'';
+  return `<div style="border-top:1px solid var(--line);padding-top:8px">
+    <div class="tiny" style="margin-bottom:4px">判定の内訳（5指標の加重平均）</div>
+    ${DIFF_INDICATORS.map(ind=>{
+      const v=clamp(num(b[ind.k],0),0,5);
+      return `<div style="display:flex;align-items:center;gap:8px;margin:3px 0">
+        <div class="tiny" style="flex:0 0 72px" title="${esc(ind.hint)}">${ind.label}</div>
+        <div class="bar-track" style="flex:1;height:6px"><div class="bar-fill" style="width:${v*20}%"></div></div>
+        <div class="tiny" style="flex:0 0 56px">${v?'★'.repeat(v):'—'} <span class="mut">${ind.w}%</span></div></div>`;
+    }).join('')}</div>`;
+}
+let _aiJudgedDiff=null, _aiNote='', _aiLevel=null, _aiDiffBreak=null; // AI先生の判定（難易度・コツ・レベル・指標内訳）
 function refreshAutoDiff(){
   const box=$('#f_diff_disp'); if(!box)return;
   _aiJudgedDiff=null; _aiLevel=null; // 選択を変えたらAI判定はリセット（ルール判定に戻す）
@@ -262,11 +282,29 @@ async function aiChatTurn(userText){
   const prompt=`あなたは学習法の設定を「短い対話」で一緒に決めるコーチです。現在のフォーム入力:
 ${methodFormContext()}
 ${transcript?`これまでの会話:\n${transcript}\n`:''}
-${userText?'学習者の最新発言に短く答え、状況に合わせて判定(難易度/対象レベル)を更新してください。「これで決定」と言われたら done=true にして励まして締めてください。「やっぱり調整したい」と言われたら done=false に戻して質問してください。':'まず現時点の判定（難易度・対象レベル）を一言で伝え、より正確に判定するための質問を1つだけしてください。'}
+${userText?'学習者の最新発言に短く答え、状況に合わせて判定を更新してください。「これで決定」と言われたら done=true にして励まして締めてください。「やっぱり調整したい」と言われたら done=false に戻して質問してください。':'まず現時点の判定（難易度・対象レベル）を一言で伝え、より正確に判定するための質問を1つだけしてください。'}
+
+難易度は必ず次の5指標をそれぞれ1〜5で採点し、加重平均（認知負荷30%・前提知識25%・続けにくさ20%・準備環境15%・時間負荷10%）を四捨五入した値を difficulty とすること:
+- cognitive(認知負荷): アウトプット量・同時処理の多さ。学習法名の意味も解析する（例:「瞬間英作文」=即時アウトプットで高、「聞き流し」=受動で低）
+- prerequisite(前提知識): 必要な語彙・文法の土台。対象レベル/目的や会話で判明したレベル感から
+- habit(続けにくさ): 飽きやすさ・意志力依存。会話で「三日坊主」等が出たら反映
+- barrier(準備・環境): 教材・相手・予約・費用のハードル。費用選択も根拠に
+- timeload(時間負荷): 1日の分数×日数
+targetLevelはCEFR/TOEIC/英検の水準感で選ぶ。会話で新情報が出るたび該当指標だけ更新する。
 JSONのみで返答:
-{"reply":"学習者への言葉（2〜3文・話し言葉・簡潔）","difficulty":1〜5の整数,"targetLevel":"${LEVELS.join(' / ')} から1つ","quick":["あなたの質問に対して学習者が選びそうな返答の選択肢を3つ（各12字以内・毎回文脈に合わせて変える）"],"done":false,"tips":["脳科学的なコツを1〜3個（任意、更新時のみ）"]}`;
+{"reply":"学習者への言葉（2〜3文・話し言葉・簡潔）","difficulty":1〜5の整数,"indicators":{"cognitive":N,"prerequisite":N,"habit":N,"barrier":N,"timeload":N},"targetLevel":"${LEVELS.join(' / ')} から1つ","quick":["あなたの質問に対して学習者が選びそうな返答の選択肢を3つ（各12字以内・毎回文脈に合わせて変える）"],"done":false,"tips":["脳科学的なコツを1〜3個（任意、更新時のみ）"]}`;
   try{
     const o=parseLooseJSON(await callLLM(prompt,{json:true,system:AI_PERSONA}))||{};
+    // 指標内訳（あれば加重平均でdifficultyを検算・上書き）
+    if(o.indicators&&typeof o.indicators==='object'){
+      const b={}; DIFF_INDICATORS.forEach(ind=>{const v=parseInt(o.indicators[ind.k],10); if(v>=1&&v<=5)b[ind.k]=v;});
+      if(Object.keys(b).length>=3){
+        _aiDiffBreak=b;
+        const wsum=DIFF_INDICATORS.reduce((s,ind)=>s+(b[ind.k]?ind.w:0),0);
+        if(wsum>0)o.difficulty=Math.round(DIFF_INDICATORS.reduce((s,ind)=>s+(b[ind.k]||0)*ind.w,0)/wsum);
+        if($('#f_diff_break'))$('#f_diff_break').innerHTML=renderDiffBreak(b);
+      }
+    }
     let d=parseInt(o.difficulty,10);
     if(d>=1&&d<=5){_aiJudgedDiff=d; if($('#f_diff_disp'))$('#f_diff_disp').innerHTML=`${diffStars(d)} <span class="tiny">（${DIFF_LABEL[d-1]}・AI判定）</span>`;}
     const lv=LEVELS.includes(o.targetLevel)?o.targetLevel:(LEVELS.find(l=>String(o.targetLevel||'').includes(l))||null);
@@ -838,6 +876,7 @@ function openMethodDetail(id){
     <div class="grid g3" style="margin:10px 0">
       ${kpi(m.recMin+'分','推奨/日')}${kpi((m.recDays||7)+'日','推奨日数')}${kpi(diffStars(m.difficulty),'難易度')}
     </div>
+    ${m.diffBreak?`<div class="card" style="padding:10px;margin:8px 0">${renderDiffBreak(m.diffBreak)}</div>`:''}
     ${m.aiNote?`<div class="ok-box tiny" style="white-space:pre-wrap;margin:8px 0"><b>🧠 AI先生の判定・コツ</b><br>${esc(m.aiNote)}</div>`:''}
     ${m.description?`<label>概要</label><div>${esc(m.description)}</div>`:''}
     ${m.instructions?`<label>学習手順</label><div style="white-space:pre-wrap">${esc(m.instructions)}</div>`:''}
@@ -855,7 +894,7 @@ function openMethodDetail(id){
   ]);
 }
 function openMethodForm(id){
-  _aiJudgedDiff=null; _aiNote=''; _aiLevel=null; _aiChat=[]; _aiQuick=[]; _aiDone=false; // AI判定・チャット状態をリセット
+  _aiJudgedDiff=null; _aiNote=''; _aiLevel=null; _aiDiffBreak=null; _aiChat=[]; _aiQuick=[]; _aiDone=false; // AI判定・チャット状態をリセット
   const m=id?methodById(id):{id:uid('m'),name:'',influencerId:'',description:'',categories:[],targetLevel:'中級',
     targetGoal:'',recMin:30,recDays:7,cost:'無料',material:'',sourceUrl:'',instructions:'',difficulty:3,expectation:3,aiNote:''};
   const infOpts=`<option value="">（未設定）</option>`+DB.influencers.map(i=>`<option value="${i.id}" ${m.influencerId===i.id?'selected':''}>${esc(i.name)}</option>`).join('');
@@ -878,6 +917,7 @@ function openMethodForm(id){
       <div class="l">難易度・対象レベル（自動判定・あなたが決める必要はありません）</div>
       <div class="n" id="f_diff_disp" style="font-size:20px">${diffStars(autoDifficulty(m))} <span class="tiny">（${DIFF_LABEL[autoDifficulty(m)-1]}・自動）</span></div>
       <div class="tiny" id="f_level_disp">対象レベル: ${esc(m.targetLevel||'中級')}（AI判定で更新されます）</div>
+      <div id="f_diff_break" style="margin-top:8px">${m.diffBreak?renderDiffBreak(m.diffBreak):''}</div>
     </div>
     <button class="btn o sm" style="width:100%;margin-top:8px" onclick="aiChatStart()">💬 AI先生とチャットで相談（難易度・レベルを対話で決める）</button>
     ${aiChatUI()}
@@ -900,7 +940,7 @@ function openMethodForm(id){
       Object.assign(m,{name,influencerId:$('#f_inf').value,categories:cats,targetLevel:level,
         difficulty,recMin,recDays:num($('#f_recdays').value,7),
         targetGoal:goals.join('・'),description:$('#f_desc').value,instructions:$('#f_inst').value,
-        cost:$('#f_cost').value,sourceUrl:$('#f_url').value,material:m.material||'',aiNote:_aiNote||m.aiNote||''});
+        cost:$('#f_cost').value,sourceUrl:$('#f_url').value,material:m.material||'',aiNote:_aiNote||m.aiNote||'',diffBreak:_aiDiffBreak||m.diffBreak||null});
       if(!id)DB.methods.push(m); saveNow();closeModal();render();
       toast('保存（難易度は自動判定：'+diffStars(difficulty)+'）');
     }}
