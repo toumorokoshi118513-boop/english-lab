@@ -758,7 +758,7 @@ const DEFAULT_WEIGHTS = {
 };
 
 /* ---------- store ---------- */
-const APP_VER='v2.6 (2026-07-12)'; // 設定画面に表示。更新が届いているかの確認用
+const APP_VER='v2.7 (2026-07-12)'; // 設定画面に表示。更新が届いているかの確認用
 const KEY='eigo_lab_v1';
 const blankDB = ()=>({
   profile:{name:'運営者',level:'中級',toeic:'',target:'',goal:'',dailyMin:30},
@@ -1383,9 +1383,9 @@ function viewChallengeDetail(v){
 
   // AI分析
   h+=`<div class="card"><div class="row" style="align-items:center">
-      <h3 style="flex:1;margin:0">🤖 AI分析</h3>
+      <h3 style="flex:1;margin:0">🧠 AI分析（脳科学×第二言語習得の権威理論に基づく）</h3>
       <button class="btn sm ${st.total!=null?'o':'gho'}" onclick="runAI('${ch.id}')">分析する</button></div>
-    <div id="ai_out" class="tiny" style="margin-top:10px">${ch.aiAnalysis?aiOutHtml(ch.aiAnalysis,ch.aiModel):'<span class="sub">結果を無料LLM（Gemini / Groq / OpenRouter）で分析します。設定でAPIキーを入れてから「分析する」を押してください。</span>'}</div>
+    <div id="ai_out" class="tiny" style="margin-top:10px">${ch.aiAnalysis?aiOutHtml(ch.aiAnalysis,ch.aiModel):'<span class="sub">脳科学・第二言語習得の研究知見（池谷裕二／今井むつみ／白井恭弘／S.クラシェン 等）に基づいて分析します。設定でAPIキーを入れてから「分析する」を押してください。</span>'}</div>
   </div>`;
 
   // レビューまとめ
@@ -1877,7 +1877,7 @@ function viewCompare(v){
       h+=`<div class="card"><div class="row" style="align-items:center">
         <h3 style="flex:1;margin:0">🧠 AI先生の比較分析</h3>
         <button class="btn sm o" onclick="runCompareAI()">${cached?'再分析':'分析する'}</button></div>
-        <div id="cmp_ai" style="margin-top:8px">${cached?aiOutHtml(cached.text,cached.model):'<span class="tiny sub">東大卒×脳科学コーチが「なぜこの差が出たか」「どう使い分けるべきか」まで深掘りします。</span>'}</div></div>`;
+        <div id="cmp_ai" style="margin-top:8px">${cached?aiOutHtml(cached.text,cached.model):'<span class="tiny sub">脳科学・第二言語習得の研究知見に基づき、「なぜこの差が出たか」「どう使い分けるべきか」まで深掘りします。</span>'}</div></div>`;
     }
     // 比較表
     const rows=[
@@ -2150,7 +2150,7 @@ ${others||'なし'}
 【② 過去の方法と比べた強み・弱み】
 【③ 次回の改善点（具体的に）】
 【④ このタイプの学習者に次に薦める学習法】`;
-  $('#ai_out').innerHTML=`<span class="sub">🧠 東大卒×脳科学コーチが分析中…（一番性能の良いAPIを自動選択）</span>`;
+  $('#ai_out').innerHTML=`<span class="sub">🧠 脳科学・第二言語習得の研究知見に基づき分析中…（一番性能の良いAPIを自動選択）</span>`;
   try{
     const text=await callLLM(prompt,{system:AI_PERSONA});
     ch.aiAnalysis=text; ch.aiModel=lastLLMModel; saveNow();
@@ -2162,7 +2162,8 @@ ${others||'なし'}
 }
 function aiOutHtml(text,model){
   return `<div style="white-space:pre-wrap;font-size:13.5px;line-height:1.6">${esc(text)}</div>`+
-    (model?`<div class="tiny" style="margin-top:8px;text-align:right">🤖 使用モデル: <b>${esc(model)}</b></div>`:'');
+    `<div class="tiny mut" style="margin-top:8px;border-top:1px solid var(--line);padding-top:6px">${AI_BASIS}</div>`+
+    (model?`<div class="tiny" style="margin-top:4px;text-align:right">🤖 使用モデル: <b>${esc(model)}</b></div>`:'');
 }
 // プロバイダ既定モデル（無料枠はモデルごとに別クォータ→複数を順に試す）
 let lastLLMModel='';
@@ -2171,10 +2172,16 @@ const LLM_MODELS={
   gemini:['gemini-2.0-flash','gemini-2.5-flash','gemini-2.0-flash-lite'],
   openrouter:['meta-llama/llama-3.3-70b-instruct:free','deepseek/deepseek-chat-v3-0324:free','mistralai/mistral-7b-instruct:free']
 };
-// AIの「人格」設定：東大卒の英語教師＋認知/脳科学の知見を持つコーチ（全解析に適用）
-const AI_PERSONA='あなたは東京大学卒の英語教師で、第二言語習得(SLA)・認知科学・脳科学にも精通した学習コーチです。'+
-  '記憶の定着（分散学習・想起練習・睡眠）、モチベーション、可処分時間、学習者のレベルを踏まえ、'+
-  '専門知識に基づきつつ断定しすぎず、根拠を添えて日本人学習者に分かりやすく助言します。';
+// AIの「人格」設定：脳科学・第二言語習得の権威の研究理論に立脚した専門家レベルのコーチ（全解析に適用）
+const AI_PERSONA='あなたは東京大学で脳科学と第二言語習得(SLA)を修めた研究者レベルの英語学習コーチです。'+
+  '次の権威の研究知見に立脚して分析すること：池谷裕二（東京大学教授・記憶と脳の第一人者／分散学習・想起・睡眠による定着）、'+
+  '今井むつみ（認知科学・言語習得／スキーマとメタ認知）、白井恭弘（第二言語習得論／インプットとアウトプットの役割）、'+
+  'Stephen Krashen（インプット仮説・情意フィルター）。'+
+  'これら確立された理論を根拠に、記憶定着・認知負荷・モチベーション・学習者レベルを踏まえ、'+
+  '断定しすぎず具体的な根拠を添えて、日本人学習者に分かりやすく助言します。'+
+  '※あなたはこれら研究者本人ではなく、その理論に基づいて助言するコーチです。';
+// 分析の理論的基盤（UIに小さく表示して権威性を示す。実在研究者の「本人監修」ではなく理論に基づく旨を明示）
+const AI_BASIS='🧠 脳科学・第二言語習得の研究知見に基づく分析（理論的基盤: 池谷裕二／今井むつみ／白井恭弘／S.クラシェン 等）';
 // モデルの性能ランク（高いほど高性能）。「一番いいやつ」を選ぶための指標
 function modelRank(prov,model){
   const m=(model||'').toLowerCase(); let s=50;
