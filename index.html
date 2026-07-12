@@ -421,20 +421,41 @@ function pickFamousInfluencers(){
    情報源の優先順: ①YouTube Data API(キー任意・実データ) ②無料リーダーでチャンネルページ ③AIの既存知識 */
 async function fetchYTContext(inf){
   const s=DB.settings;
-  // ① YouTube Data API v3（無料キー。人気動画のタイトル+説明を実データとして取得）
+  // ① YouTube Data API v3（無料枠。チャンネル紹介＋再生リスト＝学習法シリーズ＋人気動画のフル説明文を取得）
   try{
     if(s.ytKey&&inf.youtube){
+      const key=encodeURIComponent(s.ytKey);
+      const yt=(path)=>fetch(`https://www.googleapis.com/youtube/v3/${path}&key=${key}`).then(r=>r.json());
       const m=inf.youtube.match(/@([\w.\-]+)/);
-      let chId='';
+      let chId='', about='';
       if(m){
-        const r=await fetch(`https://www.googleapis.com/youtube/v3/channels?part=id&forHandle=${encodeURIComponent(m[1])}&key=${encodeURIComponent(s.ytKey)}`);
-        const j=await r.json(); chId=j.items?.[0]?.id||'';
+        const j=await yt(`channels?part=snippet&forHandle=${encodeURIComponent(m[1])}`);
+        chId=j.items?.[0]?.id||''; about=j.items?.[0]?.snippet?.description||'';
       }
       if(chId){
-        const r2=await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${chId}&order=viewCount&type=video&maxResults=15&key=${encodeURIComponent(s.ytKey)}`);
-        const j2=await r2.json();
-        const items=(j2.items||[]).map(it=>'- '+it.snippet.title+(it.snippet.description?('：'+it.snippet.description.slice(0,80)):''));
-        if(items.length)return {src:'YouTube API（人気動画'+items.length+'本の実データ）',text:items.join('\n').slice(0,3500)};
+        const parts=[]; let vidCount=0;
+        if(about)parts.push('【チャンネル紹介文】\n'+about.slice(0,700));
+        // 再生リスト（＝発信者が体系化した学習法シリーズ。最重要シグナル）
+        try{
+          const jp=await yt(`playlists?part=snippet&channelId=${chId}&maxResults=25`);
+          const pls=(jp.items||[]).map(it=>'- '+it.snippet.title+(it.snippet.description?('：'+it.snippet.description.slice(0,70)):'')).filter(Boolean);
+          if(pls.length)parts.push('【再生リスト（学習法シリーズ）】\n'+pls.join('\n'));
+        }catch(e){}
+        // 人気動画→動画IDでフル説明文を取得（searchのsnippetは説明が切れているためvideos.listで補完）
+        const js=await yt(`search?part=snippet&channelId=${chId}&order=viewCount&type=video&maxResults=12`);
+        const ids=(js.items||[]).map(it=>it.id?.videoId).filter(Boolean);
+        if(ids.length){
+          const jv=await yt(`videos?part=snippet,statistics&id=${ids.join(',')}`);
+          const vids=(jv.items||[]).map(v=>{
+            const vc=v.statistics?.viewCount?Math.round(v.statistics.viewCount/10000)+'万回 ':'';
+            const desc=(v.snippet.description||'').slice(0,220).replace(/\n+/g,' ');
+            return `- 【${vc}】${v.snippet.title}${desc?'\n  '+desc:''}`;
+          });
+          vidCount=vids.length;
+          if(vids.length)parts.push('【人気動画（タイトル＋説明冒頭）】\n'+vids.join('\n'));
+        }
+        const text=parts.join('\n\n').slice(0,6500);
+        if(text)return {src:`YouTube API（紹介文＋再生リスト＋人気動画${vidCount}本）`,text};
       }
     }
   }catch(e){}
@@ -443,7 +464,7 @@ async function fetchYTContext(inf){
     if(inf.youtube){
       const ctl=new AbortController(); setTimeout(()=>ctl.abort(),9000);
       const r=await fetch('https://r.jina.ai/'+inf.youtube.replace(/\/$/,'')+'/videos',{signal:ctl.signal});
-      if(r.ok){const t=await r.text(); if(t&&t.length>300)return {src:'チャンネルページ（簡易取得）',text:t.slice(0,3500)};}
+      if(r.ok){const t=await r.text(); if(t&&t.length>300)return {src:'チャンネルページ（簡易取得）',text:t.slice(0,4000)};}
     }
   }catch(e){}
   return {src:'AIの既存知識',text:''};
@@ -456,7 +477,7 @@ async function extractMethods(infId){
   const ctx=await fetchYTContext(inf);
   if($('#ex_status'))$('#ex_status').textContent='🧠 AIが学習法を構造化しています…（情報源: '+ctx.src+'）';
   const prompt=`英語系発信者「${inf.name}」（テーマ: ${inf.theme||'-'} / 対象: ${inf.target||'-'}）が推奨している英語学習法を、実行可能な形で3〜5個抽出してください。
-${ctx.text?`以下はこの発信者の実際の動画情報です。これを最優先の根拠にし、動画に基づく具体的な学習法にすること:\n${ctx.text}\n`:'実データはありません。この発信者について広く知られている代表的な推奨学習法を挙げてください。確信が持てない場合は、テーマに合致する一般的で効果の高い学習法として提案してください。'}
+${ctx.text?`以下はこの発信者の実際のYouTube情報です。これを最優先の根拠にすること。特に「再生リスト」はこの人が体系化した学習法シリーズなので最重要。動画タイトルと説明文から、実際に推奨している具体的な学習法を復元してください:\n${ctx.text}\n`:'実データはありません。この発信者について広く知られている代表的な推奨学習法を挙げてください。確信が持てない場合は、テーマに合致する一般的で効果の高い学習法として提案してください。'}
 各学習法は「1週間・1日10〜60分で個人が実践できる」粒度に落とすこと。
 JSONのみで返答:
 {"methods":[{"name":"学習法名（具体的に）","categories":["${CATEGORIES.join('","')} から1〜3個"],"description":"どんな学習法か1〜2文","instructions":"手順を1行ずつ\\n区切りで3〜5行","recMin":10〜60の整数,"targetGoal":"主な目的（例: リスニング）"}]}`;
@@ -661,7 +682,7 @@ const DEFAULT_WEIGHTS = {
 };
 
 /* ---------- store ---------- */
-const APP_VER='v2.0 (2026-07-12)'; // 設定画面に表示。更新が届いているかの確認用
+const APP_VER='v2.1 (2026-07-12)'; // 設定画面に表示。更新が届いているかの確認用
 const KEY='eigo_lab_v1';
 const blankDB = ()=>({
   profile:{name:'運営者',level:'中級',toeic:'',target:'',goal:'',dailyMin:30},
