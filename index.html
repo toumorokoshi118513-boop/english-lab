@@ -224,6 +224,38 @@ JSONオブジェクトのみで返答:
   }catch(e){ if(note)note.innerHTML=`<div class="warn-box tiny">AI判定に失敗: ${esc(e.message)}<br>自動ルール判定の値を使います。</div>`; }
 }
 
+/* ---------- APIキー未設定の案内（端末ごと保存のため、スマホでは入れ直し or 引き継ぎが必要） ---------- */
+function needKeyModal(){
+  modal('この端末にAPIキーがありません',`
+    <div class="sub">AI機能（チャット・分析・テスト生成）には無料LLMのAPIキーが必要です。<br>
+    <b>キーは端末ごとに保存</b>されるため、PCで入れていてもスマホには入っていません。</div>
+    <div class="ok-box" style="margin-top:10px"><b>📲 一番ラクな方法（スマホで手打ち不要）</b><br>
+    1. PCでアプリを開く → ⚙️設定 →「スマホへ引き継ぎ」の<b>コードをコピー</b><br>
+    2. LINEやメモ等で自分のスマホに送る<br>
+    3. この端末の ⚙️設定 →「引き継ぎコードを貼り付け」→ 取り込む</div>
+    <div class="tiny" style="margin-top:8px">または、この端末の⚙️設定で直接キーを貼り付けてもOKです（Groq: console.groq.com/keys）。</div>
+  `,[{t:'⚙️ 設定を開く',cls:'p',fn:()=>{closeModal();openView('settings');}}]);
+}
+// 設定の引き継ぎコード（APIキー・優先度・GAS URL・配点をbase64化）
+function exportTransferCode(){
+  const s=DB.settings;
+  const code=btoa(unescape(encodeURIComponent(JSON.stringify({llmKeys:s.llmKeys,llmPrefer:s.llmPrefer,gasUrl:s.gasUrl,weights:s.weights}))));
+  const ta=$('#tf_code'); if(ta){ta.value=code;ta.style.display='block';ta.select();}
+  try{navigator.clipboard.writeText(code);toast('コードをコピーしました。スマホに送って貼り付けてください');}
+  catch(e){toast('コードを表示しました。全選択してコピーしてください');}
+}
+function importTransferCode(){
+  const raw=($('#tf_in')?.value||'').trim(); if(!raw)return toast('コードを貼り付けてください');
+  try{
+    const o=JSON.parse(decodeURIComponent(escape(atob(raw))));
+    if(o.llmKeys)DB.settings.llmKeys={...DB.settings.llmKeys,...o.llmKeys};
+    if(o.llmPrefer)DB.settings.llmPrefer=o.llmPrefer;
+    if(o.gasUrl)DB.settings.gasUrl=o.gasUrl;
+    if(o.weights)DB.settings.weights={...DB.settings.weights,...o.weights};
+    saveNow();render();toast('✅ 設定を引き継ぎました。AI機能が使えます');
+  }catch(e){toast('コードが正しくありません。全文コピーできているか確認してください');}
+}
+
 /* ---------- AI先生チャット（学習法フォーム内・対話で難易度/レベルを決める） ---------- */
 let _aiChat=[];
 function aiChatUI(){
@@ -262,7 +294,7 @@ function methodFormContext(){
   return `学習法名:${name} / カテゴリ:${cats.join(',')||'-'} / 目的:${goals.join(',')||'-'} / 1日${$('#f_recmin')?.value||30}分 / 費用:${$('#f_cost')?.value||'無料'}`;
 }
 async function aiChatStart(){
-  if(!activeProviders().length)return toast('AIチャットにはAPIキーが必要です（⚙️設定で1つ入れるだけ）');
+  if(!activeProviders().length)return needKeyModal();
   const panel=$('#ai_chat'); if(!panel)return;
   panel.style.display='block';
   if(_aiChat.length){aiChatRender();return;} // 会話継続
@@ -1461,7 +1493,7 @@ function dlRender(typing){
   quick.innerHTML=(typing?[]:(_dlDone?['修正したい']:_dlQuick)).map(t=>`<span class="chip" style="cursor:pointer" onclick="dlChatSend(this.textContent)">${esc(t)}</span>`).join('');
 }
 async function dlChatStart(){
-  if(!activeProviders().length)return toast('AI対話にはAPIキーが必要です（⚙️設定）。手動入力は下のスライダーでどうぞ');
+  if(!activeProviders().length)return needKeyModal();
   const panel=$('#dl_chat'); if(!panel)return;
   panel.style.display='block';
   if(_dlChat.length){dlRender();return;}
@@ -1866,11 +1898,7 @@ function downloadShare(){
    AI分析（無料LLM: Groq / Gemini）
    ========================================================================= */
 async function runAI(cid){
-  if(!activeProviders().length)return modal('AI設定が必要',`<div class="sub">AI分析には無料LLMのAPIキーが必要です（1つでOK）。⚙️設定で入力してください。</div>
-    <div class="warn-box" style="margin-top:10px">・Groq: <a href="https://console.groq.com/keys" target="_blank">console.groq.com/keys</a><br>
-    ・OpenRouter: <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a><br>
-    ・Gemini: <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a></div>`,
-    [{t:'設定を開く',cls:'p',fn:()=>{closeModal();openView('settings');}}]);
+  if(!activeProviders().length)return needKeyModal();
   const ch=chById(cid),m=methodById(ch.methodId),st=computeStats(ch);
   const others=scoredChallenges().filter(x=>x.ch.id!==cid).slice(0,5)
     .map(x=>`- ${x.m?x.m.name:x.ch.name}: ${x.st.total}点 (正答率${x.st.rateDiff!=null?(x.st.rateDiff>0?'+':'')+x.st.rateDiff+'pt':'—'}, 継続${x.st.retentionPct}%)`).join('\n');
@@ -2086,9 +2114,17 @@ function viewSettings(v){
     <input id="k_gemini" type="password" value="${esc(kk.gemini||'')}" placeholder="AIza... 空欄可">
     <label>優先的に使う（任意）</label>
     <select id="llm_prefer">${prefOpt('auto','自動（Groq→OpenRouter→Gemini の順で試す）')}${prefOpt('groq','Groqを優先')}${prefOpt('openrouter','OpenRouterを優先')}${prefOpt('gemini','Geminiを優先')}</select>
-    <div class="warn-box" style="margin-top:8px">キーはこの端末のブラウザ内のみに保存されます（外部送信なし）。</div>
+    <div class="warn-box" style="margin-top:8px">キーはこの端末のブラウザ内のみに保存されます（外部送信なし）。<b>端末ごとに別保存</b>のため、スマホで使うには下の「引き継ぎ」が便利です。</div>
     <div class="row" style="margin-top:10px"><button class="btn p sm" onclick="saveLLM()">保存</button>
-      <button class="btn o sm" onclick="testLLMConnection()">🔌 接続テスト（全キー）</button></div></div>`;
+      <button class="btn o sm" onclick="testLLMConnection()">🔌 接続テスト（全キー）</button></div>
+    <div class="divider"></div>
+    <h3 style="font-size:14px">📲 スマホへ引き継ぎ（キーを手打ちしなくてOK）</h3>
+    <div class="tiny" style="margin-bottom:6px">PC側: コードをコピー → LINE/メモで自分のスマホへ送る ／ スマホ側: 下の欄に貼り付けて取り込む</div>
+    <button class="btn sm" onclick="saveLLM();exportTransferCode()">📤 引き継ぎコードをコピー（この端末の設定を出力）</button>
+    <textarea id="tf_code" readonly style="display:none;margin-top:6px;font-size:11px;min-height:52px"></textarea>
+    <label>引き継ぎコードを貼り付け</label>
+    <div class="row"><input id="tf_in" placeholder="ここにコードを貼り付け">
+      <button class="btn p sm" style="flex:0 0 auto" onclick="importTransferCode()">取り込む</button></div></div>`;
 
   // スプシ連携
   h+=`<div class="card"><h3>📊 スプレッドシート連携</h3>
