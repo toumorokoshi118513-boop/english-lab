@@ -388,6 +388,24 @@ const FAMOUS_INFLUENCERS=[
   {name:'ニック式英会話',platform:'YouTube',youtube:'https://www.youtube.com/@nicktokunaga',instagram:'https://www.instagram.com/nick_shiki/',x:'',tiktok:'',website:'',theme:'ネイティブの思考法・瞬間英作文・リスニング',target:'初級〜中級の日本人向け',note:'日本向け（ニックは日本語堪能）。「英語の頭の使い方」を体系的に。リスニングのかたまり聞きが有名。'},
 ];
 // 候補一覧から選んで追加（チェックボックス式。追加済みはグレーアウト）
+// 名前/URL/@ハンドルから発信者を1人追加（YouTubeキーがあれば実データで解決）
+async function addInfluencerByInput(){
+  const q=($('#inf_new_q')?.value||'').trim(); if(!q)return toast('名前かURLを入力してください');
+  const isUrl=/https?:|youtube|@/i.test(q);
+  let resolved=null;
+  if(DB.settings.ytKey){ toast('📡 YouTubeで確認中…'); try{ resolved=await resolveYTChannel(q); }catch(e){} }
+  const name=resolved?resolved.name:(isUrl?(q.match(/@([\w.\-]+)/)?.[1]||q):q);
+  const existed=DB.influencers.find(x=>x.name===name);
+  if(existed)return toast('「'+name+'」は既に登録済みです');
+  const inf={id:uid('inf'),name,platform:'YouTube',youtube:resolved?resolved.youtube:(isUrl?q:''),
+    instagram:'',tiktok:'',x:'',website:'',theme:'',target:'',note:resolved?resolved.note:''};
+  DB.influencers.push(inf); saveNow(); closeModal(); render();
+  modal('✅ 「'+esc(name)+'」を追加しました',
+    `<div class="sub">${resolved?'YouTubeから情報を取得して登録しました。':'名前で登録しました（YouTube APIキーを入れると実データで登録できます）。'}</div>
+     <div class="tiny" style="margin-top:8px">続けてこの発信者の学習法をAIで自動抽出できます。</div>`,
+    [{t:'🔎 学習法を自動抽出',cls:'o',fn:()=>{closeModal();extractMethods(inf.id);}},
+     {t:'閉じる',cls:'gho',fn:()=>closeModal()}]);
+}
 function pickFamousInfluencers(){
   const existing=new Set(DB.influencers.map(i=>i.name));
   const rows=FAMOUS_INFLUENCERS.map((f,i)=>{
@@ -400,8 +418,13 @@ function pickFamousInfluencers(){
         <div class="tiny mut">${esc(f.note)}</div>
       </div></label>`;
   }).join('');
-  modal('追加する発信者を選ぶ',`
-    <div class="tiny" style="margin-bottom:6px">気になる発信者にチェックを入れて追加してください。
+  modal('発信者を追加',`
+    <label>好きな発信者を追加（名前 or YouTube URL / @ハンドル）</label>
+    <div class="row"><input id="inf_new_q" placeholder="例: だいじろー / @daijirojp / URL貼付" onkeydown="if(event.key==='Enter'){event.preventDefault();addInfluencerByInput();}">
+      <button class="btn p sm" style="flex:0 0 auto" onclick="addInfluencerByInput()">＋ 追加</button></div>
+    <div class="tiny mut" style="margin-top:4px">YouTube APIキーがあれば実際のチャンネル情報を自動取得して登録します。</div>
+    <div class="divider"></div>
+    <div class="tiny" style="margin-bottom:6px">または有名どころの候補から選ぶ：
       <a style="cursor:pointer" onclick="$$('#modalbg .inf-pick:not(:disabled)').forEach(c=>c.checked=true)">すべて選択</a> ／
       <a style="cursor:pointer" onclick="$$('#modalbg .inf-pick').forEach(c=>c.checked=false)">解除</a></div>
     ${rows}`,[
@@ -727,7 +750,7 @@ const DEFAULT_WEIGHTS = {
 };
 
 /* ---------- store ---------- */
-const APP_VER='v2.2 (2026-07-12)'; // 設定画面に表示。更新が届いているかの確認用
+const APP_VER='v2.3 (2026-07-12)'; // 設定画面に表示。更新が届いているかの確認用
 const KEY='eigo_lab_v1';
 const blankDB = ()=>({
   profile:{name:'運営者',level:'中級',toeic:'',target:'',goal:'',dailyMin:30},
@@ -1023,7 +1046,7 @@ function calcStreak(){
 function viewInfluencers(v){
   let html=`<div class="row" style="align-items:center"><h2 style="flex:1">⭐ 発信者</h2>
     <button class="btn p" onclick="openInfluencerForm()">＋ 登録</button></div>
-    <button class="btn o" style="width:100%;margin-bottom:12px" onclick="pickFamousInfluencers()">⚡ 有名どころの候補から選んで追加（日本人英語系・大規模）</button>`;
+    <button class="btn o" style="width:100%;margin-bottom:12px" onclick="pickFamousInfluencers()">⚡ 名前・URLで追加 / 有名どころから選ぶ</button>`;
   if(DB.influencers.length===0){
     html+=emptyState('👤','発信者がまだいません','上の「まとめて追加」ボタンか、＋登録で発信者を登録しましょう。','＋ 発信者を登録','openInfluencerForm()');
   }else{
