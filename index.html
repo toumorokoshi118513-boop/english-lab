@@ -79,13 +79,15 @@ th{color:var(--sub);font-weight:600;font-size:12px}
 .rank-badge.g3{background:linear-gradient(135deg,#e6a373,#c07840);color:#2a1400}
 .bar-track{background:var(--panel2);border-radius:6px;height:8px;overflow:hidden}
 .bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2))}
-.modal-bg{position:fixed;inset:0;background:#04070ecc;z-index:80;display:flex;align-items:flex-start;justify-content:center;padding:12px;overflow:auto}
+/* モーダルはiPhoneのDynamic Island/ステータスバー/ホームバーを避ける（セーフエリア余白を上下に確保） */
+.modal-bg{position:fixed;inset:0;background:#04070ecc;z-index:80;display:flex;align-items:flex-start;justify-content:center;
+  padding:calc(12px + env(safe-area-inset-top)) 12px calc(12px + env(safe-area-inset-bottom));overflow:auto}
 .modal{background:var(--panel);border:1px solid var(--line);border-radius:16px;max-width:640px;width:100%;padding:16px;box-shadow:var(--shadow);margin:0 auto} /* 縦autoは長いモーダルで上端が届かなくなるため不可 */
-@media(max-width:460px){.modal{padding:13px}.modal-bg{padding:8px}}
+@media(max-width:460px){.modal{padding:13px}.modal-bg{padding:calc(10px + env(safe-area-inset-top)) 8px calc(10px + env(safe-area-inset-bottom))}}
 .modal h2{display:flex;align-items:center}
 .x{background:var(--panel2);border:1px solid var(--line);border-radius:50%;color:var(--txt);font-size:20px;cursor:pointer;line-height:1;width:38px;height:38px;flex:0 0 auto;display:flex;align-items:center;justify-content:center} /* 38pxのタップ領域 */
-/* モーダルのヘッダー行ごと上端に固定→どんなに長くても×が常に押せる */
-.mhead{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:8px;background:var(--panel);margin:-16px -16px 6px;padding:14px 16px 8px;border-radius:16px 16px 0 0}
+/* モーダルのヘッダー行ごと固定→どんなに長くてもセーフエリア直下で×が常に押せる */
+.mhead{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:8px;background:var(--panel);margin:-16px -16px 6px;padding:14px 16px 8px;border-radius:16px 16px 0 0} /* 固定位置=modal-bgのpadding(セーフエリア込)直下になる */
 @media(max-width:460px){.mhead{margin:-13px -13px 6px;padding:12px 13px 8px}}
 .seg{display:flex;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:3px;gap:3px;flex-wrap:wrap}
 .seg button{flex:1;background:none;border:none;color:var(--sub);padding:7px;border-radius:8px;cursor:pointer;font-weight:600;font-size:13px;min-width:60px}
@@ -758,7 +760,7 @@ const DEFAULT_WEIGHTS = {
 };
 
 /* ---------- store ---------- */
-const APP_VER='v2.9 (2026-07-12)'; // 設定画面に表示。更新が届いているかの確認用
+const APP_VER='v3.0 (2026-07-12)'; // 設定画面に表示。更新が届いているかの確認用
 const KEY='eigo_lab_v1';
 const blankDB = ()=>({
   profile:{name:'運営者',level:'中級',toeic:'',target:'',goal:'',dailyMin:30},
