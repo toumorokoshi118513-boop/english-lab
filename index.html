@@ -426,9 +426,12 @@ async function fetchYTContext(inf){
     if(s.ytKey&&inf.youtube){
       const key=encodeURIComponent(s.ytKey);
       const yt=(path)=>fetch(`https://www.googleapis.com/youtube/v3/${path}&key=${key}`).then(r=>r.json());
-      const m=inf.youtube.match(/@([\w.\-]+)/);
       let chId='', about='';
-      if(m){
+      const cu=inf.youtube.match(/channel\/(UC[\w\-]+)/), m=inf.youtube.match(/@([\w.\-]+)/);
+      if(cu){ // channel/UC... 形式
+        const j=await yt(`channels?part=snippet&id=${cu[1]}`);
+        if(j.items?.[0]){chId=cu[1]; about=j.items[0].snippet?.description||'';}
+      } else if(m){ // @ハンドル形式
         const j=await yt(`channels?part=snippet&forHandle=${encodeURIComponent(m[1])}`);
         chId=j.items?.[0]?.id||''; about=j.items?.[0]?.snippet?.description||'';
       }
@@ -517,13 +520,55 @@ function showExtractPicker(inf,list,src){
     }}
   ]);
 }
+// YouTubeチャンネルを名前/URL/@ハンドルから解決（キーがある時のみ・失敗はnull）
+async function resolveYTChannel(query){
+  const s=DB.settings; if(!s.ytKey)return null;
+  const key=encodeURIComponent(s.ytKey);
+  const yt=p=>fetch(`https://www.googleapis.com/youtube/v3/${p}&key=${key}`).then(r=>r.json());
+  let item=null;
+  const hm=query.match(/@([\w.\-]+)/);
+  const handle=hm?hm[1]:(/^[\w.\-]+$/.test(query)&&!query.includes(' ')?query.replace(/^@/,''):'');
+  try{ if(handle){const j=await yt(`channels?part=snippet&forHandle=${encodeURIComponent(handle)}`); item=j.items?.[0];} }catch(e){}
+  try{ if(!item){const cm=query.match(/channel\/(UC[\w\-]+)/); if(cm){const j=await yt(`channels?part=snippet&id=${cm[1]}`); item=j.items?.[0];}} }catch(e){}
+  try{ if(!item){const j=await yt(`search?part=snippet&type=channel&q=${encodeURIComponent(query.replace(/https?:\S+/,''))||encodeURIComponent(query)}&maxResults=1`);
+    const c=j.items?.[0]; const cid=c?.id?.channelId; if(cid){const j2=await yt(`channels?part=snippet&id=${cid}`); item=j2.items?.[0];}} }catch(e){}
+  if(!item)return null;
+  const sn=item.snippet||{};
+  const cu=sn.customUrl?('https://www.youtube.com/'+(sn.customUrl.startsWith('@')?sn.customUrl:'@'+sn.customUrl)):('https://www.youtube.com/channel/'+item.id);
+  return {name:sn.title||query, youtube:cu, note:(sn.description||'').slice(0,200)};
+}
 function chooseInfluencerForExtract(){
-  if(!DB.influencers.length)return modal('先に発信者を登録','<div class="sub">発信者タブの「候補から選んで追加」が早いです。</div>',
-    [{t:'発信者タブへ',cls:'p',fn:()=>{closeModal();openView('influencers');}}]);
-  modal('どの発信者から抽出する？',DB.influencers.map(i=>
-    `<div class="list-item" onclick="closeModal();extractMethods('${i.id}')">
+  const list=DB.influencers.map(i=>
+    `<div class="list-item" style="margin:6px 0" onclick="closeModal();extractMethods('${i.id}')">
       <div class="av">${esc((i.name||'?')[0])}</div>
-      <div style="flex:1;min-width:0"><b>${esc(i.name)}</b><div class="tiny">${esc(i.theme||'')}</div></div>→</div>`).join(''),[]);
+      <div style="flex:1;min-width:0"><b>${esc(i.name)}</b><div class="tiny">${esc(i.theme||'')}</div></div>→</div>`).join('');
+  modal('発信者から学習法を抽出',`
+    <label>発信者を入力（名前 or YouTube URL / @ハンドル）</label>
+    <div class="row"><input id="ex_new_q" placeholder="例: だいじろー / @daijirojp / URL貼付" onkeydown="if(event.key==='Enter'){event.preventDefault();extractFromNewInput();}">
+      <button class="btn p sm" style="flex:0 0 auto" onclick="extractFromNewInput()">🔎 抽出</button></div>
+    <div class="tiny mut" style="margin-top:4px">未登録の発信者でもOK。自動で発信者に登録してから学習法を抽出します。</div>
+    ${DB.influencers.length?`<div class="divider"></div><div class="tiny" style="margin-bottom:4px">登録済みから選ぶ</div>${list}`:''}
+  `,[]);
+}
+async function extractFromNewInput(){
+  const q=($('#ex_new_q')?.value||'').trim(); if(!q)return toast('名前かURLを入力してください');
+  if(!activeProviders().length){closeModal();return needKeyModal();}
+  closeModal();
+  modalRaw(`<div class="modal" style="max-width:420px"><h2 style="margin:0">🔎 発信者を確認中…</h2>
+    <div class="sub" id="ex_status" style="margin-top:10px">📡 「${esc(q)}」を探しています…</div></div>`);
+  let resolved=null;
+  if(DB.settings.ytKey){ try{ resolved=await resolveYTChannel(q); }catch(e){} }
+  // 既存と同名なら再利用、なければ新規登録
+  const isUrl=/https?:|youtube|@/i.test(q);
+  const name=resolved?resolved.name:(isUrl?(q.match(/@([\w.\-]+)/)?.[1]||'新規発信者'):q);
+  let inf=DB.influencers.find(x=>x.name===name);
+  if(!inf){
+    inf={id:uid('inf'),name,platform:'YouTube',youtube:resolved?resolved.youtube:(isUrl?q:''),
+      instagram:'',tiktok:'',x:'',website:'',theme:'',target:'',note:resolved?resolved.note:''};
+    DB.influencers.push(inf); saveNow();
+  } else if(resolved && !inf.youtube){ inf.youtube=resolved.youtube; saveNow(); }
+  closeModal();
+  extractMethods(inf.id);
 }
 
 // 内蔵テスト問題バンク（オフライン・API不要）。level:1易 2中 3難 / a=正解index
@@ -682,7 +727,7 @@ const DEFAULT_WEIGHTS = {
 };
 
 /* ---------- store ---------- */
-const APP_VER='v2.1 (2026-07-12)'; // 設定画面に表示。更新が届いているかの確認用
+const APP_VER='v2.2 (2026-07-12)'; // 設定画面に表示。更新が届いているかの確認用
 const KEY='eigo_lab_v1';
 const blankDB = ()=>({
   profile:{name:'運営者',level:'中級',toeic:'',target:'',goal:'',dailyMin:30},
