@@ -24,7 +24,7 @@ h3{font-size:16px}
 .wrap{max-width:1080px;margin:0 auto;padding:14px 14px calc(96px + env(safe-area-inset-bottom))}
 header.top{position:sticky;top:0;z-index:40;background:linear-gradient(180deg,#131a29,#131a29ee);
   border-bottom:1px solid var(--line);backdrop-filter:blur(6px)}
-header.top .in{max-width:1080px;margin:0 auto;padding:11px 14px;display:flex;align-items:center;gap:10px}
+header.top .in{max-width:1080px;margin:0 auto;padding:calc(11px + env(safe-area-inset-top)) 14px 11px;display:flex;align-items:center;gap:10px}
 .logo{font-weight:800;letter-spacing:.02em;font-size:17px;display:flex;align-items:center;gap:8px}
 .logo .b{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
 .grow{flex:1}
@@ -538,7 +538,7 @@ const DEFAULT_WEIGHTS = {
 };
 
 /* ---------- store ---------- */
-const APP_VER='v1.7 (2026-07-12)'; // 設定画面に表示。更新が届いているかの確認用
+const APP_VER='v1.8 (2026-07-12)'; // 設定画面に表示。更新が届いているかの確認用
 const KEY='eigo_lab_v1';
 const blankDB = ()=>({
   profile:{name:'運営者',level:'中級',toeic:'',target:'',goal:'',dailyMin:30},
