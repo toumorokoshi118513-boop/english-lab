@@ -502,14 +502,19 @@ async function extractMethods(infId){
     <div class="sub" id="ex_status" style="margin-top:10px">📡 ${esc(inf.name)}の情報を取得しています…</div></div>`);
   const ctx=await fetchYTContext(inf);
   if($('#ex_status'))$('#ex_status').textContent='🧠 AIが学習法を構造化しています…（情報源: '+ctx.src+'）';
-  const prompt=`英語系発信者「${inf.name}」（テーマ: ${inf.theme||'-'} / 対象: ${inf.target||'-'}）が推奨している英語学習法を、実行可能な形で3〜5個抽出してください。
-${ctx.text?`以下はこの発信者の実際のYouTube情報です。これを最優先の根拠にすること。特に「再生リスト」はこの人が体系化した学習法シリーズなので最重要。動画タイトルと説明文から、実際に推奨している具体的な学習法を復元してください:\n${ctx.text}\n`:'実データはありません。この発信者について広く知られている代表的な推奨学習法を挙げてください。確信が持てない場合は、テーマに合致する一般的で効果の高い学習法として提案してください。'}
-各学習法は「1週間・1日10〜60分で個人が実践できる」粒度に落とすこと。
+  const wantCount=ctx.text?'できるだけ多く（8〜15個目安、根拠のあるものだけ）':'代表的なものを5〜8個';
+  const prompt=`英語系発信者「${inf.name}」（テーマ: ${inf.theme||'-'} / 対象: ${inf.target||'-'}）が推奨している英語学習法を、実行可能な形で${wantCount}抽出してください。
+${ctx.text?`以下はこの発信者の実際のYouTube情報です。これを最優先の根拠にすること。特に「再生リスト」はこの人が体系化した学習法シリーズなので最重要。動画タイトルと説明文から、実際に推奨している具体的な学習法を「網羅的に」復元してください。似て非なる方法は別々に挙げてOK（例: シャドーイングと音読は分ける）。ただし根拠のないものを水増ししないこと:\n${ctx.text}\n`:'実データはありません。この発信者について広く知られている代表的な推奨学習法を挙げてください。確信が持てない場合は、テーマに合致する一般的で効果の高い学習法として提案してください。'}
+各学習法は「1週間・1日10〜60分で個人が実践できる」粒度に落とし、内容が重複しないようにすること。
 JSONのみで返答:
 {"methods":[{"name":"学習法名（具体的に）","categories":["${CATEGORIES.join('","')} から1〜3個"],"description":"どんな学習法か1〜2文","instructions":"手順を1行ずつ\\n区切りで3〜5行","recMin":10〜60の整数,"targetGoal":"主な目的（例: リスニング）"}]}`;
   try{
     const o=parseLooseJSON(await callLLM(prompt,{json:true,system:AI_PERSONA}))||{};
-    const list=(Array.isArray(o.methods)?o.methods:[]).filter(x=>x&&x.name).slice(0,6);
+    // 重複名を除いて最大20件まで
+    const seen=new Set();
+    const list=(Array.isArray(o.methods)?o.methods:[]).filter(x=>{
+      if(!x||!x.name)return false; const k=String(x.name).trim(); if(seen.has(k))return false; seen.add(k); return true;
+    }).slice(0,20);
     if(!list.length)throw new Error('抽出結果が空でした。もう一度お試しください');
     closeModal(); showExtractPicker(inf,list,ctx.src);
   }catch(e){ closeModal(); modal('抽出に失敗しました',`<div class="warn-box">${esc(e.message)}</div>`,[{t:'もう一度',cls:'p',fn:()=>{closeModal();extractMethods(infId);}}]); }
@@ -750,7 +755,7 @@ const DEFAULT_WEIGHTS = {
 };
 
 /* ---------- store ---------- */
-const APP_VER='v2.3 (2026-07-12)'; // 設定画面に表示。更新が届いているかの確認用
+const APP_VER='v2.4 (2026-07-12)'; // 設定画面に表示。更新が届いているかの確認用
 const KEY='eigo_lab_v1';
 const blankDB = ()=>({
   profile:{name:'運営者',level:'中級',toeic:'',target:'',goal:'',dailyMin:30},
