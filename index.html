@@ -241,7 +241,7 @@ function needKeyModal(){
 // セキュリティ: コードにはAPIキーが含まれるため、原則クリップボードのみ（画面に表示しない）
 async function exportTransferCode(){
   const s=DB.settings;
-  const code=btoa(unescape(encodeURIComponent(JSON.stringify({llmKeys:s.llmKeys,llmPrefer:s.llmPrefer,gasUrl:s.gasUrl,weights:s.weights}))));
+  const code=btoa(unescape(encodeURIComponent(JSON.stringify({llmKeys:s.llmKeys,llmPrefer:s.llmPrefer,gasUrl:s.gasUrl,weights:s.weights,ytKey:s.ytKey||''}))));
   try{
     await navigator.clipboard.writeText(code);
     toast('✅ コピーしました（画面には表示しません）。自分だけに送ってください');
@@ -263,6 +263,7 @@ function importTransferCode(){
     if(o.llmPrefer)DB.settings.llmPrefer=o.llmPrefer;
     if(o.gasUrl)DB.settings.gasUrl=o.gasUrl;
     if(o.weights)DB.settings.weights={...DB.settings.weights,...o.weights};
+    if(o.ytKey)DB.settings.ytKey=o.ytKey;
     saveNow();render();toast('✅ 設定を引き継ぎました。AI機能が使えます');
   }catch(e){toast('コードが正しくありません。全文コピーできているか確認してください');}
 }
@@ -414,6 +415,94 @@ function pickFamousInfluencers(){
       toast(n?`${n}人追加しました`:'チェックを入れてから追加してください');
     }}
   ]);
+}
+
+/* ---------- 発信者から学習法をAI自動抽出（手入力不要） ----------
+   情報源の優先順: ①YouTube Data API(キー任意・実データ) ②無料リーダーでチャンネルページ ③AIの既存知識 */
+async function fetchYTContext(inf){
+  const s=DB.settings;
+  // ① YouTube Data API v3（無料キー。人気動画のタイトル+説明を実データとして取得）
+  try{
+    if(s.ytKey&&inf.youtube){
+      const m=inf.youtube.match(/@([\w.\-]+)/);
+      let chId='';
+      if(m){
+        const r=await fetch(`https://www.googleapis.com/youtube/v3/channels?part=id&forHandle=${encodeURIComponent(m[1])}&key=${encodeURIComponent(s.ytKey)}`);
+        const j=await r.json(); chId=j.items?.[0]?.id||'';
+      }
+      if(chId){
+        const r2=await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${chId}&order=viewCount&type=video&maxResults=15&key=${encodeURIComponent(s.ytKey)}`);
+        const j2=await r2.json();
+        const items=(j2.items||[]).map(it=>'- '+it.snippet.title+(it.snippet.description?('：'+it.snippet.description.slice(0,80)):''));
+        if(items.length)return {src:'YouTube API（人気動画'+items.length+'本の実データ）',text:items.join('\n').slice(0,3500)};
+      }
+    }
+  }catch(e){}
+  // ② 無料リーダー（キー不要・ベストエフォート。失敗したら黙って次へ）
+  try{
+    if(inf.youtube){
+      const ctl=new AbortController(); setTimeout(()=>ctl.abort(),9000);
+      const r=await fetch('https://r.jina.ai/'+inf.youtube.replace(/\/$/,'')+'/videos',{signal:ctl.signal});
+      if(r.ok){const t=await r.text(); if(t&&t.length>300)return {src:'チャンネルページ（簡易取得）',text:t.slice(0,3500)};}
+    }
+  }catch(e){}
+  return {src:'AIの既存知識',text:''};
+}
+async function extractMethods(infId){
+  const inf=infById(infId); if(!inf)return;
+  if(!activeProviders().length)return needKeyModal();
+  modalRaw(`<div class="modal" style="max-width:420px"><h2 style="margin:0">🔎 抽出中…</h2>
+    <div class="sub" id="ex_status" style="margin-top:10px">📡 ${esc(inf.name)}の情報を取得しています…</div></div>`);
+  const ctx=await fetchYTContext(inf);
+  if($('#ex_status'))$('#ex_status').textContent='🧠 AIが学習法を構造化しています…（情報源: '+ctx.src+'）';
+  const prompt=`英語系発信者「${inf.name}」（テーマ: ${inf.theme||'-'} / 対象: ${inf.target||'-'}）が推奨している英語学習法を、実行可能な形で3〜5個抽出してください。
+${ctx.text?`以下はこの発信者の実際の動画情報です。これを最優先の根拠にし、動画に基づく具体的な学習法にすること:\n${ctx.text}\n`:'実データはありません。この発信者について広く知られている代表的な推奨学習法を挙げてください。確信が持てない場合は、テーマに合致する一般的で効果の高い学習法として提案してください。'}
+各学習法は「1週間・1日10〜60分で個人が実践できる」粒度に落とすこと。
+JSONのみで返答:
+{"methods":[{"name":"学習法名（具体的に）","categories":["${CATEGORIES.join('","')} から1〜3個"],"description":"どんな学習法か1〜2文","instructions":"手順を1行ずつ\\n区切りで3〜5行","recMin":10〜60の整数,"targetGoal":"主な目的（例: リスニング）"}]}`;
+  try{
+    const o=parseLooseJSON(await callLLM(prompt,{json:true,system:AI_PERSONA}))||{};
+    const list=(Array.isArray(o.methods)?o.methods:[]).filter(x=>x&&x.name).slice(0,6);
+    if(!list.length)throw new Error('抽出結果が空でした。もう一度お試しください');
+    closeModal(); showExtractPicker(inf,list,ctx.src);
+  }catch(e){ closeModal(); modal('抽出に失敗しました',`<div class="warn-box">${esc(e.message)}</div>`,[{t:'もう一度',cls:'p',fn:()=>{closeModal();extractMethods(infId);}}]); }
+}
+let __exList=[];
+function showExtractPicker(inf,list,src){
+  __exList=list;
+  modal(`🔎 ${esc(inf.name)}の学習法候補`,`
+    <div class="tiny" style="margin-bottom:6px">情報源: ${esc(src)}。登録したいものにチェック（登録後に編集もできます）</div>
+    ${list.map((m,i)=>`<label class="list-item" style="margin:6px 0;align-items:flex-start">
+      <input type="checkbox" class="ex-pick" data-i="${i}" checked style="width:auto;flex:0 0 auto;margin-top:4px">
+      <div style="flex:1;min-width:0"><b>${esc(m.name)}</b>
+        <div class="tiny">${(m.categories||[]).map(esc).join('・')} ・ ${clamp(num(m.recMin,30),5,120)}分/日 ・ ${esc(m.targetGoal||'')}</div>
+        <div class="tiny mut">${esc(m.description||'')}</div></div></label>`).join('')}
+    ${src==='AIの既存知識'?'<div class="warn-box tiny" style="margin-top:6px">※実データ未取得のためAIの知識ベースです。⚙️設定にYouTube APIキー（無料）を入れると実際の動画から抽出できます。</div>':''}
+  `,[
+    {t:'選択した学習法を登録',cls:'p',fn:()=>{
+      let n=0;
+      $$('#modalbg .ex-pick:checked').forEach(cb=>{
+        const m=__exList[+cb.dataset.i]; if(!m)return;
+        const cats=(m.categories||[]).filter(c=>CATEGORIES.includes(c));
+        const recMin=clamp(num(m.recMin,30),5,120);
+        DB.methods.push({id:uid('m'),name:String(m.name).slice(0,60),influencerId:inf.id,
+          categories:cats.length?cats:['その他'],targetLevel:'中級',targetGoal:m.targetGoal||'',
+          recMin,recDays:7,difficulty:autoDifficulty({categories:cats,recMin}),cost:'無料',material:'',
+          sourceUrl:inf.youtube||'',description:m.description||'',instructions:m.instructions||'',
+          aiNote:'AI自動抽出（情報源: '+src+'）'});
+        n++;
+      });
+      saveNow();closeModal();openView('methods');toast(n?'✅ '+n+'件の学習法を登録しました':'チェックを入れてから登録してください');
+    }}
+  ]);
+}
+function chooseInfluencerForExtract(){
+  if(!DB.influencers.length)return modal('先に発信者を登録','<div class="sub">発信者タブの「候補から選んで追加」が早いです。</div>',
+    [{t:'発信者タブへ',cls:'p',fn:()=>{closeModal();openView('influencers');}}]);
+  modal('どの発信者から抽出する？',DB.influencers.map(i=>
+    `<div class="list-item" onclick="closeModal();extractMethods('${i.id}')">
+      <div class="av">${esc((i.name||'?')[0])}</div>
+      <div style="flex:1;min-width:0"><b>${esc(i.name)}</b><div class="tiny">${esc(i.theme||'')}</div></div>→</div>`).join(''),[]);
 }
 
 // 内蔵テスト問題バンク（オフライン・API不要）。level:1易 2中 3難 / a=正解index
@@ -572,12 +661,12 @@ const DEFAULT_WEIGHTS = {
 };
 
 /* ---------- store ---------- */
-const APP_VER='v1.9 (2026-07-12)'; // 設定画面に表示。更新が届いているかの確認用
+const APP_VER='v2.0 (2026-07-12)'; // 設定画面に表示。更新が届いているかの確認用
 const KEY='eigo_lab_v1';
 const blankDB = ()=>({
   profile:{name:'運営者',level:'中級',toeic:'',target:'',goal:'',dailyMin:30},
   influencers:[], methods:[], challenges:[], tests:[], logs:[], reviews:[],
-  settings:{weights:{...DEFAULT_WEIGHTS}, llmKeys:{groq:'',openrouter:'',gemini:''}, llmPrefer:'auto', gasUrl:''}
+  settings:{weights:{...DEFAULT_WEIGHTS}, llmKeys:{groq:'',openrouter:'',gemini:''}, llmPrefer:'auto', gasUrl:'', ytKey:''}
 });
 // localStorageが使えない環境(file://のSafari等/プライベートモード)でも動くようにラップ
 let STORAGE_OK=true;
@@ -925,7 +1014,8 @@ function delInfluencer(id){
    ========================================================================= */
 function viewMethods(v){
   let html=`<div class="row" style="align-items:center"><h2 style="flex:1">📚 学習法</h2>
-    <button class="btn p" onclick="openMethodForm()">＋ 登録</button></div>`;
+    <button class="btn p" onclick="openMethodForm()">＋ 登録</button></div>
+    <button class="btn o" style="width:100%;margin-bottom:12px" onclick="chooseInfluencerForExtract()">🔎 発信者からAIで学習法を自動抽出（手入力不要）</button>`;
   if(DB.methods.length===0){
     html+=emptyState('📖','学習法がまだありません','試したい英語学習メソッドを登録しましょう。','＋ 学習法を登録','openMethodForm()');
   }else{
@@ -2157,6 +2247,9 @@ function viewSettings(v){
     <input id="k_openrouter" type="password" value="${esc(kk.openrouter||'')}" placeholder="sk-or-... 空欄可">
     <label>Gemini APIキー <a href="https://aistudio.google.com/apikey" target="_blank" class="tiny">（発行）</a></label>
     <input id="k_gemini" type="password" value="${esc(kk.gemini||'')}" placeholder="AIza... 空欄可">
+    <label>YouTube Data APIキー（任意・学習法の自動抽出で実際の動画を使う）</label>
+    <input id="k_yt" type="password" value="${esc(s.ytKey||'')}" placeholder="AIza... 空欄可（無くてもAIの知識から抽出可）">
+    <div class="tiny">発行: <a href="https://console.cloud.google.com/apis/library/youtube.googleapis.com" target="_blank">Google Cloud</a>で「YouTube Data API v3」を有効化→認証情報→APIキー作成（無料枠1日1万ユニット）</div>
     <label>優先的に使う（任意）</label>
     <select id="llm_prefer">${prefOpt('auto','自動（Groq→OpenRouter→Gemini の順で試す）')}${prefOpt('groq','Groqを優先')}${prefOpt('openrouter','OpenRouterを優先')}${prefOpt('gemini','Geminiを優先')}</select>
     <div class="ok-box" style="margin-top:8px">🔒 <b>キーが他人に見えることはありません。</b>URLは公開ですが、キーとデータは<b>あなたのこの端末のブラウザ内にだけ</b>保存されます（サーバーには何も置かれません）。他の人が同じURLを開いても、その人には空っぽのアプリが表示されるだけです。画面上もキーは●●●で隠されます。</div>
@@ -2211,6 +2304,7 @@ function saveLLM(){
   if($('#k_groq')){
     DB.settings.llmKeys={groq:$('#k_groq').value.trim(),openrouter:$('#k_openrouter').value.trim(),gemini:$('#k_gemini').value.trim()};
     DB.settings.llmPrefer=$('#llm_prefer').value;
+    if($('#k_yt'))DB.settings.ytKey=$('#k_yt').value.trim();
   }
   saveNow();toast('AI設定を保存しました');}
 function saveGas(){DB.settings.gasUrl=$('#gas_url').value.trim();saveNow();toast('保存しました');}
