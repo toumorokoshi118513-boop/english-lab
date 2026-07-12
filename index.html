@@ -528,6 +528,7 @@ const DEFAULT_WEIGHTS = {
 };
 
 /* ---------- store ---------- */
+const APP_VER='v1.6 (2026-07-12)'; // 設定画面に表示。更新が届いているかの確認用
 const KEY='eigo_lab_v1';
 const blankDB = ()=>({
   profile:{name:'運営者',level:'中級',toeic:'',target:'',goal:'',dailyMin:30},
@@ -2148,7 +2149,9 @@ function viewSettings(v){
       <input type="file" id="imp" hidden accept=".json" onchange="importJSON(this)"></div>
     <div class="row" style="margin-top:8px"><button class="btn sm gho" onclick="loadSampleData()">✨ サンプルデータ投入</button>
       <button class="btn sm dang" onclick="wipe()">全データ削除</button></div>
-    <div class="tiny" style="margin-top:8px">データはこの端末のブラウザ(localStorage)に保存。バックアップJSONを時々保存しておくと安全です。</div></div>`;
+    <div class="tiny" style="margin-top:8px">データはこの端末のブラウザ(localStorage)に保存。バックアップJSONを時々保存しておくと安全です。<br>
+      ※ローカル版(localhost)と本番(github.io)は<b>別の保存領域</b>です。移すときは「バックアップ→復元」（APIキー含む全設定・全データが移ります）。</div>
+    <div class="tiny mut" style="margin-top:6px;text-align:right">アプリバージョン: ${APP_VER}</div></div>`;
   v.innerHTML=h;
 }
 function saveProfile(){Object.assign(DB.profile,{name:$('#p_name').value,level:$('#p_level').value,toeic:$('#p_toeic').value,
@@ -2332,8 +2335,16 @@ function loadSampleData(){
 /* ---------- boot ---------- */
 render();
 // PWA: Service Worker登録（http(s)配信時のみ。file://では黙ってスキップ）
+// 新バージョン配信時は自動で更新→1回だけ再読み込み（旧キャッシュ画面のまま使い続ける問題の根治）
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
-  navigator.serviceWorker.register('sw.js').catch(()=>{});
+  navigator.serviceWorker.register('sw.js').then(reg=>{try{reg.update();}catch(_){}}).catch(()=>{});
+  let _hadSW=!!navigator.serviceWorker.controller, _swReloaded=false;
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{
+    if(!_hadSW){_hadSW=true;return;} // 初回インストールは再読み込み不要
+    if(_swReloaded)return; _swReloaded=true;
+    toast('新しいバージョンに更新します…');
+    setTimeout(()=>location.reload(),600);
+  });
 }
 // 保存できるか起動時に自己診断（file://のSafari/プライベートモード対策）
 (function storageCheck(){
