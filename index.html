@@ -237,12 +237,22 @@ function needKeyModal(){
   `,[{t:'⚙️ 設定を開く',cls:'p',fn:()=>{closeModal();openView('settings');}}]);
 }
 // 設定の引き継ぎコード（APIキー・優先度・GAS URL・配点をbase64化）
-function exportTransferCode(){
+// セキュリティ: コードにはAPIキーが含まれるため、原則クリップボードのみ（画面に表示しない）
+async function exportTransferCode(){
   const s=DB.settings;
   const code=btoa(unescape(encodeURIComponent(JSON.stringify({llmKeys:s.llmKeys,llmPrefer:s.llmPrefer,gasUrl:s.gasUrl,weights:s.weights}))));
-  const ta=$('#tf_code'); if(ta){ta.value=code;ta.style.display='block';ta.select();}
-  try{navigator.clipboard.writeText(code);toast('コードをコピーしました。スマホに送って貼り付けてください');}
-  catch(e){toast('コードを表示しました。全選択してコピーしてください');}
+  try{
+    await navigator.clipboard.writeText(code);
+    toast('✅ コピーしました（画面には表示しません）。自分だけに送ってください');
+  }catch(e){
+    // クリップボード不可の環境のみ、警告つきで一時表示（60秒で自動消去）
+    const ta=$('#tf_code');
+    if(ta){
+      ta.value=code; ta.style.display='block'; ta.select();
+      toast('⚠️ 手動でコピーしてください。60秒後に自動で消します');
+      setTimeout(()=>{ta.value='';ta.style.display='none';},60000);
+    }
+  }
 }
 function importTransferCode(){
   const raw=($('#tf_in')?.value||'').trim(); if(!raw)return toast('コードを貼り付けてください');
@@ -528,7 +538,7 @@ const DEFAULT_WEIGHTS = {
 };
 
 /* ---------- store ---------- */
-const APP_VER='v1.6 (2026-07-12)'; // 設定画面に表示。更新が届いているかの確認用
+const APP_VER='v1.7 (2026-07-12)'; // 設定画面に表示。更新が届いているかの確認用
 const KEY='eigo_lab_v1';
 const blankDB = ()=>({
   profile:{name:'運営者',level:'中級',toeic:'',target:'',goal:'',dailyMin:30},
@@ -2115,12 +2125,14 @@ function viewSettings(v){
     <input id="k_gemini" type="password" value="${esc(kk.gemini||'')}" placeholder="AIza... 空欄可">
     <label>優先的に使う（任意）</label>
     <select id="llm_prefer">${prefOpt('auto','自動（Groq→OpenRouter→Gemini の順で試す）')}${prefOpt('groq','Groqを優先')}${prefOpt('openrouter','OpenRouterを優先')}${prefOpt('gemini','Geminiを優先')}</select>
-    <div class="warn-box" style="margin-top:8px">キーはこの端末のブラウザ内のみに保存されます（外部送信なし）。<b>端末ごとに別保存</b>のため、スマホで使うには下の「引き継ぎ」が便利です。</div>
+    <div class="ok-box" style="margin-top:8px">🔒 <b>キーが他人に見えることはありません。</b>URLは公開ですが、キーとデータは<b>あなたのこの端末のブラウザ内にだけ</b>保存されます（サーバーには何も置かれません）。他の人が同じURLを開いても、その人には空っぽのアプリが表示されるだけです。画面上もキーは●●●で隠されます。</div>
+    <div class="warn-box" style="margin-top:8px"><b>端末ごとに別保存</b>のため、スマホで使うには下の「引き継ぎ」が便利です。</div>
     <div class="row" style="margin-top:10px"><button class="btn p sm" onclick="saveLLM()">保存</button>
       <button class="btn o sm" onclick="testLLMConnection()">🔌 接続テスト（全キー）</button></div>
     <div class="divider"></div>
     <h3 style="font-size:14px">📲 スマホへ引き継ぎ（キーを手打ちしなくてOK）</h3>
-    <div class="tiny" style="margin-bottom:6px">PC側: コードをコピー → LINE/メモで自分のスマホへ送る ／ スマホ側: 下の欄に貼り付けて取り込む</div>
+    <div class="tiny" style="margin-bottom:6px">PC側: コードをコピー（<b>画面には表示されません</b>）→ LINEのKeepメモ等で<b>自分のスマホだけ</b>に送る ／ スマホ側: 下の欄に貼り付けて取り込む</div>
+    <div class="warn-box tiny" style="margin-bottom:6px">⚠️ 引き継ぎコードにはAPIキーが含まれます。他人に送らない・SNSに貼らないでください。送信後はメッセージを削除すると安全です。</div>
     <button class="btn sm" onclick="saveLLM();exportTransferCode()">📤 引き継ぎコードをコピー（この端末の設定を出力）</button>
     <textarea id="tf_code" readonly style="display:none;margin-top:6px;font-size:11px;min-height:52px"></textarea>
     <label>引き継ぎコードを貼り付け</label>
