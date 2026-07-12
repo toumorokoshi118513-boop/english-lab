@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>1週間英語ラボ</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#131a29">
@@ -21,7 +21,7 @@ a{color:var(--accent)}
 h1,h2,h3{margin:0 0 .4em}
 h2{font-size:20px}
 h3{font-size:16px}
-.wrap{max-width:1080px;margin:0 auto;padding:14px 14px 96px}
+.wrap{max-width:1080px;margin:0 auto;padding:14px 14px calc(96px + env(safe-area-inset-bottom))}
 header.top{position:sticky;top:0;z-index:40;background:linear-gradient(180deg,#131a29,#131a29ee);
   border-bottom:1px solid var(--line);backdrop-filter:blur(6px)}
 header.top .in{max-width:1080px;margin:0 auto;padding:11px 14px;display:flex;align-items:center;gap:10px}
@@ -37,7 +37,7 @@ header.top .in{max-width:1080px;margin:0 auto;padding:11px 14px;display:flex;ali
 .btn.sm{padding:6px 10px;font-size:12.5px;border-radius:8px}
 .btn.gho{background:transparent}
 .btn.dang{color:var(--bad);border-color:#4a2530}
-nav.tabs{display:flex;gap:4px;overflow-x:auto;padding:8px 10px;position:fixed;bottom:0;left:0;right:0;
+nav.tabs{display:flex;gap:4px;overflow-x:auto;padding:8px 10px calc(8px + env(safe-area-inset-bottom));position:fixed;bottom:0;left:0;right:0;
   background:#131a29f2;border-top:1px solid var(--line);z-index:40;backdrop-filter:blur(8px)}
 nav.tabs button{flex:0 0 auto;background:none;border:none;color:var(--sub);font-size:11px;font-weight:600;
   display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 12px;cursor:pointer;border-radius:8px}
@@ -1400,6 +1400,7 @@ function submitQuiz(){
 
 /* ---------- 毎日の記録（1分入力） ---------- */
 function openDailyLog(cid,date){
+  _dlChat=[];_dlQuick=[];_dlDone=false;_dlCtx={cid,date}; // AI対話状態をリセット
   const ex=DB.logs.find(l=>l.challengeId===cid&&l.date===date);
   const ch=chById(cid);
   const prev=logsOf(cid).filter(l=>l.date<date).slice(-1)[0];
@@ -1416,6 +1417,14 @@ function openDailyLog(cid,date){
     <div class="row" style="margin-top:10px">
       <div><label>学習時間(分)</label><input id="l_min" type="number" value="${l.minutes}"></div>
       <div style="display:flex;align-items:flex-end"><button class="btn gho sm" style="width:100%" onclick="openTimer('${cid}','${date}')">⏱ タイマーで測る</button></div>
+    </div>
+    <button class="btn o sm" style="width:100%;margin-top:10px" onclick="dlChatStart()">💬 AIと対話で記録（今日やったことを選ぶだけ）</button>
+    <div id="dl_chat" style="display:none;border:1px solid var(--line);border-radius:12px;padding:10px;margin-top:8px;background:var(--panel2)">
+      <div id="dl_msgs" style="max-height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;margin-bottom:8px"></div>
+      <div id="dl_quick" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px"></div>
+      <div style="display:flex;gap:6px">
+        <input id="dl_input" placeholder="自由に話す（例: 音読だけ10分やった）" onkeydown="if(event.key==='Enter'){event.preventDefault();dlChatSend();}">
+        <button class="btn p sm" style="flex:0 0 auto" onclick="dlChatSend()">送信</button></div>
     </div>
     <div class="divider"></div>
     <div class="tiny" style="margin-bottom:6px">5段階評価（スライダー）</div>
@@ -1439,6 +1448,64 @@ function openDailyLog(cid,date){
   ]);
 }
 function segPick(b){$$('.on',b.parentElement).forEach(x=>x.classList.remove('on'));b.classList.add('on');}
+
+/* ---------- 毎日記録のAI対話入力（フォームを自動で埋める） ---------- */
+let _dlChat=[],_dlQuick=[],_dlDone=false,_dlCtx=null;
+function dlRender(typing){
+  const box=$('#dl_msgs'); if(!box)return;
+  box.innerHTML=_dlChat.map(m=>aiMsgBubble(m.role,m.text)).join('')
+    +(typing?`<div class="tiny sub">🧠 考え中…</div>`:'')
+    +(_dlDone&&!typing?`<div class="ok-box tiny" style="margin-top:4px">✅ フォームに反映しました。内容を確認して「保存」を押してください。</div>`:'');
+  box.scrollTop=box.scrollHeight;
+  const quick=$('#dl_quick'); if(!quick)return;
+  quick.innerHTML=(typing?[]:(_dlDone?['修正したい']:_dlQuick)).map(t=>`<span class="chip" style="cursor:pointer" onclick="dlChatSend(this.textContent)">${esc(t)}</span>`).join('');
+}
+async function dlChatStart(){
+  if(!activeProviders().length)return toast('AI対話にはAPIキーが必要です（⚙️設定）。手動入力は下のスライダーでどうぞ');
+  const panel=$('#dl_chat'); if(!panel)return;
+  panel.style.display='block';
+  if(_dlChat.length){dlRender();return;}
+  dlRender(true); await dlChatTurn(null);
+}
+async function dlChatSend(preset){
+  const inp=$('#dl_input');
+  const text=(preset||(inp?inp.value:'')).trim(); if(!text)return;
+  if(inp&&!preset)inp.value='';
+  _dlChat.push({role:'user',text});
+  dlRender(true); await dlChatTurn(text);
+}
+function applyDlLog(l){
+  if(!l||typeof l!=='object')return;
+  if(l.status&&$('#l_status')){$$('#l_status button').forEach(b=>b.classList.toggle('on',b.textContent===l.status));}
+  if(l.minutes!=null&&$('#l_min'))$('#l_min').value=Math.max(0,num(l.minutes));
+  ['focus','fun','difficulty','effect','understand','sustain'].forEach(k=>{
+    const v=parseInt(l[k],10);
+    if(v>=1&&v<=5&&$('#l_'+k)){$('#l_'+k).value=v;$('#l_'+k).nextElementSibling.textContent=v;}
+  });
+  if(l.memo&&$('#l_memo'))$('#l_memo').value=String(l.memo);
+}
+async function dlChatTurn(userText){
+  const ch=chById(_dlCtx.cid), m=ch?methodById(ch.methodId):null;
+  const transcript=_dlChat.map(x=>(x.role==='ai'?'AI:':'学習者:')+x.text).join('\n');
+  const prompt=`今日の学習記録を短い対話で埋めるアシスタントです。
+学習法:「${m?m.name:'-'}」（カテゴリ:${m?(m.categories||[]).join('・'):'-'} / 手順:${m?(m.instructions||'-').replace(/\n/g,' '):'-'} / 1日目標${ch?ch.dailyTarget:30}分）
+日付:${_dlCtx.date}
+${transcript?`会話:\n${transcript}\n`:''}
+${userText?'発言から分かった値だけlogに入れて更新してください。時間と内容が分かったら、集中/楽しさ/難しさ/効果/理解/続けやすさも会話のトーンから推定して埋め、done=trueにして一言ねぎらってください。「修正したい」と言われたらdone=falseで何を直すか聞いてください。':'「今日は何をどのくらいやりましたか？」と聞いてください。quickにはこの学習法の手順・目標時間に即した具体的な選択肢を出すこと（例:「シャドーイング30分やり切った」「音読だけ15分」「今日は休んだ」）。'}
+JSONのみで返答:
+{"reply":"学習者への言葉（1〜2文）","quick":["文脈に合う返答候補3つ（各14字以内）"],"log":{"status":"完了/一部実施/未実施/休息日 のどれか(判明時のみ)","minutes":数値(判明時のみ),"focus":1-5,"fun":1-5,"difficulty":1-5,"effect":1-5,"understand":1-5,"sustain":1-5,"memo":"やった内容の短い要約(判明時のみ)"},"done":false}
+※logの各項目は判明したものだけ入れる（不明はnull/省略）。`;
+  try{
+    const o=parseLooseJSON(await callLLM(prompt,{json:true,system:AI_PERSONA}))||{};
+    applyDlLog(o.log);
+    _dlQuick=Array.isArray(o.quick)?o.quick.filter(x=>typeof x==='string'&&x.trim()).slice(0,3):[];
+    _dlDone=o.done===true;
+    _dlChat.push({role:'ai',text:o.reply||'（フォームを更新しました）'});
+  }catch(e){
+    _dlChat.push({role:'ai',text:'通信に失敗しました（'+e.message.slice(0,40)+'）。もう一度どうぞ。'});
+  }
+  dlRender();
+}
 
 /* ---------- 週次レビュー ---------- */
 function openReviewForm(cid){
