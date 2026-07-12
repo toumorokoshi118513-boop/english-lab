@@ -758,7 +758,7 @@ const DEFAULT_WEIGHTS = {
 };
 
 /* ---------- store ---------- */
-const APP_VER='v2.8 (2026-07-12)'; // 設定画面に表示。更新が届いているかの確認用
+const APP_VER='v2.9 (2026-07-12)'; // 設定画面に表示。更新が届いているかの確認用
 const KEY='eigo_lab_v1';
 const blankDB = ()=>({
   profile:{name:'運営者',level:'中級',toeic:'',target:'',goal:'',dailyMin:30},
@@ -1978,23 +1978,16 @@ async function runCompareAI(){
   const key=compareSel.slice().sort().join(',');
   const box=$('#cmp_ai'); if(box)box.innerHTML='<span class="sub">🧠 AI先生が比較分析中…</span>';
   const nm=x=>x?.m?x.m.name:x?.ch.name;
-  const data=sel.map(x=>{
-    const pre=preTest(x.ch.id),post=postTest(x.ch.id);
-    let fd='';
-    if(pre?.fieldStats&&post?.fieldStats){
-      const pct=(fs,f)=>fs[f]&&fs[f].total?round1(fs[f].correct/fs[f].total*100):null;
-      fd=[...new Set([...Object.keys(pre.fieldStats),...Object.keys(post.fieldStats)])]
-        .map(f=>`${f}:${pct(pre.fieldStats,f)??'?'}→${pct(post.fieldStats,f)??'?'}%`).join(', ');
-    }
-    return `【${nm(x)}】総合${x.st.total}点 / 正答率${x.st.rateDiff!=null?fmtDiff(x.st.rateDiff,'pt'):'不明'} / 継続${x.st.retentionPct}% / 学習${fmtMin(x.st.totalMin)} / 楽しさ${x.st.rev?.enjoyment??'-'}／5 続けやすさ${x.st.rev?.sustainability??'-'}／5${fd?' / 分野別:'+fd:''}${x.st.rev?.good_points?' / 良:'+x.st.rev.good_points:''}${x.st.rev?.bad_points?' / 悪:'+x.st.rev.bad_points:''}`;
-  }).join('\n');
-  const prompt=`同一学習者が1週間ずつ実践した複数の英語学習法の比較データです。専門家として厳密に比較分析してください。
+  // 各チャレンジの全記録（毎日の記録・分野別・レビュー自由記述込み）を渡す
+  const data=sel.map((x,i)=>`===== 学習法${i+1} =====\n${challengeFullContext(x.ch.id,true)}`).join('\n\n');
+  const p=DB.profile;
+  const prompt=`同一学習者（レベル${p.level||'-'} / TOEIC ${p.toeic||'未計測'} / 目的:${p.goal||'-'}）が1週間ずつ実践した複数の英語学習法の全記録です。専門家パネルとして、要約でなく生データ（日別の推移・分野別成績・本人の自由記述）まで読み込み、厳密に比較分析してください。
 ${data}
 
-次の見出しで日本語・各2〜4文で出力:
+4つの専門視点（脳科学/認知科学/第二言語習得論/インプット仮説）の立場を明示しながら、次の見出しで日本語・各2〜4文で出力（日別推移や分野別の具体データを根拠に引用すること）:
 【① 総合勝者とその科学的根拠】
-【② 各方法の「何が良く・何が悪かった」か（1方法ずつ）】
-【③ 数字の裏にある要因の仮説（SLA/脳科学の観点）】
+【② 各方法の「何が良く・何が悪かった」か（1方法ずつ・データを引用して）】
+【③ 数字の裏にある要因の仮説】各視点から「脳科学の観点では〜」のように述べる
 【④ この学習者への最適な組み合わせ・使い分け提案】`;
   try{
     const text=await callLLM(prompt,{system:AI_PERSONA});
@@ -2129,25 +2122,61 @@ function downloadShare(){
 /* =========================================================================
    AI分析（無料LLM: Groq / Gemini）
    ========================================================================= */
+// チャレンジの「全情報」を専門家パネルに渡すための完全コンテキスト
+function challengeFullContext(cid,compact){
+  const ch=chById(cid); if(!ch)return'';
+  const m=methodById(ch.methodId), inf=m?infById(m.influencerId):null, st=computeStats(ch);
+  const p=DB.profile;
+  const L=[];
+  if(!compact)L.push(`◆学習者プロフィール: レベル${p.level||'-'} / TOEIC ${p.toeic||'未計測'}(目標${p.target||'-'}) / 目的:${p.goal||'-'} / 1日確保${p.dailyMin||'-'}分`);
+  L.push(`◆学習法「${m?m.name:ch.name}」${inf?'（発信者: '+inf.name+'）':''}`);
+  if(m){
+    L.push(`  カテゴリ:${(m.categories||[]).join('・')||'-'} / 対象:${m.targetLevel||'-'} / 難易度${m.difficulty||'-'}／5${m.diffBreak?'（認知負荷'+(m.diffBreak.cognitive||'-')+' 前提'+(m.diffBreak.prerequisite||'-')+' 続けにくさ'+(m.diffBreak.habit||'-')+' 環境'+(m.diffBreak.barrier||'-')+' 時間'+(m.diffBreak.timeload||'-')+'）':''} / ${m.recMin}分×${m.recDays}日 / 費用:${m.cost||'-'}`);
+    if(!compact&&m.description)L.push(`  概要: ${m.description}`);
+    if(!compact&&m.instructions)L.push(`  手順: ${m.instructions.replace(/\n/g,' → ')}`);
+  }
+  L.push(`◆チャレンジ設定: ${ch.start}〜${ch.end} / 目標${ch.dailyTarget}分/日${ch.weeklyGoal?' / 週目標:'+ch.weeklyGoal:''}${ch.hypothesis?' / 仮説:'+ch.hypothesis:''}${ch.success?' / 成功条件:'+ch.success:''}`);
+  // 毎日の記録（全日・全スライダー・メモ）
+  const logs=logsOf(cid);
+  if(logs.length){
+    L.push('◆毎日の記録（日/状態/分/集中/楽しさ/難しさ/効果/理解/続けやすさ/メモ）:');
+    logs.forEach((l,i)=>L.push(`  ${i+1}日目 ${l.status} ${num(l.minutes)}分 ${l.focus||'-'}/${l.fun||'-'}/${l.difficulty||'-'}/${l.effect||'-'}/${l.understand||'-'}/${l.sustain||'-'}${l.memo?' 「'+l.memo+'」':''}`));
+  }
+  // テスト（分野別成績まで）
+  const fmtT=(t,label)=>{
+    if(!t)return `◆${label}テスト: 未実施`;
+    let s=`◆${label}テスト: ${t.type||''} ${t.rate!=null?t.rate+'%':''}（${t.correct??'?'}/${t.qcount??'?'}問・${t.seconds?fmtSec(t.seconds):'-'}）`;
+    if(t.fieldStats)s+=' 分野別:'+Object.entries(t.fieldStats).map(([f,v])=>`${f} ${v.correct}/${v.total}`).join(', ');
+    if(t.reused)s+=' ※一部既出問題を再出題';
+    if(t.grew)s+=` 伸びた実感:${t.grew}`;
+    return s;
+  };
+  L.push(fmtT(st.pre,'実践前'), fmtT(st.post,'実践後'));
+  // 週次レビュー（全項目＋自由記述）
+  const r=st.rev;
+  if(r){
+    L.push(`◆週次レビュー(5点満点): 効果${r.effectiveness} 継続${r.sustainability} 楽しさ${r.enjoyment} 難易度${r.difficulty} 時間効率${r.time_efficiency} 費用対効果${r.cost_performance} 準備${r.preparation} おすすめ${r.recommendation} 続けたい${r.continuation}`);
+    if(r.good_points)L.push(`  良かった点: ${r.good_points}`);
+    if(r.bad_points)L.push(`  悪かった点: ${r.bad_points}`);
+    if(r.suitable)L.push(`  向いている人: ${r.suitable}${r.unsuitable?' / 向かない人: '+r.unsuitable:''}`);
+    if(r.overall)L.push(`  総評: ${r.overall}`);
+  }
+  L.push(`◆自動集計: 総合${st.total??'-'}点 / 正答率${st.rateDiff!=null?fmtDiff(st.rateDiff,'pt'):'-'}（${st.pre?.rate??'?'}%→${st.post?.rate??'?'}%）/ 総学習${fmtMin(st.totalMin)} / 継続${st.retentionPct}%（${st.daysPracticed}/7日）/ 1h効率${st.perHrImprove!=null?fmtDiff(st.perHrImprove,'pt'):'-'}`);
+  return L.join('\n');
+}
 async function runAI(cid){
   if(!activeProviders().length)return needKeyModal();
-  const ch=chById(cid),m=methodById(ch.methodId),st=computeStats(ch);
+  const ch=chById(cid);
   const others=scoredChallenges().filter(x=>x.ch.id!==cid).slice(0,5)
     .map(x=>`- ${x.m?x.m.name:x.ch.name}: ${x.st.total}点 (正答率${x.st.rateDiff!=null?(x.st.rateDiff>0?'+':'')+x.st.rateDiff+'pt':'—'}, 継続${x.st.retentionPct}%)`).join('\n');
-  const prompt=`以下の「1週間英語チャレンジ」の実践データを、専門家として分析してください。日本語で、各見出し2〜3文で簡潔に。
-## 学習法: ${m?m.name:ch.name} (${m?m.categories?.join('/'):''} / 対象:${m?.targetLevel||'-'} / ${m?.recMin||'-'}分)
-## 結果
-- 総合スコア: ${st.total}/100
-- 正答率変化: ${st.rateDiff!=null?st.rateDiff+'pt':'不明'} (前${st.pre?.rate??'?'}% → 後${st.post?.rate??'?'}%)
-- 総学習時間: ${fmtMin(st.totalMin)} / 継続率: ${st.retentionPct}% (7日中${st.daysPracticed}日)
-- 自己評価(5点): 効果${st.rev?.effectiveness??'-'} 継続${st.rev?.sustainability??'-'} 楽しさ${st.rev?.enjoyment??'-'} 難易度${st.rev?.difficulty??'-'}
-- 良かった点: ${st.rev?.good_points||'-'} / 悪かった点: ${st.rev?.bad_points||'-'}
-## 過去の他メソッド
+  const prompt=`以下は「1週間英語チャレンジ」の全記録です。専門家パネルとして、要約ではなく生データ（毎日の記録の推移・分野別成績・本人の自由記述）まで読み込んだ上で分析してください。
+${challengeFullContext(cid)}
+## 過去の他メソッド（比較用）
 ${others||'なし'}
 
-4つの専門視点（脳科学/認知科学/第二言語習得論/インプット仮説）の立場を明示しながら、次の4見出しで出力:
+4つの専門視点（脳科学/認知科学/第二言語習得論/インプット仮説）の立場を明示しながら、次の4見出しで出力（各2〜4文、日別推移や分野別・本人メモなど具体的なデータを根拠に引用すること）:
 【① なぜこの結果になったか】各視点から「脳科学の観点では〜」のように根拠を述べる
-【② 過去の方法と比べた強み・弱み】
+【② データから読める兆候】日別の変化・分野別の凸凹・本人メモから読み取れること
 【③ 次回の改善点（具体的に）】
 【④ このタイプの学習者に次に薦める学習法】`;
   $('#ai_out').innerHTML=`<span class="sub">🧠 脳科学・第二言語習得の研究知見に基づき分析中…（一番性能の良いAPIを自動選択）</span>`;
