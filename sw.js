@@ -1,5 +1,5 @@
 // 1週間英語ラボ Service Worker — オフライン対応（キャッシュ優先＋バックグラウンド更新）
-const CACHE = 'eigolab-v12';
+const CACHE = 'eigolab-v13';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
